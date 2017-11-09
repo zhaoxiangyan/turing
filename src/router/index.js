@@ -39,7 +39,7 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: resolve => require(['../components/page/One.vue'], resolve)
+          component: resolve => require(['../components/page/Four.vue'], resolve)
         },
         {
           path: '/system/one',

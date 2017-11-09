@@ -21,3 +21,16 @@
     float:right;
     margin-right:30px;
 }
+
+
+/* four */
+/*element table表格状态类名颜色*/
+.el-table .info-row {
+    background: #c9e5f5;
+}
+.el-table .positive-row {
+    background: #e2f0e4;
+}
+.el-table th>.cell{
+    text-align:center;
+}

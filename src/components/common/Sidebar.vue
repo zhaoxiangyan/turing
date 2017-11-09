@@ -38,7 +38,7 @@
            return {
               Item: [
                     {
-                        menu:"主页",
+                        menu:"我的交易信息",
                         iconclassname:"el-icon-date",
                         url:"home"
                     },

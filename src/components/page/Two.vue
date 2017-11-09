@@ -55,7 +55,7 @@
 				    <span>MT4密码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="password" placeholder="请输入MT4密码" ></el-input>
+					   <el-input type="password" v-model="password" placeholder="请输入MT4密码" ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -63,7 +63,31 @@
 				    <span>确认MT4密码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
+					   <el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>修改MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right radio35">
+				    	<el-switch on-text="" off-text="" v-model="switch1" :width="80"></el-switch>
+          </el-col>
+				</el-row>
+				<el-row class="li" v-show="switch1">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>新的MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input type="password" v-model="password1" placeholder="请输入新的MT4密码" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li" v-show="switch1">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>确认新的MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input type="password" v-model="repassword1" placeholder="请再次输入新的MT4密码" ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -96,10 +120,7 @@
 				    <span>同意挂机费用：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					    <template>
-								<el-radio class="radio" v-model="radio" label="1">同意</el-radio>
-								<el-radio class="radio" v-model="radio" label="2">不同意</el-radio>
-					  	</template>
+					<el-switch  v-model="switch2"  on-text="同意"  off-text="不同意" :width='80'></el-switch>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -107,11 +128,8 @@
 				    <span>最大回撤选择：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35 small_text">
-					    <template>
-								<el-radio class="radio" v-model="radio2" label="1">35%</el-radio>
-								<el-radio class="radio" v-model="radio2" label="2">自定义</el-radio>
-					  	</template>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比"></el-input>
+					<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>
+					  	<el-input v-model="input5" placeholder="自定义回撤百分比" v-show="switch3"></el-input>
           </el-col>
 				</el-row>
 		</el-row>
@@ -132,9 +150,17 @@
           value1: '1',
           label1: 'GQ-capital'
         }],
-        value1: '',
+    value1: '',
 		// MT4账号
 		input2: '',
+		// MT4密码
+		password:'',
+		repassword:'',
+		// 是否修改MT4密码
+		switch1:false,
+		// 新的MT4密码
+		password1:'',
+		repassword1:'',
 		// 使用挂机模式
 		options3: [{
           value3: '选项1',
@@ -149,12 +175,12 @@
           value3: '选项4',
           label3: '综合尊享型'
         }],
-        value3: '',
+    value3: '',
 		// 同意挂机费用
-		radio: '1',
+		switch2:false,
 		// 最大回撤选择
-		radio2: '1',
-		input5: '',
+		switch3:false,
+		input5: ''
       };
     },
     methods: {
