@@ -7,10 +7,6 @@
             </div>
             <div class="register_div">
                 <div class="register_box">
-                    <!--<ul class="tab">
-                        <li class="active">手机用户</li>
-                        <li>邮箱用户</li>
-                    </ul>-->
                     <div>
                         <div class="phone-register">
                             <!--手机用户注册-->
@@ -20,6 +16,10 @@
                             <div class="error_div"><span class="error" v-show="error.img_code1">*图形验证码错误</span></div>
                             <p><input type="text" id="messageCode" placeholder="请输入短信验证码" v-model="code"> <input type="submit" v-model="sendMessage" :disabled='disabled' id="send" @click="sendCaptcha"></p>
                             <div class="error_div"><span class="error" v-show="error.code1">*短信验证码错误</span></div>
+                            <p><input type="password" id="psw" placeholder="请输入密码" v-model="password"> </p>
+                            <div class="error_div"><span class="error" v-show="error.password1">*请输入格式正确的密码（6-16位字母、数字和下划线）</span></div>
+                            <p><input type="password" id="repsw" placeholder="请再次输入密码" v-model="repassword"> </p>
+                            <div class="error_div"><span class="error" v-show="error.repassword1">*两次密码不一致</span></div>
                             <div class="checked_div">
                                 <input type="checkbox" id="checkbox" v-model="checked"> 同意并接受
                                 <a href="/system/glhProtocol" class="" target="_blank">图灵用户协议</a>
@@ -43,13 +43,17 @@
                 phone: '',
                 img_code: '',
                 code:'',
+                password:'',
+                repassword:'',
                 disabled: false,
                 sendMessage: '发送短信验证码',
                 checked:false,
                 error: {
                     phone1:false,
                     img_code1:false,
-                    code1:false
+                    code1:false,
+                    password1:false,
+                    repassword1:false
                 }
             }
         },
@@ -214,22 +218,6 @@ ul,ol,li{
     padding-bottom:40px;
     padding-top:20px;
 }
-.tab{
-    width:220px;
-    height:40px;
-    margin:10px auto;
-}
-.tab li{
-    display:inline-block;
-    width:100px;
-    text-align:center;
-    line-height:40px;
-    font-size:16px;
-    cursor:pointer;
-}
-.tab li.active{
-   color:#3175d1;
-}
 /*手机用户注册*/
 .phone-register{
     
@@ -275,7 +263,7 @@ ul,ol,li{
     vertical-align:-10px;
     display:inline-block;
 }
-#messageCode,#nickname,#psw1,#psw{
+#messageCode,#nickname,#repsw,#psw{
     display: inline-block;
     height: 40px;
     line-height: 40px;
@@ -344,7 +332,7 @@ ul,ol,li{
     border-radius:20px;
     background:#fff;
 }
-#email,#nickname,#psw1,#psw,#submit{
+#email,#nickname,#repsw,#psw,#submit{
     line-height: 38px;
     height: 38px;
     width: 100%;

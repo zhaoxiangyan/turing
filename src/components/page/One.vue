@@ -25,7 +25,7 @@
 </template>
 			  </el-col>
 			</el-row>  
-		    <form @submit.prevent="uploadUserPDF" v-if="radio == 0">	 		
+		    <form  @submit.prevent="uploadUserPDF" v-if="radio == 0">	 		
 			<p>*请上传签约后的pdf文件</p>
 			<el-row class="li" :gutter="30">
 			  <el-col  :xs="24" :sm="24" :md="24" :lg="24">
@@ -91,15 +91,20 @@
 </template>
 			  </el-col>			 
 			</el-row>
-			<form  @submit.prevent="uploadDebitPDF" v-if="radio1 == 0">
+			<form   @submit.prevent="uploadDebitPDF" v-if="radio1 == 0">
      		<p>*请上传签约后的pdf文件</p>
 			<el-row class="li" :gutter="30">
-			  <el-col  :xs="24" :sm="24" :md="24" :lg="24">
+			  <el-col  :span="24">
 				<div class="file_box">
 				<input type="file" id="debit_file" accept="application/pdf"  @change="uploadDebit()"  name="withholdPdf">
 				<span class="mask user_mask">{{debit}}</span>
 				</div>
-			   </el-col>
+			   </el-col>  
+               <el-col :span="24" class="mt4_box">
+			        <p>协议关联的MT4账号：</p>
+					<input class="mt4_input" type="text" v-for="account in accounts" v-model="account.value" placeholder="请输入协议相关联的MT4账号">
+					<br/><i  @click="addMT4">新增</i><i  @click="removeMT4">删除</i>
+			   </el-col>	
 			   <el-col :xs="24" :sm="24" :md="24" :lg="24">
 				<input type="submit" value="提交">
 				<em class="error" v-show="error.debit">{{error.debit_text}}</em>
@@ -125,6 +130,11 @@
 			  <br/>
 			  <img id="debit_img2">
 			  </el-col>
+			  <el-col :span="24" class="mt4_box">
+			        <p>协议关联的MT4账号：</p>
+					<input class="mt4_input" type="text" v-for="account in accounts" v-model="account.value" placeholder="请输入协议相关联的MT4账号">
+					<br/><i  @click="addMT4">新增</i><i  @click="removeMT4">删除</i>
+		  	  </el-col>	
 			  <el-col  :xs="24" :sm="24" :md="24" :lg="24">
 			  <input type="submit" value="提交">
 			  <em class="error" v-show="error.debit1">{{error.debit_text1}}</em>
@@ -175,7 +185,12 @@
 			//  扣款协议img
             debit1:false,
 			debit_text1:'协议上传错误'
-		 }
+		 },
+		//  添加MT4账号
+		accounts:[
+			{value:''}
+		]
+		
       };
     },
     methods: {
@@ -408,7 +423,21 @@
 					alert("AJAX失败");
 				});
 			}
-	    }
+	    },
+		// 添加MT4账号
+        addMT4(){
+			var self = this;
+			self.accounts.push({
+				value:''
+			})
+		},
+		removeMT4(){
+			var self = this;
+			var index = self.accounts.length-1;
+			if(index !== 0){
+			 self.accounts.splice(index,1)
+			}
+		}
     }
 }
 </script>
@@ -508,7 +537,29 @@ ul,li{
 .page_content li a.download:hover{
 
 }
-.page_content li input{
+.page_content li input.mt4_input{
+	width:200px;
+	font-size:13px;
+	text-align:left;
+	padding:0 10px;
+	margin:0 10px 10px 0;
+}
+.page_content li .mt4_box i{
+	display:inline-block;
+	width:78px;
+	text-align:center;
+	margin-right:20px;
+	height:33px;
+	line-height:33px;
+	font-style:normal;
+	border-radius:2px;
+	border:1px solid #b4b1b2;
+	vertical-align:middle;
+	cursor:pointer;
+}
+.page_content li .mt4_box i:hover{
+	color:#20a0ff;
+	border:1px solid #20a0ff;
 }
 .page_content li input[type='file']{
 	opacity:0;

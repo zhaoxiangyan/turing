@@ -47,7 +47,23 @@
 				    <span>MT4账号：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入MT4账号" :disabled="true"></el-input>
+					   <el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input v-model="password" placeholder="请输入MT4密码" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>确认MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">

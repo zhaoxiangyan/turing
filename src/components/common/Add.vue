@@ -3,7 +3,7 @@
       <div v-title>填写个人资料</div>
         <div class="box">
             <div id="add_title">
-                <span>个人资料</span>
+                <span>填写个人资料</span>
             </div>
             <div class="add_div">
                 <div class="add_box">
@@ -17,14 +17,6 @@
                             <div><span class="error" v-show="error.name1">*请输入正确的姓名</span></div>
                             <p><span class="input_title">身份证号码：</span> <input class="input_content" type="text" id="card" placeholder="请输入身份证号码" v-model="card" name="idcard"></p>
                             <div><span class="error" v-show="error.card1">*请输入正确的身份证号码</span></div>
-                            <p><span class="input_title">邮箱：</span> <input class="input_content" type="text" id="email" placeholder="请输入邮箱" v-model="email" name="email"></p>
-                            <div><span class="error" v-show="error.email1">*请输入正确的邮箱</span></div>
-                            <p><span class="input_title">MT4账号：</span> <input class="input_content" type="text" id="mt4" placeholder="请输入MT4账号" v-model="mt4" name="account"></p>
-                            <div><span class="error" v-show="error.mt41">*请输入MT4账号</span></div>
-                            <p><span class="input_title">MT4密码：</span> <input class="input_content" type="password" id="password" placeholder="请输入登录密码" v-model="password" name="password"></p>
-                            <div><span class="error" v-show="error.password1">*请输入格式正确的密码（6-16位字母、数字和下划线）</span></div>
-                            <p><span class="input_title">确认MT4密码：</span> <input class="input_content" type="password" id="repassword" placeholder="请再次输入登录密码" v-model="repassword"></p>
-                            <div><span class="error" v-show="error.repassword1">*两次密码不一致</span></div>
                             <p class="file_box">
                                <span class="input_title">身份证正面：</span>
                                <a href="javascript:void(0)">{{file_name1}}</a>
@@ -49,7 +41,7 @@
                                 <input type="checkbox" id="checkbox" v-model="checked"> 同意并接受
                                 <a href="/system/glhProtocol" class="" target="_blank">图灵用户协议</a>
                             </div>
-                            <div class="phone-submit">
+                            <div class="confirm-submit">
                                 <input type="submit" id="submit" value="确认提交" v-if="checked" >
                                 <input type="submit" id="submit" disabled="disabled" value="确认提交" v-else>
                             </div>
@@ -68,10 +60,6 @@
             return {
                 name: '',
                 card: '',
-                mt4: '',
-                email: '',
-                password: '',
-                repassword: '',
                 file_name1:'点击选择图片上传',
                 file1: false,
                 file_name2:'点击选择图片上传',
@@ -80,34 +68,32 @@
                 error: {
                     name1:false,
                     card1:false,
-                    mt41:false,
-                    email1:false,
-                    password1:false,
-                    repassword1:false,
                     file11:false,
                     file21:false
                 }
             }
         },
         mounted: function () {
-               var self = this;
-               self.$http({
-                        method: 'post',
-                        url: '/turingcloud/checkUserStatus'
-                        // headers: { "Content-Type": "multipart/form-data;charset=UTF-8"},
-                        // headers: { 'Content-Type': 'application/json;charset=UTF-8'},
-                    }).then(function(res){
-                        if(res.data == '0'){
-                            console.log('用户已注册，请填写资料');
-                        }else if(res.data == '1'){
-                            alert('请先注册手机号码');
-                            self.$router.push('/system/register');
-                        }else{
-                            alert('Error');
-                        }
-                    }).catch(function(err){
-                       alert("AJAX失败");
-                    }); 
+            // 线上代码begin
+            //    var self = this;
+            //    self.$http({
+            //             method: 'post',
+            //             url: '/turingcloud/checkUserStatus'
+            //             // headers: { "Content-Type": "multipart/form-data;charset=UTF-8"},
+            //             // headers: { 'Content-Type': 'application/json;charset=UTF-8'},
+            //         }).then(function(res){
+            //             if(res.data == '0'){
+            //                 console.log('用户已注册，请填写资料');
+            //             }else if(res.data == '1'){
+            //                 alert('请先注册手机号码');
+            //                 self.$router.push('/system/register');
+            //             }else{
+            //                 alert('Error');
+            //             }
+            //         }).catch(function(err){
+            //            alert("AJAX失败");
+            //         }); 
+            // 线上代码end        
         },
         watch:{
             name:function(){
@@ -126,40 +112,6 @@
                      self.error.card1 = true;
                 }else{
                     self.error.card1 = false;
-                }
-            },
-            mt4:function(){
-                var self = this;
-                if(self.mt4 === ''|| self.mt4 === 'null' ){
-                     self.error.mt41 = true;
-                }else{
-                    self.error.mt41 = false;
-                }
-            },
-            email:function(){
-                var self = this;
-                var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-                if(self.email === '' || !emailReg.test(self.email)){
-                     self.error.email1 = true;
-                }else{
-                    self.error.email1 = false;
-                }
-            },
-            password:function(){
-                 var self = this;
-                 var pswReg = /^\w{6,16}$/;
-                if(self.password === '' || !pswReg.test(self.password)){
-                     self.error.password1 = true;
-                }else{
-                    self.error.password1 = false;
-                }
-            },
-            repassword:function(){
-                  var self = this;
-                if(self.password!==self.repassword){
-                     self.error.repassword1 = true;
-                }else{
-                    self.error.repassword1 = false;
                 }
             },
             file1:function(){
@@ -217,26 +169,12 @@
                 // var nameReg = /^([\u4E00-\u9FA5]{2,}+|[a-zA-Z]+)$/;
                 var nameReg = /^[\u4e00-\u9fa5]{2,4}$/;
                 var cardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-                var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-                var pswReg = /^\w{6,16}$/;
                 if(self.name === '' || !nameReg.test(self.name)){
                      self.error.name1 = true;
                      return false;
                 } else if(self.card === '' || !cardReg.test(self.card)){
                      self.error.card1 = true;
                      return false;
-                } else if(self.mt4 === ''|| self.mt4 === 'null'){
-                    self.error.mt41 = true;
-                    return false;
-                } else if (self.email === '' || !emailReg.test(self.email)) {
-                     self.error.email1 = true;
-                     return false;
-                } else if(self.password === '' || !pswReg.test(self.password)){
-                      self.error.password1 = true;
-                      return false;
-                } else if(self.password!==self.repassword){
-                      self.error.repassword1 = true;
-                      return false;
                 } else if(self.file1 == false){
                       self.error.file11 = true;
                       return false;
@@ -247,9 +185,6 @@
                     var image = new FormData();
                     image.append('username',self.name);
                     image.append('idcard',self.card);
-                    image.append('account',self.mt4);
-                    image.append('email',self.email);
-                    image.append('password',self.password);
                     image.append('idcardPic',document.getElementById("file1").files[0]);
                     image.append('idcardPic',document.getElementById("file2").files[0]);
                     self.$http({
@@ -282,8 +217,8 @@
 </script>
 <!-- scoped  样式只对当前组件起作用 -->
 <style scoped>
- * {
-      box-sizing: border-box;
+*{
+    box-sizing: border-box;
 }
 ul,ol,li{
     list-style:none;
@@ -331,22 +266,6 @@ ul,ol,li{
     /*min-height:370px;*/
     margin:0 auto;
     padding:20px 0;
-}
-.tab{
-    width:220px;
-    height:40px;
-    margin:10px auto;
-}
-.tab li{
-    display:inline-block;
-    width:100px;
-    text-align:center;
-    line-height:40px;
-    font-size:16px;
-    cursor:pointer;
-}
-.tab li.active{
-   color:#3175d1;
 }
 /*手机用户注册*/
 .add_personal{
@@ -422,7 +341,7 @@ span.tips{
     color:#3175d1;
     font-size:14px;
 }
-.phone-submit{
+.confirm-submit{
     width:100%;
 }
 #submit{
