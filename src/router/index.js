@@ -74,7 +74,7 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: resolve => require(['../components/admin/page/One.vue'], resolve)
+          component: resolve => require(['../components/admin/page/Four.vue'], resolve)
         },
         {
           path: '/system/admin/one',

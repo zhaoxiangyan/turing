@@ -1,5 +1,5 @@
 <template>
-	<div class="four">
+	<div class="Four">
 	<div v-title>我的交易信息</div>
 	    <div class="page_title">
 		    <span><i class="el-icon-edit"></i>我的交易信息</span>
@@ -11,23 +11,35 @@
         <div class="page_content">
 <template>
   <el-table
-    :data="tableData2"
+    :data="tableData"
     style="width: 100%"
-    border
     :row-class-name="tableRowClassName">
     <el-table-column
       prop="date"
       label="日期"
-      width="180">
+      width="150">
     </el-table-column>
     <el-table-column
-      prop="name"
-      label="姓名"
-      width="180">
+      prop="platform"
+      label="使用的平台"
+      width="150">
     </el-table-column>
     <el-table-column
-      prop="address"
-      label="地址">
+      prop="account"
+      label="MT4账号">
+    </el-table-column>
+		<el-table-column
+      prop="capital"
+      label="投资资金（单位：美元）"
+			width="190">
+    </el-table-column>
+		<el-table-column
+      prop="model"
+      label="挂机模式">
+    </el-table-column>
+		<el-table-column
+      prop="retracement"
+      label="最大回撤">
     </el-table-column>
     <el-table-column
       label="操作"
@@ -37,11 +49,13 @@
       </template>
     </el-table-column>
   </el-table>
-</template>         
+</template>  
+<p class="state_tips">One<span class="one"></span>Two<span class="two"></span>Three<span class="three"></span>Four<span class="four"></span></p>
         </div>
         <!--编辑交易配置页面begin-->
+		<el-dialog title="交易配置" :visible.sync="dialogFormVisible">
 		<el-row class="edit_content">
-			    <el-row class="li">
+			    <!--<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5"  class="li_left">
 				    <span>三方合作协议：</span>
 				  </el-col>
@@ -56,7 +70,7 @@
 				  <el-col :span="16" class="li_right">
 				     	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>您已签约委托扣款协议</a>
                  </el-col>
-				</el-row>	
+				</el-row>	-->
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>使用的平台：</span>
@@ -165,10 +179,16 @@
                   </el-col>
 				</el-row>
 		</el-row>
+		<div slot="footer" class="dialog-footer">
+		  <el-button type="primary" @click="dialogFormVisible = false">提交修改</el-button>
+			<el-button type="success" @click="stop">停止挂机</el-button>
+			<el-button type="danger" @click="delete_setting">删除</el-button>
+			<el-button @click="dialogFormVisible = false">取 消</el-button>
+    </div>
+		</el-dialog>
         <!--编辑交易配置页面end-->
 		<div class="page_footer">
 		   <span>交易有风险，入市须谨慎！</span>
-			 <a href="javascript:void(0)">提交</a>
 		</div>
 	</div>	
 </template>
@@ -215,45 +235,93 @@
 		// 最大回撤选择
 		switch3:false,
 		input5: '',
-        // 表格数据
-        tableData2: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
+		// 表格数据
+		tableData: [{
+			id:'1',
+			date: '2016-05-02',
+			platform: 'GQ-capital',
+			account: '20171105',
+			capital: '5000',
+			model: '成长型',
+			retracement: '35%',
+			state:'1'
+		}, {
+			id:'2',
+			date: '2016-05-02',
+			platform: 'GQ-capital',
+			account: '20171105',
+			capital: '5000',
+			model: '成长型',
+			retracement: '35%',
+			state:'2'
+		}, {
+			id:'3',
+			date: '2016-05-02',
+			platform: 'GQ-capital',
+			account: '20171105',
+			capital: '5000',
+			model: '成长型',
+			retracement: '35%',
+			state:'3'
+		}, {
+			id:'4',
+			date: '2016-05-02',
+			platform: 'GQ-capital',
+			account: '20171105',
+			capital: '5000',
+			model: '成长型',
+			retracement: '35%',
+			state:'4'
+		}],
+		dialogFormVisible: false
       };
     },
     methods: {
         // 获取数据状态，类名表格
-	    tableRowClassName(row, index) {
-            if (index === 1) {
-                return 'info-row';
-            } else if (index === 3) {
-                return 'positive-row';
-            }
-            return '';
+	      tableRowClassName(row, index) {
+						if(row.state == '1'){
+							return 'one-row';
+						}else if(row.state == '2'){
+							return 'two-row';
+						}else if(row.state == '3'){
+							return 'three-row';
+						}else if(row.state == '4'){
+							return 'four-row';
+						}
         },
         // 表格编辑按钮
         handleEdit(index, row) {
+					 var self = this;
            console.log(index, row);
+					 self.dialogFormVisible = true;
         },
+				// 删除交易配置
+				delete_setting() {
+        this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '等待后台删除!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      },
+			// 提交停止挂机
+			stop(){
+				alert('停止挂机');
+			}
     }
 }
 </script>
 <style scoped>
-.four{
+.Four{
 	/*position:relative;*/
 	/*min-height:100%;*/
 	height:auto;
@@ -288,10 +356,36 @@
 	display:inline-block;
 	float:right;
 }
+.page_content{}
+.page_content .state_tips{
+	height:30px;
+	line-height:30px;
+	text-align:left;
+	padding-left:30px;
+}
+.page_content .state_tips span{
+ 	display:inline-block;
+	width:50px;
+	height:22px;
+	border-radius:12px;
+	vertical-align:middle;
+	margin:0 30px 0 10px;
+}
+.page_content .state_tips .one{
+	background: #c9e5f5;
+}
+.page_content .state_tips .two{
+	background: #e2f0e4;
+}
+.page_content .state_tips .three{
+  background:#dee4f7;
+}
+.page_content .state_tips .four{
+  background:#f7dada;
+}
 /*编辑交易配置页面begin*/
 .edit_content{
-  display:none;
-  padding-bottom:35px;
+  /*padding-bottom:35px;*/
 }
 .edit_content  .li{
 	margin-top:35px;
@@ -373,18 +467,7 @@
   height: 55px;
   line-height: 55px;
 }
-.page_footer a{
-	float:right;
-	display:inline-block;
-	width:80px;
-	height:35px;
-	margin-top:10px;
-	background:#21b548;
-	color:#fff;
-	text-align:center;
-	line-height:35px;
-	border-radius:4px;
-}
+
 
 /*修改样式*/
 .el-radio+.el-radio{

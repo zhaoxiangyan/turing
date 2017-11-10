@@ -9,9 +9,8 @@
 	    	</el-breadcrumb>
 		</div>	
 		<el-row class="page_content">
-			<el-col :xs="24" :sm="24" :md="24" :lg="11">
 			    <el-row class="li">
-				  <el-col :span="8"  class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5"  class="li_left">
 				    <span>三方合作协议：</span>
 				  </el-col>
 				  <el-col :span="16"  class="li_right">
@@ -19,7 +18,7 @@
           </el-col>
 				</el-row>
 				<el-row class="li">
-				  <el-col :span="8" class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>委托扣款协议：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
@@ -27,7 +26,7 @@
           </el-col>
 				</el-row>	
 				<el-row class="li">
-				  <el-col :span="8" class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>使用的平台：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right platform select100">
@@ -44,25 +43,63 @@
           </el-col>
 				</el-row>	
 				<el-row class="li">
-				  <el-col :span="8" class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>MT4账号：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input type="password" v-model="password" placeholder="请输入MT4密码" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>确认MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>修改MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right radio35">
+				    	<el-switch on-text="" off-text="" v-model="switch1" :width="80"></el-switch>
+          </el-col>
+				</el-row>
+				<el-row class="li" v-show="switch1">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>新的MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input type="password" v-model="password1" placeholder="请输入新的MT4密码" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li" v-show="switch1">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>确认新的MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input type="password" v-model="repassword1" placeholder="请再次输入新的MT4密码" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>账户投资资金：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 					   <el-input v-model="input1" placeholder="请输入投资金额（单位：美元）"></el-input>
           </el-col>
 				</el-row>	
-				<el-row class="li">
-				  <el-col :span="8" class="li_left">
-				    <span>MT4账号编号：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入MT4账号"></el-input>
-          </el-col>
-				</el-row>	
-			</el-col>
-			<el-col :xs="24" :sm="24" :md="24" :lg="13">
 			    <el-row class="li">
-				  <el-col :span="8" class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>使用挂机模式：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right select100">
@@ -79,55 +116,22 @@
           </el-col>
 				</el-row>
 				<el-row class="li">
-				  <el-col :span="8" class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>同意挂机费用：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					    <template>
-								<el-radio class="radio" v-model="radio" label="1">同意</el-radio>
-								<el-radio class="radio" v-model="radio" label="2">不同意</el-radio>
-					  	</template>
+					<el-switch  v-model="switch2"  on-text="同意"  off-text="不同意" :width='80'></el-switch>
           </el-col>
 				</el-row>
 				<el-row class="li">
-				  <el-col :span="8" class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>最大回撤选择：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35 small_text">
-					    <template>
-								<el-radio class="radio" v-model="radio2" label="1">35%</el-radio>
-								<el-radio class="radio" v-model="radio2" label="2">自定义</el-radio>
-					  	</template>
-					  	<el-input v-model="input5" placeholder="自定义预警"></el-input>
+					<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>
+					  	<el-input v-model="input5" placeholder="自定义回撤百分比" v-show="switch3"></el-input>
           </el-col>
 				</el-row>
-				<el-row class="li">
-				  <el-col :span="8" class="li_left">
-				    <span>MT4账户密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right text100">
-				     	<el-input type="password" v-model="password" auto-complete="off" placeholder="请输入MT4账号密码"></el-input>
-          </el-col>
-				</el-row>
-				<el-row class="li">
-				  <el-col :span="8" class="li_left">
-				    <span>确认MT4账户密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right text100">
-				    	<el-input type="password" v-model="repassword" auto-complete="off" placeholder="请再次输入MT4账号密码"></el-input>
-          </el-col>
-				</el-row>
-			</el-col>
-			<el-col :span="24" class="table">
-			   <el-row>
-				   <el-col :span="12">6个月</el-col>
-					 <el-col :span="12"><span>1860.76</span>美金~<span>2040.82</span>美金</el-col>
-				 </el-row>
-				 <el-row>
-				   <el-col :span="12">12个月</el-col>
-					 <el-col :span="12"><span>3720.72</span>美金~<span>4080.97</span>美金</el-col>
-				 </el-row>
-			</el-col>
 		</el-row>
 		<div class="page_footer">
 		   <span>交易有风险，入市须谨慎！</span>
@@ -143,21 +147,20 @@
 		input1: '',
 		// 使用的平台select
 		options1: [{
-          value1: '选项1',
-          label1: 'MetaQuotes-Demo'
-        }, {
-          value1: '选项2',
-          label1: 'MetaQuotes-Demo'
-        }, {
-          value1: '选项3',
-          label1: 'MetaQuotes-Demo'
-        }, {
-          value1: '选项4',
-          label1: 'MetaQuotes-Demo'
+          value1: '1',
+          label1: 'GQ-capital'
         }],
-        value1: '',
+    value1: '',
 		// MT4账号
 		input2: '',
+		// MT4密码
+		password:'',
+		repassword:'',
+		// 是否修改MT4密码
+		switch1:false,
+		// 新的MT4密码
+		password1:'',
+		repassword1:'',
 		// 使用挂机模式
 		options3: [{
           value3: '选项1',
@@ -172,16 +175,12 @@
           value3: '选项4',
           label3: '综合尊享型'
         }],
-        value3: '',
+    value3: '',
 		// 同意挂机费用
-		radio: '1',
+		switch2:false,
 		// 最大回撤选择
-		radio2: '1',
-		input5: '',
-		// 账户密码
-		password: '',
-		// 确认密码
-		repassword:''
+		switch3:false,
+		input5: ''
       };
     },
     methods: {
@@ -227,7 +226,7 @@
 }
 
 .page_content{
-
+  padding-bottom:35px;
 }
 .page_content  .li{
 	margin-top:35px;
@@ -296,21 +295,6 @@
 	width:40%;
 }
 
-.table{
-	margin:30px 0px;
-	padding:0 10px;
-}
-.table .el-row{
-	background:#f9f9f9;
-}
-.table .el-row .el-col{
-	height:50px;
-	line-height:50px;
-	border:1px solid #f4f4f4;
-}
-.table .el-row .el-col span{
-	color:#dd4b39;
-}
 
 
 .page_footer{

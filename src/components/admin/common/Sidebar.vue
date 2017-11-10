@@ -38,17 +38,17 @@
            return {
               Item: [
                     {
-                        menu:"主页",
+                        menu:"管理用户交易信息",
                         iconclassname:"el-icon-date",
                         url:"home"
                     },
                     {
-                        menu:"签约协议",
+                        menu:"管理用户签约协议",
                         iconclassname:"el-icon-edit",
                         url:"one"
                     },
                     {
-                        menu:"账户交易配置",
+                        menu:"管理用户信息",
                         iconclassname:"el-icon-setting",
                         url:"two"
                     },

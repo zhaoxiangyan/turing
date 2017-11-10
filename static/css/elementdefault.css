@@ -25,12 +25,27 @@
 
 /* four */
 /*element table表格状态类名颜色*/
-.el-table .info-row {
+.el-table .one-row {
     background: #c9e5f5;
 }
-.el-table .positive-row {
+.el-table .two-row {
     background: #e2f0e4;
+}
+.el-table .three-row{
+    background:#dee4f7;
+}
+.el-table .four-row{
+    background:#f7dada;
 }
 .el-table th>.cell{
     text-align:center;
+}
+
+/* admin/four */
+.el-select.search .el-input{
+	width:120px;
+}
+/* 分页 */
+.page_content .state_tips ul.el-pager{
+	line-height:28px;
 }
