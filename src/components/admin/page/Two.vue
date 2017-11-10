@@ -1,190 +1,323 @@
 <template>
 	<div class="two">
-	<div v-title>账户交易配置</div>
-	  <div class="page_title">
-		    <span><i class="el-icon-edit"></i>账户交易配置</span>
+	<div v-title>管理用户个人信息</div>
+	    <div class="page_title">
+		    <span><i class="el-icon-edit"></i>用户个人信息</span>
 		    <el-breadcrumb separator="/">
-				<el-breadcrumb-item :to="{path:'/home'}">首页</el-breadcrumb-item>
-				<el-breadcrumb-item>账户交易配置</el-breadcrumb-item>
+				<el-breadcrumb-item :to="{path:'/system/admin/home'}">首页</el-breadcrumb-item>
+				<el-breadcrumb-item>用户个人信息</el-breadcrumb-item>
 	    	</el-breadcrumb>
 		</div>	
-		<el-row class="page_content">
-			    <el-row class="li">
+        <div class="page_content">
+<!--用户查询-->
+<el-input placeholder="请输入内容" v-model="input6">
+    <el-select v-model="select" slot="prepend" placeholder="请选择" class="search">
+		  <el-option label="所有"   value="0"></el-option>
+      <el-option label="用户姓名" value="1"></el-option>
+      <el-option label="手机号码" value="2"></el-option>
+    </el-select>
+    <el-button slot="append" icon="search"></el-button>
+</el-input>
+<!--个人信息表格table-->
+<template>
+  <el-table
+    :data="tableData"
+    style="width: 100%"
+    :row-class-name="tableRowClassName">
+    <el-table-column
+      prop="date"
+      label="最后登录时间">
+    </el-table-column>
+		<el-table-column
+		  prop="name"
+			label="真实姓名">
+		</el-table-column>
+		<el-table-column
+		  prop="phone"
+			label="手机号码">
+		</el-table-column>
+    <el-table-column
+      prop="email"
+      label="邮箱">
+    </el-table-column>
+    <el-table-column
+      prop="card"
+      label="身份证号码">
+    </el-table-column>		
+		<el-table-column
+      prop="address"
+      label="居住地址">
+    </el-table-column>
+		<el-table-column
+      prop="state_text"
+      label="是否处理"
+      width="150"
+      :filters="[{ text: '未处理', value: '未处理' }, { text: '已处理', value: '已处理' }]"
+      :filter-method="filterTag"
+      filter-placement="bottom-end">
+      <template slot-scope="scope">
+        <el-tag
+          :type="scope.row.state_text === '未处理' ? 'primary' : 'success'"
+          close-transition>{{scope.row.state_text}}</el-tag>
+      </template>
+    </el-table-column>
+    <el-table-column
+      label="操作"
+      width="100">
+      <template slot-scope="scope">
+       <el-button type="text" size="small"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+      </template>
+    </el-table-column>
+  </el-table>
+</template>
+<!--个人信息状态指示色-->
+<p class="state_tips">
+      审核通过，可登录<span class="one"></span>
+			审核不通过，还需提交个人资料<span class="two"></span>
+			Three<span class="three"></span>
+			Four<span class="four"></span>
+<el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage"
+      :page-sizes="[10, 20, 50, 100]"
+      :page-size="10"
+      layout="total, sizes, prev, pager, next"
+      :total="110">
+</el-pagination>
+</p>
+        </div>
+        <!--管理用户个人信息编辑页面begin-->
+		<el-dialog title="个人信息" :visible.sync="dialogFormVisible">
+		<el-row class="edit_content">
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>真实姓名：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input v-model="name" placeholder="用户真实姓名" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>手机号码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input v-model="phone" placeholder="用户手机号码" ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>性别：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right  radio35">
+					   <el-switch on-text="男" off-text="女" off-color="#ff4949" v-model="sex" :width="80" ></el-switch>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>身份证号码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input v-model="card" placeholder="用户身份证号码"  ></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5"  class="li_left">
-				    <span>三方合作协议：</span>
+				    <span>身份证正面：</span>
 				  </el-col>
 				  <el-col :span="16"  class="li_right">
-				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>您已签约三方合作协议</a>
+				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>身份证正面照</a>
           </el-col>
 				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>委托扣款协议：</span>
+				    <span>身份证反面：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-				     	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>您已签约委托扣款协议</a>
+				     	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>身份证反面照</a>
           </el-col>
-				</el-row>	
+				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>使用的平台：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right platform select100">
-					    <template>
-								<el-select v-model="value1" placeholder="请选择">
-									<el-option
-									v-for="item in options1"
-									:key="item.value1"
-									:label="item.label1"
-									:value="item.value1">
-									</el-option>
-								</el-select>
-					  	</template>
-          </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>MT4账号：</span>
+				    <span>邮箱：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
+					   <el-input v-model="email" placeholder="请输入邮箱" ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>MT4密码：</span>
+				    <span>居住地址：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input type="password" v-model="password" placeholder="请输入MT4密码" ></el-input>
+					   <el-input type="text" v-model="address" placeholder="如：广东深圳"  ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>确认MT4密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
-          </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>修改MT4密码：</span>
+				    <span>用户审核：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-				    	<el-switch on-text="" off-text="" v-model="switch1" :width="80"></el-switch>
-          </el-col>
-				</el-row>
-				<el-row class="li" v-show="switch1">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>新的MT4密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input type="password" v-model="password1" placeholder="请输入新的MT4密码" ></el-input>
-          </el-col>
-				</el-row>	
-				<el-row class="li" v-show="switch1">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>确认新的MT4密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input type="password" v-model="repassword1" placeholder="请再次输入新的MT4密码" ></el-input>
-          </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>账户投资资金：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input1" placeholder="请输入投资金额（单位：美元）"></el-input>
-          </el-col>
-				</el-row>	
-			    <el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>使用挂机模式：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right select100">
-					    <template>
-								<el-select v-model="value3" placeholder="请选择">
-									<el-option
-									v-for="item in options3"
-									:key="item.value3"
-									:label="item.label3"
-									:value="item.value3">
-									</el-option>
-								</el-select>
-					  	</template>
+					<el-switch  v-model="examine"  on-text="通过"  off-text="不通过" :width='80'></el-switch>
           </el-col>
 				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>同意挂机费用：</span>
+				    <span>是否发送信息：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch2"  on-text="同意"  off-text="不同意" :width='80'></el-switch>
+					<el-switch  v-model="switch6"  on-text="发送"  off-text="不发送" :width='80'></el-switch>
+          </el-col>
+				</el-row>
+				<el-row class="li textarea_box" v-show="switch6" >
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>反馈信息：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right textarea_div" >
+					  <el-input type="textarea" v-model="value2"></el-input>
           </el-col>
 				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>最大回撤选择：</span>
+				    <span>是否处理：</span>
 				  </el-col>
-				  <el-col :span="16" class="li_right radio35 small_text">
-					<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比" v-show="switch3"></el-input>
+				  <el-col :span="16" class="li_right radio35">
+					<el-switch  v-model="switch4"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
           </el-col>
 				</el-row>
 		</el-row>
+		<div slot="footer" class="dialog-footer">
+		  <el-button type="primary" @click="dialogFormVisible = false">提交修改</el-button>
+			<!--<el-button type="success" @click="stop">停止挂机</el-button>-->
+			<el-button type="danger" @click="delete_setting">删除</el-button>
+			<el-button @click="dialogFormVisible = false">取 消</el-button>
+    </div>
+		</el-dialog>
+        <!--编辑交易配置页面end-->
 		<div class="page_footer">
 		   <span>交易有风险，入市须谨慎！</span>
-			 <a href="javascript:void(0)">提交</a>
 		</div>
 	</div>	
 </template>
 <script>
  export default {
+    name: 'Four',
     data() {
       return {
-		//   账户投资资金select
-		input1: '',
-		// 使用的平台select
-		options1: [{
-          value1: '1',
-          label1: 'GQ-capital'
-        }],
-    value1: '',
-		// MT4账号
-		input2: '',
-		// MT4密码
-		password:'',
-		repassword:'',
-		// 是否修改MT4密码
-		switch1:false,
-		// 新的MT4密码
-		password1:'',
-		repassword1:'',
-		// 使用挂机模式
-		options3: [{
-          value3: '选项1',
-          label3: '成长型'
-        }, {
-          value3: '选项2',
-          label3: '宏利先锋型'
-        }, {
-          value3: '选项3',
-          label3: '趋势策略型'
-        }, {
-          value3: '选项4',
-          label3: '综合尊享型'
-        }],
-    value3: '',
-		// 同意挂机费用
-		switch2:false,
-		// 最大回撤选择
-		switch3:false,
-		input5: ''
+		name:'赵先生',
+		phone:'15112345678',
+		sex:true,
+		card:'360421199312451452',
+		// 身份证正面URL数据
+		email:'98956@qq.com',
+    address:'广东深圳',
+		// 用户账号审核
+		examine:false,
+		// 管理员是否处理
+		switch4:false,
+		// 是否发送消息
+		switch6:false,
+		// 反馈信息
+		value2:'',
+		// 搜索框
+		input6: '',
+    select: '0',
+		// 表格数据
+		tableData: [{
+			id:'1',
+			date: '2016-05-02',
+			name:'gdf',
+			phone:'15212345678',
+			email: '41546546@qq.com',
+			card: '304457188617581245',
+			address: '江西九江',
+			state:'1',
+			state_text:'已处理'
+		}, {
+			id:'2',
+			date: '2016-05-02',
+			name:'tfd',
+			phone:'15212345678',
+			email: '41546546@qq.com',
+			card: '304457188617581245',
+			address: '江西九江',
+			state:'2',
+			state_text:'未处理'
+		}, {
+			id:'3',
+			date: '2016-05-02',
+			name:'err',
+			phone:'15212345678',
+			email: '41546546@qq.com',
+			card: '304457188617581245',
+			address: '江西九江',
+			state:'3',
+			state_text:'已处理'
+		}, {
+			id:'4',
+			date: '2016-05-02',
+			name:'fss',
+			phone:'15212345678',
+			email: '41546546@qq.com',
+			card: '304457188617581245',
+			address: '江西九江',
+			state:'4',
+			state_text:'未处理'
+		}],
+		dialogFormVisible: false,
+		// 表格分页
+		currentPage:4
       };
     },
     methods: {
-	
+        // 获取数据状态，类名表格
+	      tableRowClassName(row, index) {
+						if(row.state == '1'){
+							return 'one-row';
+						}else if(row.state == '2'){
+							return 'two-row';
+						}else if(row.state == '3'){
+							return 'three-row';
+						}else if(row.state == '4'){
+							return 'four-row';
+						}
+        },
+        // 表格编辑按钮
+        handleEdit(index, row) {
+					 var self = this;
+           console.log(index, row);
+					 self.dialogFormVisible = true;
+        },
+				// 删除交易配置
+				delete_setting() {
+        this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '信息已永久删除!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      },
+			// 处理状态筛选
+			filterTag(value, row) {
+        return row.state_text === value;
+      },
+			// 分页
+			handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+      }
     }
 }
 </script>
@@ -224,17 +357,44 @@
 	display:inline-block;
 	float:right;
 }
-
-.page_content{
-  padding-bottom:35px;
+.page_content{}
+.page_content .state_tips{
+	height:34px;
+	line-height:34px;
+	text-align:left;
+	padding:0 20px;
 }
-.page_content  .li{
-	margin-top:35px;
+.page_content .state_tips span{
+ 	display:inline-block;
+	width:50px;
+	height:22px;
+	border-radius:12px;
+	vertical-align:middle;
+	margin:0 30px 0 10px;
+}
+.page_content .state_tips .one{
+	background: #c9e5f5;
+}
+.page_content .state_tips .two{
+	background: #e2f0e4;
+}
+.page_content .state_tips .three{
+  background:#dee4f7;
+}
+.page_content .state_tips .four{
+  background:#f7dada;
+}
+/*编辑交易配置页面begin*/
+.edit_content{
+  /*padding-bottom:35px;*/
+}
+.edit_content  .li{
+	margin-top:20px;
 	/*padding:0 30px;*/
 	height:35px;
 	text-align:left;
 }
-.page_content .li a.preview{
+.edit_content .li a.preview{
 	box-sizing:border-box;
 	display:inline-block;
 	width:100%;
@@ -258,10 +418,10 @@
 	float:left;
 	margin-right:10px;
 }
-.page_content .li div{
+.edit_content .li div{
 	height:35px;
 }
-.page_content .li_left{}
+.edit_content .li_left{}
 .li_left span{
 	display:block;
 	height:35px;
@@ -270,7 +430,7 @@
 	padding-right:10%;
 	font-weight:bold;
 }
-.page_content .li_right{
+.edit_content .li_right{
 	padding-right:30px;
 }
 .li_right a{}
@@ -294,7 +454,7 @@
 	float:right;
 	width:40%;
 }
-
+/*编辑交易配置页面end*/
 
 
 .page_footer{
@@ -308,18 +468,7 @@
   height: 55px;
   line-height: 55px;
 }
-.page_footer a{
-	float:right;
-	display:inline-block;
-	width:80px;
-	height:35px;
-	margin-top:10px;
-	background:#21b548;
-	color:#fff;
-	text-align:center;
-	line-height:35px;
-	border-radius:4px;
-}
+
 
 /*修改样式*/
 .el-radio+.el-radio{
@@ -328,4 +477,25 @@
 .small_text .el-input{
 	width:30%;
 }
+.el-input-group{
+	padding:0 20px;
+	margin:20px 0;
+	width:auto;
+}
+
+/*textarea样式修改*/
+.edit_content .li.textarea_box{
+	height:auto;
+}
+.edit_content .li.textarea_box div{
+	height:auto;
+}
+/*分页*/
+.el-pagination{
+	float:right;
+	height:34px;
+	padding:3px 0; 
+	box-sizing:border-box;
+}
+
 </style>

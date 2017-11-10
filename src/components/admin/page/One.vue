@@ -100,163 +100,99 @@
 </el-pagination>
 </p>
         </div>
-        <!--编辑交易配置页面begin-->
-		<el-dialog title="交易配置" :visible.sync="dialogFormVisible">
+        <!--编辑用户签约协议页面begin-->
+		<el-dialog title="签约协议" :visible.sync="dialogFormVisible">
 		<el-row class="edit_content">
-			    <!--<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5"  class="li_left">
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
+				    <span>真实姓名：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input v-model="name" placeholder="用户真实姓名" :disabled='true' ></el-input>
+                </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
+				    <span>手机号码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input v-model="phone" placeholder="用户手机号码" :disabled='true' ></el-input>
+                </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6"  class="li_left">
 				    <span>三方合作协议：</span>
 				  </el-col>
 				  <el-col :span="16"  class="li_right">
 				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>您已签约三方合作协议</a>
                   </el-col>
-				</el-row>	-->
+				</el-row>
 				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>真实姓名：</span>
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
+				    <span>合作协议是否通过：</span>
 				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input v-model="name" placeholder="用户真实姓名" :disabled='true' ></el-input>
-          </el-col>
-				</el-row>	
+				  <el-col :span="16" class="li_right radio35">
+					<el-switch  v-model="switch7"  on-text="已通过"  off-text="未通过" :width='80'></el-switch>
+                  </el-col>
+				</el-row>
 				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>手机号码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input v-model="phone" placeholder="用户手机号码" :disabled='true' ></el-input>
-          </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
 				    <span>委托扣款协议：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 				     	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>用户委托扣款协议</a>
-          </el-col>
+                  </el-col>
 				</el-row>
 				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>使用的平台：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right platform select100">
-					    <template>
-								<el-select v-model="value1" placeholder="请选择" disabled>
-									<el-option
-									v-for="item in options1"
-									:key="item.value1"
-									:label="item.label1"
-									:value="item.value1">
-									</el-option>
-								</el-select>
-					  	</template>
-          </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>MT4账号：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入MT4账号" :disabled="true"></el-input>
-          </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>MT4密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input type="text" v-model="password" placeholder="请输入MT4密码"  :disabled="true" ></el-input>
-          </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>修改MT4密码：</span>
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
+				    <span>扣款协议是否通过：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-				    	<el-switch on-text="修改" off-text="不修改" v-model="switch1" :width="80" disabled></el-switch>
-          </el-col>
-				</el-row>
-				<el-row class="li" v-show="switch1">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>新的MT4密码：</span>
+					<el-switch  v-model="switch8"  on-text="已通过"  off-text="未通过" :width='80'></el-switch>
+                  </el-col>
+				</el-row>	
+				<el-row class="li textarea_box">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
+				    <span>关联MT4账号：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input type="text" v-model="password1" placeholder="请输入新的MT4密码" :disabled="true" ></el-input>
-          </el-col>
-				</el-row>	
+					   <el-input class="mt4_input" type="text" v-for="number in numbers" v-model="number.value" :disabled="whether" placeholder="请输入协议相关联的MT4账号"></el-input>
+                 </el-col>
+				</el-row>		    
 				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>账户投资资金：</span>
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
+				    <span>操作：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input1" placeholder="请输入投资金额（单位：美元）"  :disabled="true"></el-input>
-          </el-col>
-				</el-row>	
-			    <el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>使用挂机模式：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right select100">
-					    <template>
-								<el-select v-model="value3" placeholder="请选择" disabled>
-									<el-option
-									v-for="item in options3"
-									:key="item.value3"
-									:label="item.label3"
-									:value="item.value3">
-									</el-option>
-								</el-select>
-					  	</template>
-          </el-col>
-				</el-row>
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>同意挂机费用：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch2"  on-text="同意"  off-text="不同意" :width='80' disabled></el-switch>
-          </el-col>
-				</el-row>
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>最大回撤选择：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right radio35 small_text">
-					<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' disabled ></el-switch>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比" v-show="switch3" :disabled="true"></el-input>
-          </el-col>
-				</el-row>
-				<el-row class="li" v-show="!switch5">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>停止挂机模式：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch5"  on-text="运行"  off-text="停止" :width='80' disabled></el-switch>
-          </el-col>
-				</el-row>
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+                        <el-button type="primary" @click="Locking" v-if="whether">解锁</el-button>
+						<el-button type="primary" @click="Locking" v-else>锁定</el-button>
+						<el-button  @click="addMT4" :disabled="whether">新增</el-button>
+						<el-button @click="removeMT4" :disabled="whether">删除</el-button>
+                 </el-col>
+				</el-row>		    
+				<!--<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
 				    <span>是否发送信息：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
 					<el-switch  v-model="switch6"  on-text="发送"  off-text="不发送" :width='80'></el-switch>
-          </el-col>
+                  </el-col>
 				</el-row>
 				<el-row class="li textarea_box" v-show="switch6" >
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
 				    <span>反馈信息：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right textarea_div" >
 					  <el-input type="textarea" v-model="value2"></el-input>
-          </el-col>
-				</el-row>
+                 </el-col>
+				</el-row>-->
 				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
 				    <span>是否处理：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
 					<el-switch  v-model="switch4"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
-          </el-col>
+                  </el-col>
 				</el-row>
 		</el-row>
 		<div slot="footer" class="dialog-footer">
@@ -323,9 +259,20 @@
 		switch6:false,
 		// 反馈信息
 		value2:'',
+		// 协议是否通过
+		switch7:false,
+		switch8:false,
+		// 管理关联MT4账号
+		//  添加MT4账号
+		numbers:[
+			{value:''}
+		],
+		// 管理MT4账号操作
+		// 关联MT4账号是否可编辑
+		whether:true,
 		// 搜索框
 		input6: '',
-    select: '0',
+        select: '0',
 		// 表格数据
 		tableData: [{
 			id:'1',
@@ -345,7 +292,7 @@
 			accounts:[123,456,789],
 			debit:'已通过',
 			user:'未通过',
-			state:'1',
+			state:'2',
 			state_text:'未处理'
 		}, {
 			id:'3',
@@ -355,7 +302,7 @@
 			accounts:[123,456,789],
 			debit:'已通过',
 			user:'未通过',
-			state:'1',
+			state:'3',
 			state_text:'已处理'
 		}, {
 			id:'4',
@@ -365,7 +312,7 @@
 			accounts:[123,456,789],
 			debit:'已通过',
 			user:'未通过',
-			state:'1',
+			state:'4',
 			state_text:'未处理'
 		}],
 		dialogFormVisible: false,
@@ -423,7 +370,7 @@
             message: '已取消删除'
           });          
         });
-      },
+        },
 	  filterTag(value, row) {
         return row.state_text === value;
       },
@@ -433,7 +380,24 @@
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-      }
+      },
+		// 添加MT4账号
+	  Locking(){
+          this.whether = !this.whether;
+	  },
+	  addMT4(){
+		var self = this;
+		self.numbers.push({
+			value:''
+		})
+      },
+	  removeMT4(){
+		var self = this;
+		var index = self.numbers.length-1;
+		if(index !== 0){
+			self.numbers.splice(index,1)
+		}
+	  }
     }
 }
 </script>
