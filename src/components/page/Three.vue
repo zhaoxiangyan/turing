@@ -86,14 +86,14 @@
           </el-col>
 		</el-row>
         <div class="page_footer">
-		      <a href="javascript:void(0)">修改密码</a>
-			 <a href="javascript:void(0)" class="fr">保存修改</a>
+		      <a href="javascript:void(0)"  @click="dialogFormVisible2 = true" >修改密码</a>
+			    <!--<a href="javascript:void(0)" class="fr">保存修改</a>-->
 		</div>
 <!--修改邮箱模态框-->
 <el-dialog title="修改用户邮箱" :visible.sync="dialogFormVisible">
   <el-form :model="form">
     <el-form-item label="原邮箱：" :label-width="formLabelWidth">
-      <el-input v-model="form.name"  placeholder="请输入旧的邮箱地址"></el-input>
+      <el-input v-model="form.oldemail"  placeholder="请输入旧的邮箱地址"></el-input>
     </el-form-item>
     <el-form-item label="是否收到邮件：" :label-width="formLabelWidth">
       <template>
@@ -103,7 +103,7 @@
       <el-button  type="text">发送邮件至原邮箱</el-button>
     </el-form-item>
     <el-form-item label="新邮箱：" :label-width="formLabelWidth">
-      <el-input v-model="form.region"  placeholder="请输入新的邮箱地址"></el-input>
+      <el-input v-model="form.newemail"  placeholder="请输入新的邮箱地址"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -115,19 +115,37 @@
 <el-dialog title="修改手机号码" :visible.sync="dialogFormVisible1">
   <el-form :model="form1">
     <el-form-item label="旧的手机号码：" :label-width="formLabelWidth1">
-      <el-input v-model="form1.name" placeholder="请输入旧的手机号码" ></el-input>
+      <el-input v-model="form1.oldphone" placeholder="请输入旧的手机号码" ></el-input>
     </el-form-item>
-    <el-form-item label="短信验证码：" :label-width="formLabelWidth">
+    <el-form-item label="短信验证码：" :label-width="formLabelWidth1">
       <el-input class="code_box"  v-model="form1.code" placeholder="请输入短信验证码"></el-input>
       <el-button  type="text">发送短信验证码至原手机号码</el-button>
     </el-form-item>
     <el-form-item label="新的手机号码：" :label-width="formLabelWidth1">
-      <el-input v-model="form1.region" placeholder="请输入新的手机号码" ></el-input>    
+      <el-input v-model="form1.newphone" placeholder="请输入新的手机号码" ></el-input>    
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogFormVisible1 = false">取 消</el-button>
     <el-button type="primary" @click="dialogFormVisible1 = false">确 定</el-button>
+  </div>
+</el-dialog>
+<!--修改密码模态框-->
+<el-dialog title="修改登录密码" :visible.sync="dialogFormVisible2">
+  <el-form :model="form2">
+    <el-form-item label="旧的登录密码：" :label-width="formLabelWidth2">
+      <el-input v-model="form2.oldpassword" placeholder="请输入旧的登录密码"  type="password"></el-input>
+    </el-form-item>
+    <el-form-item label="新的登录密码：" :label-width="formLabelWidth2">
+      <el-input   v-model="form2.newpassword" placeholder="请输入新的登录密码" type="password"></el-input>
+    </el-form-item>
+    <el-form-item label="确认登录密码：" :label-width="formLabelWidth2">
+      <el-input v-model="form2.repassword" placeholder="请再次输入新的登录密码" type="password"></el-input>    
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisible2 = false">取 消</el-button>
+    <el-button type="primary" @click="dialogFormVisible2 = false">确 定</el-button>
   </div>
 </el-dialog>
 	</div>	
@@ -147,31 +165,27 @@
         // 修改邮箱模态框
         dialogFormVisible: false,
         form: {
-          name: '',
+          oldemail: '',
           radio: '1',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          newemail: ''
         },
         formLabelWidth: '120px',
         // 修改手机号码模态框
         dialogFormVisible1: false,
         form1: {
-          name: '',
+          oldphone: '',
           code: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
+          newphone: ''
         },
         formLabelWidth1: '120px',
+        // 修改密码模态框
+        dialogFormVisible2: false,
+        form2: {
+          oldpassword:'',
+          newpassword:'',
+          repassword:''
+        },
+        formLabelWidth2: '120px',
         // 确定修改居住地址
         visible2: false
       }

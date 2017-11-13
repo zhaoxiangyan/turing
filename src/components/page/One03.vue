@@ -8,29 +8,17 @@
 				<el-breadcrumb-item>签约协议</el-breadcrumb-item>
 	    	</el-breadcrumb>
 		</div>	
-		<el-row class="page_content">
-		  <el-col class="li_box" :xs="24" :sm="24" :md="24" :lg="12">
-		    <el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span>合作协议：</span>
-			  </el-col>
-			  <el-col  :span="16">
+		<ul class="page_content">
+		  <li>
+		    <el-row class="li"  :gutter="30">
+			  <el-col  :xs="24" :sm="18" :md="12" :lg="8">
 		        <a class="preview" href="http://192.168.0.133/system/file/agreement.pdf" target="_blank"><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
-			</el-row>
-			<el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span></span>
-			  </el-col>
-			  <el-col :span="16">
+			  <el-col   :xs="24" :sm="24" :md="24" :lg="24">
 			     <a class="download" href="http://192.168.0.133/system/file/agreement.zip">下载协议</a>
-			  </el-col>  
-			</el-row>
-			<el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span>协议上传方式：</span>
 			  </el-col>
-			  <el-col :span="16">		
+			  <el-col    :xs="24" :sm="24" :md="24" :lg="24">		
+请选择协议上传方式：
 <template>
   <el-radio class="radio" v-model="radio" label="0">上传pdf文件</el-radio>
   <el-radio class="radio" v-model="radio" label="1">上传img文件</el-radio>
@@ -38,33 +26,24 @@
 			  </el-col>
 			</el-row>  
 		    <form  @submit.prevent="uploadUserPDF" v-if="radio == 0">	 		
-			<el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span>请上传PDF文件：</span>
-			  </el-col>
-			  <el-col  :span="16">
+			<p>*请上传签约后的pdf文件</p>
+			<el-row class="li" :gutter="30">
+			  <el-col  :xs="24" :sm="24" :md="24" :lg="24">
 				<div class="file_box">
 				<input type="file" id="user_file" accept="application/pdf" @change="uploadUser()" name="cooperationPdf">
 				<span class="mask user_mask">{{user}}</span>
 				</div>
 			  </el-col>
-			</el-row>
-			<el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span></span>
-			  </el-col>
-			  <el-col  :span="16">
+			  <el-col  :xs="24" :sm="24" :md="24" :lg="24">
 				<input type="submit" value="提交">
 				<em class="error" v-show="error.user">{{error.user_text}}</em>
 			  </el-col> 
 			</el-row>  
 			</form>
 			<form @submit.prevent="uploadUserIMG" v-else>
-			<el-row class="li" >
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span>请上传图片文件：</span>
-			  </el-col>
-			  <el-col  :span="16">
+			<p>*请上传签约后的文件图片，支持上传png/jpeg/gif/jpg格式的图片</p>
+			<el-row class="li" :gutter="30">
+			  <el-col  :xs="24" :sm="24" :md="24" :lg="24">
 				<div class="file_box">
 				<input type="file" id="user_file1" accept="image/png, image/jpeg, image/gif, image/jpg"  @change="uploadUser1()" name="cooperationPic">
 				<span class="mask user_mask1">{{user1}}</span>
@@ -72,12 +51,7 @@
 				<br/>
 				<img id="user_img1">
 			  </el-col>
-			</el-row>
-			<el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span></span>
-			  </el-col>
-			  <el-col  :span="16">
+			  <el-col  :xs="24" :sm="24" :md="24" :lg="24">
 				<div class="file_box">
 				<input type="file" id="user_file2" accept="image/png, image/jpeg, image/gif, image/jpg"  @change="uploadUser2()" name="cooperationPic">
 				<span class="mask user_mask2">{{user2}}</span>
@@ -85,12 +59,7 @@
 				<br/>
 				<img id="user_img2">
 			  </el-col>
-			</el-row>
-			<el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span></span>
-			  </el-col>
-			  <el-col  :span="16">
+			  <el-col  :xs="24" :sm="24" :md="24" :lg="24">
 				<div class="file_box">	
 				<input type="file" id="user_file3" accept="image/png, image/jpeg, image/gif, image/jpg"  @change="uploadUser3()" name="cooperationPic">
 				<span class="mask user_mask3">{{user3}}</span>
@@ -98,41 +67,24 @@
 				<br/>
 				<img id="user_img3">
 			  </el-col>
-			</el-row>
-			<el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span></span>
-			  </el-col>
-			  <el-col  :span="16">
+			  <el-col  :xs="24" :sm="24" :md="24" :lg="24">
 				<input type="submit" value="提交">
 				<em class="error" v-show="error.user1">{{error.user_text1}}</em>
 			  </el-col> 
 			</el-row>  
 			</form>			
 			  <p>*您如果同意签约，请先下载协议，打印后签名，再扫描上传已签约的协议，再提交审核</p>
-		  </el-col>
-		  <el-col class="li_box"  :xs="24" :sm="24" :md="24" :lg="12">
-		    <el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span>扣款协议：</span>
-			  </el-col>
-			 <el-col  :span="16">
+		  </li>
+		  <li>
+		    <el-row class="li" :gutter="30">
+			 <el-col  :xs="24" :sm="18" :md="12" :lg="8">
 		      <a class="preview" href="http://192.168.0.133/system/file/agreement.pdf" target="_blank"><i class="el-icon-document"></i>委托扣款协议</a>
 			 </el-col>
-			</el-row>
-			<el-row class="li">
-			 <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span></span>
-			  </el-col>
-			 <el-col  :span="16">
+			 <el-col  :xs="24" :sm="24" :md="24" :lg="24">
 			  <a class="download" href="http://192.168.0.133/system/file/agreement.zip">下载协议</a>
 			 </el-col>
-			</el-row>
-			<el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span>协议上传方式：</span>
-			  </el-col>
-			  <el-col    :span="16">		
+			  <el-col    :xs="24" :sm="24" :md="24" :lg="24">		
+请选择协议上传方式：
 <template>
   <el-radio class="radio" v-model="radio1" label="0">上传pdf文件</el-radio>
   <el-radio class="radio" v-model="radio1" label="1">上传img文件</el-radio>
@@ -140,34 +92,19 @@
 			  </el-col>			 
 			</el-row>
 			<form   @submit.prevent="uploadDebitPDF" v-if="radio1 == 0">
-			<el-row class="li">
-			  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span>请上传PDF文件：</span>
-			  </el-col>
-			  <el-col  :span="16">
+     		<p>*请上传签约后的pdf文件</p>
+			<el-row class="li" :gutter="30">
+			  <el-col  :span="24">
 				<div class="file_box">
 				<input type="file" id="debit_file" accept="application/pdf"  @change="uploadDebit()"  name="withholdPdf">
 				<span class="mask user_mask">{{debit}}</span>
 				</div>
-			  </el-col>  
-			</el-row>
-			<el-row class="li">
-			   <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span>协议关联的MT4账号：</span>
-			  </el-col>
-               <el-col :span="16" class="mt4_box">
+			   </el-col>  
+               <el-col :span="24" class="mt4_box">
+			        <p>协议关联的MT4账号：</p>
 					<input class="mt4_input" type="text" v-for="account in accounts" v-model="account.value" placeholder="请输入协议相关联的MT4账号">
-			   </el-col>
-			</el-row>	
-			<el-row class="li">
-			   <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-			     <span></span>
-			  </el-col>
-               <el-col :span="16" class="mt4_box">
 					<br/><i  @click="addMT4">新增</i><i  @click="removeMT4">删除</i>
-			   </el-col>
-			</el-row>	
-		    <el-row class="li">
+			   </el-col>	
 			   <el-col :xs="24" :sm="24" :md="24" :lg="24">
 				<input type="submit" value="提交">
 				<em class="error" v-show="error.debit">{{error.debit_text}}</em>
@@ -205,8 +142,8 @@
 			</el-row>  
 			</form>
 			  <p>*您如果同意签约，请先下载协议，打印后签名，再扫描上传已签约的协议，再提交审核</p>
-		  </el-col  :xs="24" :sm="24" :md="24" :lg="12">
-		</el-row>	  
+		  </li>
+		</ul>	  
 	</div>	
 </template>
 <script>
@@ -217,7 +154,7 @@
 		  radio:'0',
 		  radio1:'0',
     //    三方协议pdf
-	     user:'选择PDF文件',
+	     user:'上传协议pdf文件',
 		 user_file:false,
 	//    三方协议img
          user1:'上传协议第一页',
@@ -536,15 +473,18 @@
 	display:inline-block;
 	float:right;
 }
+ul,li{
+	list-style:none;
+}
 .page_content{
 
 }
-.page_content .li_box{
+.page_content li{
 	margin:30px 0 45px;
 	padding:0 30px;
 	text-align:left;
 }
-.page_content .li_box a.preview{
+.page_content li a.preview{
 	box-sizing:border-box;
 	display:inline-block;
 	width:100%;
@@ -569,7 +509,7 @@
 	float:left;
 	margin-right:20px;
 }
-.page_content .li_box a.download,.page_content .li_box div.file_box,.page_content .li_box input,.page_content .li_box div span{
+.page_content li a.download,.page_content li div.file_box,.page_content li input,.page_content li div span{
 	display:inline-block;
 	/*margin:0 10px 10px 0;*/
 	padding:0;
@@ -580,31 +520,31 @@
 	border:1px solid #b4b1b2;
 	text-align:center;
 }
-.page_content .li_box div span{
+.page_content li div span{
 	padding:0 5px;
 }
-.page_content .li_box div.file_box{
+.page_content li div.file_box{
 	position:relative;
 	border:none;
 	cursor:pointer;
 	vertical-align:middle;
 }
-.page_content .li_box a.download{
+.page_content li a.download{
 	box-sizing:border-box;
 	color:#000;
 	vertical-align:middle;	
 }
-.page_content .li_box a.download:hover{
+.page_content li a.download:hover{
 
 }
-.page_content .li_box input.mt4_input{
+.page_content li input.mt4_input{
 	width:200px;
 	font-size:13px;
 	text-align:left;
 	padding:0 10px;
 	margin:0 10px 10px 0;
 }
-.page_content .li_box .mt4_box i{
+.page_content li .mt4_box i{
 	display:inline-block;
 	width:78px;
 	text-align:center;
@@ -617,11 +557,11 @@
 	vertical-align:middle;
 	cursor:pointer;
 }
-.page_content .li_box .mt4_box i:hover{
+.page_content li .mt4_box i:hover{
 	color:#20a0ff;
 	border:1px solid #20a0ff;
 }
-.page_content .li_box input[type='file']{
+.page_content li input[type='file']{
 	opacity:0;
 	position:absolute;
 	filter:alpha(opacity=0);
@@ -631,21 +571,21 @@
 	cursor:pointer;
 	width:100%;
 }
-.page_content .li_box div span{
+.page_content li div span{
 	cursor:pointer;
     box-sizing:border-box;
    	overflow:hidden;
 }
-.page_content .li_box span.mask_user1{
+.page_content li span.mask_user1{
 }
-.page_content .li_box span.mask_user2{}
-.page_content .li_box span.mask_user3{}
-.page_content .li_box input[type='submit']{
+.page_content li span.mask_user2{}
+.page_content li span.mask_user3{}
+.page_content li input[type='submit']{
 	background:#fff;
 	cursor:pointer;
 	vertical-align:middle;
 }
-.page_content .li_box p{
+.page_content li p{
 	margin-top:10px;
 	color:#797878;
 	font-size:15px;

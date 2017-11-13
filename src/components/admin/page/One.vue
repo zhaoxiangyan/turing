@@ -156,7 +156,7 @@
 				    <span>关联MT4账号：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input class="mt4_input" type="text" v-for="number in numbers" v-model="number.value" :disabled="whether" placeholder="请输入协议相关联的MT4账号"></el-input>
+					   <el-input class="mt4_input" type="text" v-for="number in numbers" :key="number.index" v-model="number.value" :disabled="whether" placeholder="请输入协议相关联的MT4账号"></el-input>
                  </el-col>
 				</el-row>		    
 				<el-row class="li">

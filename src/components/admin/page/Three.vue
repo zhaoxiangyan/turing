@@ -1,8 +1,8 @@
 <template>
 	<div class="three">
-	<div v-title>个人信息</div>
+	<div v-title>管理员信息</div>
 	    <div class="page_title">
-		    <span>个人信息<i>Sign Contract</i></span>
+		    <span>管理员信息<i>Sign Contract</i></span>
 		    <el-breadcrumb separator="/">
 				<el-breadcrumb-item :to="{path:'/home'}">首页</el-breadcrumb-item>
 				<el-breadcrumb-item>个人信息</el-breadcrumb-item>
@@ -12,10 +12,18 @@
           <el-col :span="24">
             <el-row class="li">
               <el-col  :xs="7" :sm="6" :md="5" :lg="5">
+                 <span class="title">登录账号：</span>
+              </el-col>
+              <el-col  :span="16">
+                <el-input v-model="input0" placeholder="请输入登录账号" :disabled="true"></el-input>
+              </el-col>
+            </el-row>
+            <el-row class="li">
+              <el-col  :xs="7" :sm="6" :md="5" :lg="5">
                  <span class="title">真实姓名：</span>
               </el-col>
               <el-col  :span="16">
-                <el-input v-model="input1" placeholder="Andy" :disabled="true"></el-input>
+                <el-input v-model="input1" placeholder="请输入真实姓名" :disabled="true"></el-input>
               </el-col>
             </el-row>
             <el-row class="li">
@@ -46,37 +54,6 @@
             </el-row>
             <el-row class="li">
               <el-col  :xs="7" :sm="6" :md="5" :lg="5">
-                 <span class="title">身份证号码：</span>
-              </el-col>
-              <el-col  :xs="16" :sm="16" :md="16" :lg="16">
-                <el-input v-model="input4" placeholder="3604211996467461452" :disabled="true"></el-input>
-              </el-col>
-            </el-row>
-            <el-row class="li">
-              <el-col  :xs="7" :sm="6" :md="5" :lg="5">
-                 <span class="title">居住地址：</span>
-              </el-col>
-              <el-col  :span="16"> 
-<!--确定修改居住地址-->
-<el-popover
-  ref="popover5"
-  placement="top"
-  width="160"
-  v-model="visible2">
-  <p>确定修改居住地址吗？</p>
-  <div style="text-align: right; margin: 0">
-    <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-    <el-button type="primary" size="mini" @click="visible2 = false">确定</el-button>
-  </div>
-</el-popover>                           
-<el-input v-model="input6" placeholder="如：广东深圳">
-    <el-button slot="append" icon="edit" v-popover:popover5 ></el-button>
-</el-input>
-<!--<v-distpicker></v-distpicker>-->
-              </el-col>
-            </el-row>
-            <el-row class="li">
-              <el-col  :xs="7" :sm="6" :md="5" :lg="5">
                  <span class="title">最近登录时间：</span>
               </el-col>
               <el-col  :span="16">
@@ -86,8 +63,8 @@
           </el-col>
 		</el-row>
         <div class="page_footer">
-		      <a href="javascript:void(0)">修改密码</a>
-			 <a href="javascript:void(0)" class="fr">保存修改</a>
+		      <!--<a href="javascript:void(0)">修改密码</a>
+			    <a href="javascript:void(0)" class="fr">保存修改</a>-->
 		</div>
 <!--修改邮箱模态框-->
 <el-dialog title="修改用户邮箱" :visible.sync="dialogFormVisible">
@@ -138,11 +115,10 @@
  export default {
     data() {
       return {
-		    input1: '赵',
+        input0: 'admin01',
+		    input1: '图灵智能交易系统',
         input2: '9876710@qq.com',
         input3: '1517982',
-        input4: '360421199311104214',
-        input6: '',
         input7: '2017/11/02', 
         // 修改邮箱模态框
         dialogFormVisible: false,
@@ -171,9 +147,7 @@
           resource: '',
           desc: ''
         },
-        formLabelWidth1: '120px',
-        // 确定修改居住地址
-        visible2: false
+        formLabelWidth1: '120px'
       }
     },
     components:{

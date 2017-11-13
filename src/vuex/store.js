@@ -7,7 +7,7 @@ Vue.use(Vuex)
 
 // 应用初始状态
 const state = {
-  collapsed: false
+  collapsed: true
 }
 
 // 定义所需的 mutations

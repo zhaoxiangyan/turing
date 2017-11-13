@@ -22,6 +22,10 @@ export default new Router({
       component: resolve => require(['../components/common/Login.vue'], resolve)
     },
     {
+      path: '/system/findpassword',
+      component: resolve => require(['../components/common/Findpassword.vue'], resolve)
+    },
+    {
       path: '/system/register',
       component: resolve => require(['../components/common/Register.vue'], resolve)
     },

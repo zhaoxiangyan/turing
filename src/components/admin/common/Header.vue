@@ -1,8 +1,10 @@
 <template>
         <div class="header">
-            <div class="left" v-bind:class="[ getcollapsed ? '' : 'min-left']">
+            <!--<div class="left" v-bind:class="[ getcollapsed ? '' : 'min-left']">
                 图灵
-            </div>
+            </div>-->
+            <div class="left" v-if="getcollapsed">图灵智能交易系统</div>
+            <div class="left min-left" v-else>图灵</div>
             <div class="center" @click.prevent="changecollapsed">
                 <i v-bind:class="[ getcollapsed ? 'el-icon-d-arrow-left' : 'el-icon-d-arrow-right']" ></i>
             </div>
@@ -112,6 +114,7 @@
         border-width:1px;
         border-right-style:solid;
         float:left;
+        font-size:18px;
     }
     .left.min-left{
       width:81px;

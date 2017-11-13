@@ -18,7 +18,7 @@
    	  	 	</div>
           <div class="re">
             <label for="keepPwd"><input type="checkbox" id="keepPwd" v-model="repassword">记住密码</label>
-            <a href="/system/findpwd">忘记密码？</a>
+            <a href="/system/findpassword">忘记密码？</a>
           </div>
    	  	 	<div class="login_div">
    	  	 		<input type="button" value="登录" id="submit1" @click="login1" >
