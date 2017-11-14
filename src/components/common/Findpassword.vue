@@ -52,6 +52,7 @@
             }
         },
         watch:{
+            // 手机号码
             phone:function(){
                 var self = this;
                 var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
@@ -61,6 +62,7 @@
                      self.error.phone1 = true;
                 }
             },
+            // 图形验证码
             img_code:function(){
                 /*var pswReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;*/
                 var self = this;
@@ -120,15 +122,24 @@
                      });
                 }
             },
-            // 注册
+            // 提交
             find() {
                 var self = this;
                 var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+                var pswReg = /^\w{6,16}$/;
+                     // 6-16位字母、数字和下划线
                 if (self.phone === '' || !phoneReg.test(self.phone)) {
                      self.error.phone1 = true;
                      return false;
-                } else if(self.error.img_code1 == true){
+                } else if(self.error.img_code1 == true||self.img_code === ''){
+                      self.error.img_code1 = true;
                       return false;
+                } else if(self.password === ''|| !pswReg.test(self.password)){
+                     self.error.password1 = true;
+                     return false;
+                } else if(self.repassword != self.password ){
+                    self.error.repassword1 = true;
+                    return false;
                 } else {
                     self.$http({
                         method: 'post',
@@ -136,7 +147,7 @@
                     }).then(function(res){
                        if(res.data.rcode == '0'||res.data.rcode == '1'){
                            alert('注册成功');
-                           self.$router.push('/system/add');
+                           self.$router.push('/system/login');
                        }else if(res.data.rcode =='2'){
                            alert('账号已注册,资料审核中');
                        }else if(res.data.rcode == '3'){
@@ -144,7 +155,7 @@
                            self.$router.push('/system/login');
                        }else if(res.data.rcode == '4'){
                            alert('账号已注册,资料审核未通过，请重新填写个人资料');
-                           self.$router.push('/system/add');
+                           self.$router.push('/system/login');
                        }else if(res.data.rcode == '6'){
                            alert('验证码过期,请重新发送验证码');
                        }else if(res.data.rcode == '7'){

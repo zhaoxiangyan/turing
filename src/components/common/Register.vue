@@ -130,11 +130,20 @@
             register() {
                 var self = this;
                 var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+                var pswReg = /^\w{6,16}$/;
+                // 6-16位字母、数字和下划线
                 if (self.phone === '' || !phoneReg.test(self.phone)) {
                      self.error.phone1 = true;
                      return false;
-                } else if(self.error.img_code1 == true){
+                } else if(self.error.img_code1 == true||self.img_code === ''){
+                      self.error.img_code1 = true;
                       return false;
+                } else if(self.password === ''|| !pswReg.test(self.password)){
+                     self.error.password1 = true;
+                     return false;
+                } else if(self.repassword != self.password ){
+                    self.error.repassword1 = true;
+                    return false;
                 } else {
                     self.$http({
                         method: 'post',

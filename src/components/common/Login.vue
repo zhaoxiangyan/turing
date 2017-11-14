@@ -1,7 +1,7 @@
 <template>
    <div class="login">
       <div v-title>登录</div>
-   	  <div class="title">图灵智能交易管理系统</div>
+   	  <div class="title">图灵智能交易系统</div>
    	  <div class="login-form">
          <ul class="switch">
            <li  v-bind:class="[ this.switch ? 'active' : '']" @click="switchLogin1">密码登录</li>
@@ -39,7 +39,7 @@
    	  	 		<input type="password" name="code"  v-model="code" placeholder="请输入短信验证码" id="messageCode">
    	  	 	</div>
           <div class="re">
-            <a href="/system/findpwd">忘记密码？</a>
+            <a href="/system/findpassword">忘记密码？</a>
           </div>
    	  	 	<div class="login_div">
    	  	 		<input type="button" value="登录" id="submit2" @click="login2">
@@ -146,11 +146,13 @@
           this.repassword = getRepassword;
         }
     },
+    // 密码登录
     login1 () {
       var self = this;
       self.empty1 = false;
       var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
       var pswReg = /^\w{6,16}$/;
+      // 6-16位字母、数字和下划线
       if (self.phone1 === '' || self.password === '') {
         // alert('输入框不能为空')
          self.message1 = "请填写完整";
@@ -189,7 +191,7 @@
               alert('登录失败，密码错误');
             }else if(res.data == '3'){
               alert('资料未填写，请先填写资料');
-              self.$router.push('/add');
+              self.$router.push('/system/add');
             }else if(res.data == '4'){
               alert('资料正在审核中');
             }else if(res.data == '5'){

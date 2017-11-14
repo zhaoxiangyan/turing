@@ -172,9 +172,13 @@
                 var self = this;
                 // var nameReg = /^([\u4E00-\u9FA5]{2,}+|[a-zA-Z]+)$/;
                 var nameReg = /^[\u4e00-\u9fa5]{2,4}$/;
+                var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
                 var cardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
                 if(self.name === '' || !nameReg.test(self.name)){
                      self.error.name1 = true;
+                     return false;
+                } else if(self.email === '' || !emailReg.test(self.email)){
+                     self.error.email1 = true;
                      return false;
                 } else if(self.card === '' || !cardReg.test(self.card)){
                      self.error.card1 = true;
