@@ -15,6 +15,8 @@
                            <form  @submit.prevent="confirm">
                             <p><span class="input_title">姓名：</span> <input class="input_content" type="text" id="name" placeholder="请输入真实姓名" v-model="name" name="username"></p>
                             <div><span class="error" v-show="error.name1">*请输入正确的姓名</span></div>
+                            <p><span class="input_title">邮箱：</span> <input class="input_content" type="text" id="email" placeholder="请输入邮箱地址" v-model="email" name="email"></p>
+                            <div><span class="error" v-show="error.email1">*请输入正确的邮箱</span></div>
                             <p><span class="input_title">身份证号码：</span> <input class="input_content" type="text" id="card" placeholder="请输入身份证号码" v-model="card" name="idcard"></p>
                             <div><span class="error" v-show="error.card1">*请输入正确的身份证号码</span></div>
                             <p class="file_box">
@@ -59,6 +61,7 @@
         data() {
             return {
                 name: '',
+                email: '',
                 card: '',
                 file_name1:'点击选择图片上传',
                 file1: false,
@@ -67,6 +70,7 @@
                 checked:false,
                 error: {
                     name1:false,
+                    email1:false,
                     card1:false,
                     file11:false,
                     file21:false
