@@ -48,9 +48,13 @@
        <el-button type="text" size="small"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
       </template>
     </el-table-column>
+		<el-table-column
+      prop="message"
+      label="备注">
+    </el-table-column>
   </el-table>
 </template>  
-<p class="state_tips">One<span class="one"></span>Two<span class="two"></span>Three<span class="three"></span>Four<span class="four"></span></p>
+<p class="state_tips">审核未通过：<span class="red"></span>正在运行：<span class="green"></span>等待审核：<span class="yellow"></span>停止运行：<span class="blue"></span></p>
         </div>
         <!--编辑交易配置页面begin-->
 		<el-dialog title="交易配置" :visible.sync="dialogFormVisible">
@@ -166,7 +170,7 @@
 				    <span>同意挂机费用：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch2"  on-text="同意"  off-text="不同意" :width='80'></el-switch>
+					<el-switch  class="disable" v-model="switch2"  on-text="同意"  off-text="不同意" :width='80' disabled></el-switch>
                   </el-col>
 				</el-row>
 				<el-row class="li">
@@ -182,7 +186,7 @@
 		<div slot="footer" class="dialog-footer">
 		  <el-button type="primary" @click="dialogFormVisible = false">提交修改</el-button>
 			<el-button type="success" @click="stop">停止挂机</el-button>
-			<el-button type="danger" @click="delete_setting">删除</el-button>
+			<!--<el-button type="danger" @click="delete_setting">删除</el-button>-->
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
     </div>
 		</el-dialog>
@@ -231,7 +235,7 @@
         }],
         value3: '',
 		// 同意挂机费用
-		switch2:false,
+		switch2:true,
 		// 最大回撤选择
 		switch3:false,
 		input5: '',
@@ -244,7 +248,8 @@
 			capital: '5000',
 			model: '成长型',
 			retracement: '35%',
-			state:'1'
+			state:'1',
+			message:'最大回撤过大'
 		}, {
 			id:'2',
 			date: '2016-05-02',
@@ -253,7 +258,8 @@
 			capital: '5000',
 			model: '成长型',
 			retracement: '35%',
-			state:'2'
+			state:'2',
+			message:'MT4账号与协议不符'
 		}, {
 			id:'3',
 			date: '2016-05-02',
@@ -262,7 +268,8 @@
 			capital: '5000',
 			model: '成长型',
 			retracement: '35%',
-			state:'3'
+			state:'3',
+			message:'账户资金不足'
 		}, {
 			id:'4',
 			date: '2016-05-02',
@@ -271,7 +278,8 @@
 			capital: '5000',
 			model: '成长型',
 			retracement: '35%',
-			state:'4'
+			state:'4',
+			message:'账户正在运行'
 		}],
 		dialogFormVisible: false
       };
@@ -280,13 +288,13 @@
         // 获取数据状态，类名表格
 	      tableRowClassName(row, index) {
 						if(row.state == '1'){
-							return 'one-row';
+							return 'red-row';
 						}else if(row.state == '2'){
-							return 'two-row';
+							return 'green-row';
 						}else if(row.state == '3'){
-							return 'three-row';
+							return 'yellow-row';
 						}else if(row.state == '4'){
-							return 'four-row';
+							return 'blue-row';
 						}
         },
         // 表格编辑按钮
@@ -369,19 +377,19 @@
 	height:22px;
 	border-radius:12px;
 	vertical-align:middle;
-	margin:0 30px 0 10px;
+	margin-right:30px;
 }
-.page_content .state_tips .one{
-	background: #c9e5f5;
+.page_content .state_tips .red{
+	background:#f99090;
 }
-.page_content .state_tips .two{
-	background: #e2f0e4;
+.page_content .state_tips .green{
+	background:#9ee29e;
 }
-.page_content .state_tips .three{
-  background:#dee4f7;
+.page_content .state_tips .yellow{
+	background:#efef5c;
 }
-.page_content .state_tips .four{
-  background:#f7dada;
+.page_content .state_tips .blue{
+	background:#7073f1;
 }
 /*编辑交易配置页面begin*/
 .edit_content{
@@ -476,7 +484,6 @@
 .small_text .el-input{
 	width:30%;
 }
-
 
 
 

@@ -43,14 +43,14 @@
                         url:"home"
                     },
                     {
-                        menu:"管理用户签约协议",
-                        iconclassname:"el-icon-edit",
-                        url:"one"
-                    },
-                    {
                         menu:"管理用户信息",
                         iconclassname:"el-icon-setting",
                         url:"two"
+                    },
+                    {
+                        menu:"管理用户合作协议",
+                        iconclassname:"el-icon-edit",
+                        url:"one"
                     },
                     {
                         menu:"个人信息",

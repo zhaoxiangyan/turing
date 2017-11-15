@@ -60,7 +60,7 @@
     </el-table-column>
 		<el-table-column
       prop="state_text"
-      label="运行状态"
+      label="是否处理"
       width="150"
       :filters="[{ text: '未处理', value: '未处理' }, { text: '已处理', value: '已处理' }]"
       :filter-method="filterTag"

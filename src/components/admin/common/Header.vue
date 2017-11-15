@@ -4,7 +4,7 @@
                 图灵
             </div>-->
             <div class="left" v-if="getcollapsed">图灵智能交易系统</div>
-            <div class="left min-left" v-else>图灵</div>
+            <div class="left min-left" v-else><img src="../../../assets/img/logo.png"></div>
             <div class="center" @click.prevent="changecollapsed">
                 <i v-bind:class="[ getcollapsed ? 'el-icon-d-arrow-left' : 'el-icon-d-arrow-right']" ></i>
             </div>
@@ -119,6 +119,11 @@
     .left.min-left{
       width:81px;
       padding:0;
+    }
+    .left.min-left img{
+      width:50px;
+      height:50px;
+      vertical-align:middle;
     }
     .header .center{
         padding:0 23px;

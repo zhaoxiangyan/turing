@@ -2,7 +2,7 @@
 	<div class="three">
 	<div v-title>个人信息</div>
 	    <div class="page_title">
-		    <span>个人信息<i>Sign Contract</i></span>
+		    <span>个人信息</span>
 		    <el-breadcrumb separator="/">
 				<el-breadcrumb-item :to="{path:'/home'}">首页</el-breadcrumb-item>
 				<el-breadcrumb-item>个人信息</el-breadcrumb-item>

@@ -12,17 +12,42 @@
 		time:'5'
       };
     },
+    mounted() {
+        this.countDown(); 
+    },
     methods: {
-      
+       countDown() {
+        var self = this;
+        var _step = 4;
+        var _res = setInterval(function(){
+            self.time = _step;
+            _step-=1;
+            if(_step<=0){
+                self.$router.push('/system/');
+                clearInterval(_res);
+            }
+        },1000);
+        },
     }
 }
 </script>
 <style scoped>
 .sorry_box{
+    font-size:36px;
     margin:200px 0 15px;
+    color:#333;
 }
-.sorry_box .sorry{}
-.timeout{}
-.timeout .countdown{}
+.sorry_box .sorry{
+    color:rgb(85,158,231);
+}
+.timeout{
+    font-size:20px;
+}
+.timeout .countdown{
+    font-weight:bold;
+}
+.timeout a{
+    color:rgb(19,110,194);
+}
 
 </style>

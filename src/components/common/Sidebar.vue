@@ -38,14 +38,9 @@
            return {
               Item: [
                     {
-                        menu:"我的交易信息",
+                        menu:"我的账户信息",
                         iconclassname:"el-icon-date",
                         url:"home"
-                    },
-                    {
-                        menu:"签约协议",
-                        iconclassname:"el-icon-edit",
-                        url:"one"
                     },
                     {
                         menu:"账户交易配置",
@@ -56,6 +51,11 @@
                         menu:"个人信息",
                         iconclassname:"el-icon-document",
                         url:"three"
+                    },
+                    {
+                        menu:"合作协议",
+                        iconclassname:"el-icon-edit",
+                        url:"one"
                     }]
 
            }
