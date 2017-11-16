@@ -96,6 +96,7 @@
 				<img id="user_img3">
 			  </el-col>
 			</el-row>
+			</div>
 			<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>使用的平台：</span>
@@ -144,11 +145,10 @@
 				  <el-col :span="16" class="li_right">
 					    <el-input type="textarea" v-model="value2" disabled></el-input>
           </el-col>
-				</el-row>	
-			</div>		
+				</el-row>			
 		</el-row>	  
-		<div class="page_footer">
-		   <span>交易有风险，入市须谨慎！</span>
+		<div class="page_footer clearfix">
+		   <span>风险警告：外汇和差价合约交易以及任何金融资产进行的交易都涉及高风险，都有损失部分和全部投资资金的可能性，未必适合每一位投资者。在决定参与交易之前，您应该审慎考虑您的投资目标、经验等级、财政状况及风险承受能力。您需要承担相关保证金的支付和交易带来的损失，如果没有足够资金承担损失，请不要贸然进行投资交易。图灵不会为市场风险导致的损失承担任何责任，请确保您已经阅读并完全理解图灵的政策披露描述。</span>
 			 <a href="javascript:void(0)">提交</a>
 		</div>
 	</div>	
@@ -175,7 +175,7 @@
 		 // 使用的平台select
 		options1: [{
           value1: '1',
-          label1: 'GQ-capital'
+          label1: 'GQCapital-Live'
         }],
     value1: '',
 		// MT4账号
@@ -216,18 +216,57 @@
       };
     },
     methods: {
+			// 检测图片格式大小符合
+			testIMG(img){
+					var path = img.value;
+					var fileExt = path.substring(path.lastIndexOf(".")).toLowerCase();
+					if (!fileExt.match(/.jpg|.gif|.png|.bmp/i)) {
+							// 上传的文件不是图片，请重新上传
+							return false;
+					}
+					var size = (img.files[0].size / 1024).toFixed(0);
+					if(size>2048){
+							//   图片文件大于2M
+							return false;
+					}
+					return true;
+					// alert('你选择的文件大小' + (img.files[0].size / 1024).toFixed(0) + "kb");
+			},
+			// 检测PDF文件格式大小符合
+			testPDF(pdf){
+					var path = pdf.value;
+					var fileExt = path.substring(path.lastIndexOf(".")).toLowerCase();
+					if (!fileExt.match(/.pdf/i)) {
+							// 上传的文件不是PDF，请重新上传
+							return false;
+					}
+					var size = (pdf.files[0].size / 1024).toFixed(0);
+					if(size>2048){
+							//   PDF文件大于2M
+							return false;
+					}
+					return true;
+					// alert('你选择的文件大小' + (img.files[0].size / 1024).toFixed(0) + "kb");
+			},
 		// 三方合作协议pdf文件
 		uploadUser(){
 			var self = this;
 			var reader = new FileReader();
-			var file = document.getElementById("user_file").files[0];
-			self.user = file.name;
-			//读取文件过程方法
-			reader.onload = function (e) {
-				console.log("成功读取....");
-				self.user_file = true;
+			var fileID = document.getElementById("user_file");
+			if(!this.testPDF(fileID)){
+                    alert("文件大小类型不符");
+                    fileID.value = "";
+                    return false;
+      }else{
+				var file = document.getElementById("user_file").files[0];
+				self.user = file.name;
+				//读取文件过程方法
+				reader.onload = function (e) {
+					console.log("成功读取....");
+					self.user_file = true;
+				}
+				reader.readAsDataURL(file)
 			}
-			reader.readAsDataURL(file)
 		},
 		uploadUserPDF() {
 			var self = this;
@@ -263,47 +302,68 @@
 		uploadUser1(){
 			var self = this;
 			var reader = new FileReader();
-			var file = document.getElementById("user_file1").files[0];
-			self.user1 = file.name;
-			//读取文件过程方法
-			reader.onload = function (e) {
-				console.log("成功读取....");
-				self.user_file1 = true;
-				var img = document.getElementById("user_img1");
-                    img.style.display = 'inline-block';
-                    img.src = e.target.result;
+			var fileID = document.getElementById("user_file1");
+			if(!this.testIMG(fileID)){
+                    alert("图片大小类型不符");
+                    fileID.value = "";
+                    return false;
+      }else{
+				var file = document.getElementById("user_file1").files[0];
+				self.user1 = file.name;
+				//读取文件过程方法
+				reader.onload = function (e) {
+					console.log("成功读取....");
+					self.user_file1 = true;
+					var img = document.getElementById("user_img1");
+											img.style.display = 'inline-block';
+											img.src = e.target.result;
+				}
+				reader.readAsDataURL(file)
 			}
-			reader.readAsDataURL(file)
 		},
 		uploadUser2(){
 			var self = this;
 			var reader = new FileReader();
-			var file = document.getElementById("user_file2").files[0];
-			self.user2 = file.name;
-			//读取文件过程方法
-			reader.onload = function (e) {
-				console.log("成功读取....");
-				self.user_file2 = true;
-				var img = document.getElementById("user_img2");
-                    img.style.display = 'inline-block';
-                    img.src = e.target.result;
+			var fileID = document.getElementById("user_file2");
+			if(!this.testIMG(fileID)){
+                    alert("图片大小类型不符");
+                    fileID.value = "";
+                    return false;
+      }else{
+				var file = document.getElementById("user_file2").files[0];
+				self.user2 = file.name;
+				//读取文件过程方法
+				reader.onload = function (e) {
+					console.log("成功读取....");
+					self.user_file2 = true;
+					var img = document.getElementById("user_img2");
+											img.style.display = 'inline-block';
+											img.src = e.target.result;
+				}
+				reader.readAsDataURL(file)
 			}
-			reader.readAsDataURL(file)
 		},
 		uploadUser3(){
 			var self = this;
 			var reader = new FileReader();
-			var file = document.getElementById("user_file3").files[0];
-			self.user3 = file.name;
-			//读取文件过程方法
-			reader.onload = function (e) {
-				console.log("成功读取....");
-				self.user_file3 = true;
-				var img = document.getElementById("user_img3");
-                    img.style.display = 'inline-block';
-                    img.src = e.target.result;
+			var fileID = document.getElementById("user_file3");
+			if(!this.testIMG(fileID)){
+                    alert("图片大小类型不符");
+                    fileID.value = "";
+                    return false;
+      }else{
+				var file = document.getElementById("user_file3").files[0];
+				self.user3 = file.name;
+				//读取文件过程方法
+				reader.onload = function (e) {
+					console.log("成功读取....");
+					self.user_file3 = true;
+					var img = document.getElementById("user_img3");
+											img.style.display = 'inline-block';
+											img.src = e.target.result;
+				}
+				reader.readAsDataURL(file)
 			}
-			reader.readAsDataURL(file)
 		},
 		uploadUserIMG() {
 			var self = this;
@@ -530,22 +590,21 @@ em.error{
 
 
 .page_footer{
-	height: 55px;
   border-top: 1px solid #f4f4f4;
   text-align: left;
   padding: 0 10px;
 }
 .page_footer span{
 	display: inline-block;
-  height: 55px;
-  line-height: 55px;
+  font-size:15px;
+  line-height: 25px;
 }
 .page_footer a{
 	float:right;
 	display:inline-block;
 	width:80px;
 	height:35px;
-	margin-top:10px;
+	margin:10px 0;
 	background:#21b548;
 	color:#fff;
 	text-align:center;

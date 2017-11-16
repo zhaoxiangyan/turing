@@ -214,7 +214,7 @@
 		// 使用的平台select
 		options1: [{
           value1: '1',
-          label1: 'GQ-capital'
+          label1: 'GQCapital-Live'
         }],
     value1: '1',
 		// MT4账号
@@ -242,7 +242,7 @@
         value3: '2',
 		// 同意挂机费用
 		switch2:true,
-		// 最大回撤选择
+		//建议回撤
 		switch3:true,
 		input5: '45%',
 		// 管理员是否处理
@@ -273,7 +273,7 @@
 			date: '2016-05-02',
 			name:'gdf',
 			phone:'15212345678',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account:'745456',
 			debit:'已通过',
 			user:'未通过',
@@ -284,7 +284,7 @@
 			date: '2016-05-02',
 			name:'tfd',
 			phone:'15212345678',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account:'12124',
 			debit:'已通过',
 			user:'未通过',
@@ -295,7 +295,7 @@
 			date: '2016-05-02',
 			name:'err',
 			phone:'15212345678',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account:'123',
 			debit:'已通过',
 			user:'未通过',
@@ -306,7 +306,7 @@
 			date: '2016-05-02',
 			name:'fss',
 			phone:'15212345678',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account:'4567',
 			debit:'已通过',
 			user:'未通过',

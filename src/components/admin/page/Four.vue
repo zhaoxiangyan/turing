@@ -58,6 +58,25 @@
       prop="retracement"
       label="最大回撤">
     </el-table-column>
+    <el-table-column
+      prop="state"
+      label="账户状态"
+			width="95">
+<template slot-scope="scope">
+      <el-tag v-if="scope.row.state === '1'"
+          type="danger"
+          close-transition>审核未通过</el-tag>
+      <el-tag v-else-if="scope.row.state === '2'"
+          type="success"
+          close-transition>正在运行</el-tag>
+			<el-tag v-else-if="scope.row.state === '3'"
+          type="warning"
+          close-transition>等待审核</el-tag>
+			<el-tag v-else-if="scope.row.state === '4'"
+          type="primary"
+          close-transition>停止运行</el-tag>
+</template>  
+    </el-table-column>
 		<el-table-column
       prop="state_text"
       label="是否处理"
@@ -82,10 +101,6 @@
 </template>
 <!--交易信息状态指示色-->
 <p class="state_tips">
-      One<span class="one"></span>
-			Two<span class="two"></span>
-			Three<span class="three"></span>
-			Four<span class="four"></span>
 <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -224,7 +239,7 @@
 				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>最大回撤选择：</span>
+				    <span>建议回撤：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35 small_text">
 					<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' disabled ></el-switch>
@@ -253,6 +268,19 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right textarea_div" >
 					  <el-input type="textarea" v-model="value2"></el-input>
+          </el-col>
+				</el-row>
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>账户状态：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right radio35">
+<template>
+    <el-radio class="danger" v-model="radio" label="1" >审核未通过</el-radio>
+    <el-radio class="success" v-model="radio" label="2" >正在运行</el-radio>
+    <el-radio class="warning" v-model="radio" label="3" >等待审核</el-radio>
+		<el-radio class="primary" v-model="radio" label="4" >停止运行</el-radio>
+</template>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -290,7 +318,7 @@
 		// 使用的平台select
 		options1: [{
           value1: '1',
-          label1: 'GQ-capital'
+          label1: 'GQCapital-Live'
         }],
         value1: '1',
 		// MT4账号
@@ -318,7 +346,7 @@
         value3: '2',
 		// 同意挂机费用
 		switch2:true,
-		// 最大回撤选择
+		//建议回撤
 		switch3:true,
 		input5: '45%',
 		// 管理员是否处理
@@ -329,6 +357,8 @@
 		switch6:false,
 		// 反馈信息
 		value2:'',
+		// 账户状态
+		radio:'3',
 		// 搜索框
 		input6: '',
     select: '0',
@@ -338,7 +368,7 @@
 			date: '2016-05-02',
 			name:'gdf',
 			phone:'15212345678',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
@@ -350,7 +380,7 @@
 			date: '2016-05-02',
 			name:'tfd',
 			phone:'15212345678',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
@@ -362,7 +392,7 @@
 			date: '2016-05-02',
 			name:'err',
 			phone:'15212345678',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
@@ -374,7 +404,7 @@
 			date: '2016-05-02',
 			name:'fss',
 			phone:'15212345678',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
@@ -388,18 +418,6 @@
       };
     },
     methods: {
-        // 获取数据状态，类名表格
-	      tableRowClassName(row, index) {
-						if(row.state == '1'){
-							return 'one-row';
-						}else if(row.state == '2'){
-							return 'two-row';
-						}else if(row.state == '3'){
-							return 'three-row';
-						}else if(row.state == '4'){
-							return 'four-row';
-						}
-        },
         // 表格编辑按钮
         handleEdit(index, row) {
 					 var self = this;
@@ -493,18 +511,6 @@
 	vertical-align:middle;
 	margin:0 30px 0 10px;
 }
-.page_content .state_tips .one{
-	background: #c9e5f5;
-}
-.page_content .state_tips .two{
-	background: #e2f0e4;
-}
-.page_content .state_tips .three{
-  background:#dee4f7;
-}
-.page_content .state_tips .four{
-  background:#f7dada;
-}
 /*编辑交易配置页面begin*/
 .edit_content{
   /*padding-bottom:35px;*/
@@ -541,6 +547,9 @@
 }
 .edit_content .li div{
 	height:35px;
+}
+.edit_content .li .radio35 div{
+	height:auto;
 }
 .edit_content .li_left{}
 .li_left span{
@@ -602,6 +611,19 @@
 	padding:0 20px;
 	margin:20px 0;
 	width:auto;
+}
+/*账户状态单选框颜色*/
+.el-radio.danger{
+	 color: #ff4949;
+}
+.el-radio.success{
+   color: #13ce66;
+}
+.el-radio.warning{
+   color: #f7ba2a;
+}
+.el-radio.primary{
+   color: #20a0ff;
 }
 
 /*textarea样式修改*/

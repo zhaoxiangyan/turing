@@ -148,53 +148,90 @@
             }
         },
         methods: {
+            // 检测图片格式大小符合
+            testIMG(img){
+                var path = img.value;
+                var fileExt = path.substring(path.lastIndexOf(".")).toLowerCase();
+                if (!fileExt.match(/.jpg|.gif|.png|.bmp/i)) {
+                    // 上传的文件不是图片，请重新上传
+                   return false;
+                }
+                var size = (img.files[0].size / 1024).toFixed(0);
+                if(size>2048){
+                    //   图片文件大于2M
+                    return false;
+                }
+                return true;
+                // alert('你选择的文件大小' + (img.files[0].size / 1024).toFixed(0) + "kb");
+            },
             uploadCard1(){
                 var self = this;
                 var reader = new FileReader();
-                var file = document.getElementById("file1").files[0];
-                self.file_name1 = file.name;
-                //读取文件过程方法
-                reader.onload = function (e) {
-                    console.log("成功读取....");
-                    var img = document.getElementById("img1");
-                    img.style.display = 'inline-block';
-                    img.src = e.target.result;
-                    self.file1 = true;
-                    //或者 img.src = this.result;  //e.target == this
+                var fileID = document.getElementById("file1");
+                if(!this.testIMG(fileID)){
+                    alert("图片大小类型不符");
+                    fileID.value = "";
+                    return false;
+                }else{
+                    var file = document.getElementById("file1").files[0];
+                    self.file_name1 = file.name;
+                    //读取文件过程方法
+                    reader.onload = function (e) {
+                        console.log("成功读取....");
+                        var img = document.getElementById("img1");
+                        img.style.display = 'inline-block';
+                        img.src = e.target.result;
+                        self.file1 = true;
+                        //或者 img.src = this.result;  //e.target == this
+                    }
+                    reader.readAsDataURL(file)
                 }
-                reader.readAsDataURL(file)
             },
             uploadCard2(){
                 var self = this;
                 var reader = new FileReader();
-                var file = document.getElementById("file2").files[0];
-                self.file_name2 = file.name;
-                //读取文件过程方法
-                reader.onload = function (e) {
-                    console.log("成功读取....");
-                    var img = document.getElementById("img2");
-                    img.style.display = 'inline-block';
-                    img.src = e.target.result;
-                    self.file2 = true;
-                    //或者 img.src = this.result;  //e.target == this
+                var fileID = document.getElementById("file2");
+                if(!this.testIMG(fileID)){
+                    alert("图片大小类型不符");
+                    fileID.value = "";
+                    return false;
+                }else{
+                    var file = document.getElementById("file2").files[0];
+                    self.file_name2 = file.name;
+                    //读取文件过程方法
+                    reader.onload = function (e) {
+                        console.log("成功读取....");
+                        var img = document.getElementById("img2");
+                        img.style.display = 'inline-block';
+                        img.src = e.target.result;
+                        self.file2 = true;
+                        //或者 img.src = this.result;  //e.target == this
+                    }
+                    reader.readAsDataURL(file)
                 }
-                reader.readAsDataURL(file)
             },
             uploadCard3(){
                 var self = this;
                 var reader = new FileReader();
-                var file = document.getElementById("file3").files[0];
-                self.file_name3 = file.name;
-                //读取文件过程方法
-                reader.onload = function (e) {
-                    console.log("成功读取....");
-                    var img = document.getElementById("img3");
-                    img.style.display = 'inline-block';
-                    img.src = e.target.result;
-                    self.file3 = true;
-                    //或者 img.src = this.result;  //e.target == this
+                var fileID = document.getElementById("file3");
+                if(!this.testIMG(fileID)){
+                    alert("图片大小类型不符");
+                    fileID.value = "";
+                    return false;
+                }else{
+                    var file = document.getElementById("file3").files[0];
+                    self.file_name3 = file.name;
+                    //读取文件过程方法
+                    reader.onload = function (e) {
+                        console.log("成功读取....");
+                        var img = document.getElementById("img3");
+                        img.style.display = 'inline-block';
+                        img.src = e.target.result;
+                        self.file3 = true;
+                        //或者 img.src = this.result;  //e.target == this
+                    }
+                    reader.readAsDataURL(file)
                 }
-                reader.readAsDataURL(file)
             },
             confirm() {
                 var self = this;

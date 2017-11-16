@@ -28,6 +28,9 @@
                                 <input type="submit" id="submit" value="注册" v-if="checked" @click="register">
                                 <input type="submit" id="submit" disabled="disabled" value="注册" v-else>
                             </div>
+                            <div id="http_message" class="error" v-show="http_mess">
+                                {{http_message}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -54,7 +57,9 @@
                     code1:false,
                     password1:false,
                     repassword1:false
-                }
+                },
+                http_mess:false,
+                http_message:''
             }
         },
         watch:{
@@ -109,19 +114,26 @@
             sendCaptcha(){
                 var self = this;
                 var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+                self.http_mess = false;
                 if (self.phone === '' || !phoneReg.test(self.phone)) {
-                     self.error.phone1 = true;
+                    self.http_message = '*请输入正确的手机号码';
+                    self.http_mess = true;
+                    //  self.error.phone1 = true;
                      return false;
-                } else if(self.error.img_code1 == true){
+                } else if(self.img_code.length!=4){
+                    //   self.error.img_code1 = true;
+                    self.http_message = '*图形验证码错误';
+                    self.http_mess = true;
                       return false;
                 } else {
                      self.$http({
                          method: 'post',
-                         url: '/turingcloud/sendMsmCode?phone='+self.phone
+                         url: '/turingcloud/sendMsmCode?phone='+self.phone+'&imageCode='+self.img_code
                      }).then(function(res){
                         self.countDown();
                      }).catch(function(err){
-
+                        self.http_mess = true;
+                        self.http_message = err.response.data.message;
                      });
                 }
             },
@@ -131,23 +143,25 @@
                 var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
                 var pswReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
                 // 8-16位字母和数字的组合
+                self.http_mess = false;
                 if (self.phone === '' || !phoneReg.test(self.phone)) {
-                     self.error.phone1 = true;
+                     self.http_message = '*请输入正确的手机号码';
+                     self.http_mess = true;
                      return false;
-                } else if(self.error.img_code1 == true||self.img_code === ''){
-                      self.error.img_code1 = true;
-                      return false;
                 } else if(self.password === ''|| !pswReg.test(self.password)){
-                     self.error.password1 = true;
+                     self.http_message = '*请输入格式正确的密码（8-16位字母和数字的组合）';
+                     self.http_mess = true;
                      return false;
                 } else if(self.repassword != self.password ){
-                    self.error.repassword1 = true;
+                     self.http_message = '*两次密码不一致';
+                     self.http_mess = true;
                     return false;
                 } else {
                     self.$http({
                         method: 'post',
-                        url: '/turingcloud/registerWithPhone?phone='+self.phone+'&msmCode='+self.code
+                        url: '/turingcloud/register?phone='+self.phone+'&msmCode='+self.code+'&password='+self.password
                     }).then(function(res){
+                        console.log(res);
                        if(res.data.rcode == '0'||res.data.rcode == '1'){
                            alert('注册成功');
                            self.$router.push('/system/add');
@@ -167,7 +181,9 @@
                            alert('Error');
                        }
                     }).catch(function(err){
-                       alert("AJAX失败");
+                        console.log(err);
+                        self.http_message = err.response.data.message;
+                        self.http_mess = true;  
                     });
                     // self.$router.push('/add')
                     // alert('注册成功');
@@ -311,7 +327,6 @@ ul,ol,li{
 }
 .phone-submit{
     width:100%;
-    height:40px;
 }
 #submit-register{
     line-height: 40px;

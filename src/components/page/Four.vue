@@ -42,7 +42,8 @@
     </el-table-column>
 		<el-table-column
       prop="state"
-      label="账户状态">
+      label="账户状态"
+			width="95">
 <template slot-scope="scope">
       <el-tag v-if="scope.row.state === '1'"
           type="danger"
@@ -71,7 +72,7 @@
     </el-table-column>
   </el-table>
 </template>  
-<p class="state_tips"><a href="/system/two">去添加账户</a></p>
+<p class="state_tips"><a href="/system/two" type="primary">添加账户<i class="el-icon-plus"></i></a></p>
         </div>
         <!--编辑交易配置页面begin-->
 		<el-dialog title="交易配置" :visible.sync="dialogFormVisible">
@@ -191,7 +192,7 @@
 					   <el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
           </el-col>
 				</el-row>	
-				<el-row class="li">
+				<!--<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>MT4密码：</span>
 				  </el-col>
@@ -206,7 +207,7 @@
 				  <el-col :span="16" class="li_right">
 					   <el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
           </el-col>
-				</el-row>	
+				</el-row>	-->
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>修改MT4密码：</span>
@@ -266,7 +267,7 @@
 				</el-row>-->
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>最大回撤选择：</span>
+				    <span>建议回撤：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35 small_text">
 					<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>
@@ -276,14 +277,14 @@
 		</el-row>
 		<div slot="footer" class="dialog-footer">
 		  <el-button type="primary" @click="dialogFormVisible = false">提交修改</el-button>
-			<el-button type="success" @click="stop">停止挂机</el-button>
+			<el-button type="danger" @click="stop">停止挂机</el-button>
 			<!--<el-button type="danger" @click="delete_setting">删除</el-button>-->
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
     </div>
 		</el-dialog>
         <!--编辑交易配置页面end-->
 		<div class="page_footer">
-		   <span>交易有风险，入市须谨慎！</span>
+		   	<span>风险警告：外汇和差价合约交易以及任何金融资产进行的交易都涉及高风险，都有损失部分和全部投资资金的可能性，未必适合每一位投资者。在决定参与交易之前，您应该审慎考虑您的投资目标、经验等级、财政状况及风险承受能力。您需要承担相关保证金的支付和交易带来的损失，如果没有足够资金承担损失，请不要贸然进行投资交易。图灵不会为市场风险导致的损失承担任何责任，请确保您已经阅读并完全理解图灵的政策披露描述。</span>
 		</div>
 	</div>	
 </template>
@@ -307,7 +308,7 @@
 		// 使用的平台select
 		options1: [{
           value1: '1',
-          label1: 'GQ-capital'
+          label1: 'GQCapital-Live'
         }],
         value1: '',
 		// MT4账号
@@ -337,14 +338,14 @@
         value3: '',
 		// 同意挂机费用
 		switch2:true,
-		// 最大回撤选择
+		//建议回撤
 		switch3:false,
 		input5: '',
 		// 表格数据
 		tableData: [{
 			id:'1',
 			date: '2016-05-02',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
@@ -354,7 +355,7 @@
 		}, {
 			id:'2',
 			date: '2016-05-02',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
@@ -364,7 +365,7 @@
 		}, {
 			id:'3',
 			date: '2016-05-02',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
@@ -374,7 +375,7 @@
 		}, {
 			id:'4',
 			date: '2016-05-02',
-			platform: 'GQ-capital',
+			platform: 'GQCapital-Live',
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
@@ -386,6 +387,32 @@
       };
     },
     methods: {
+			  // 检测图片格式大小符合
+				testIMG(img){
+						var path = img.value;
+						var fileExt = path.substring(path.lastIndexOf(".")).toLowerCase();
+						if (!fileExt.match(/.jpg|.gif|.png|.bmp/i)) {	// 上传的文件不是图片，请重新上传
+								return false;
+						}
+						var size = (img.files[0].size / 1024).toFixed(0);
+						if(size>2048){ 	//   图片文件大于2M
+								return false;
+						}
+						return true;
+				},
+				// 检测PDF文件格式大小符合
+				testPDF(pdf){
+						var path = pdf.value;
+						var fileExt = path.substring(path.lastIndexOf(".")).toLowerCase();
+						if (!fileExt.match(/.pdf/i)) {	// 上传的文件不是PDF，请重新上传
+								return false;
+						}
+						var size = (pdf.files[0].size / 1024).toFixed(0);
+						if(size>2048){	//   PDF文件大于2M
+								return false;
+						}
+						return true;
+				},
         // 表格编辑按钮
         handleEdit(index, row) {
 					 var self = this;
@@ -396,45 +423,66 @@
 				uploadDebit(){
 					var self = this;
 					var reader = new FileReader();
-					var file = document.getElementById("debit_file").files[0];
-					self.debit = file.name;
-					//读取文件过程方法
-					reader.onload = function (e) {
-						console.log("成功读取....");
-						self.debit_file = true;
+					var fileID = document.getElementById("debit_file");
+					if(!this.testPDF(fileID)){
+                    alert("文件大小类型不符");
+                    fileID.value = "";
+                    return false;
+          }else{
+							var file = document.getElementById("debit_file").files[0];
+							self.debit = file.name;
+							//读取文件过程方法
+							reader.onload = function (e) {
+								console.log("成功读取....");
+								self.debit_file = true;
+							}
+							reader.readAsDataURL(file)
 					}
-					reader.readAsDataURL(file)
 				},
 				// 委托扣款协议img文件
 				uploadDebit1(){
 					var self = this;
 					var reader = new FileReader();
-					var file = document.getElementById("debit_file1").files[0];
-					self.debit1 = file.name;
-					//读取文件过程方法
-					reader.onload = function (e) {
-						console.log("成功读取....");
-						self.debit_file1 = true;
-						var img = document.getElementById("debit_img1");
-												img.style.display = 'inline-block';
-												img.src = e.target.result;
+					var fileID = document.getElementById("debit_file1");
+					if(!this.testIMG(fileID)){
+                    alert("图片大小类型不符");
+                    fileID.value = "";
+                    return false;
+          }else{
+							var file = document.getElementById("debit_file1").files[0];
+							self.debit1 = file.name;
+							//读取文件过程方法
+							reader.onload = function (e) {
+								console.log("成功读取....");
+								self.debit_file1 = true;
+								var img = document.getElementById("debit_img1");
+														img.style.display = 'inline-block';
+														img.src = e.target.result;
+							}
+							reader.readAsDataURL(file)
 					}
-					reader.readAsDataURL(file)
 				},
 				uploadDebit2(){
 					var self = this;
 					var reader = new FileReader();
-					var file = document.getElementById("debit_file2").files[0];
-					self.debit2 = file.name;
-					//读取文件过程方法
-					reader.onload = function (e) {
-						console.log("成功读取....");
-						self.debit_file2 = true;
-						var img = document.getElementById("debit_img2");
-												img.style.display = 'inline-block';
-												img.src = e.target.result;
+					var fileID = document.getElementById("debit_file2");
+					if(!this.testIMG(fileID)){
+                    alert("图片大小类型不符");
+                    fileID.value = "";
+                    return false;
+          }else{
+							var file = document.getElementById("debit_file2").files[0];
+							self.debit2 = file.name;
+							//读取文件过程方法
+							reader.onload = function (e) {
+								console.log("成功读取....");
+								self.debit_file2 = true;
+								var img = document.getElementById("debit_img2");
+														img.style.display = 'inline-block';
+														img.src = e.target.result;
+							}
+							reader.readAsDataURL(file)
 					}
-					reader.readAsDataURL(file)
 				},					
 				// 删除交易配置
 				delete_setting() {
@@ -499,7 +547,6 @@
 }
 .page_content{}
 .page_content .state_tips{
-	height:30px;
 	line-height:30px;
 	text-align:left;
 	padding-right:30px;
@@ -507,7 +554,19 @@
 }
 .page_content .state_tips a{
 	font-size:15px;
-	color:#20a0ff;
+    display: inline-block;
+    width: 100px;
+    height: 35px;
+    margin: 10px 0;
+    background: #21b548;
+    color: #fff;
+    text-align: center;
+    line-height: 35px;
+    border-radius: 4px;
+}
+.page_content .state_tips a i{
+	margin-left:5px;
+	font-size:14px;
 }
 .page_content .state_tips span{
  	display:inline-block;
@@ -516,18 +575,6 @@
 	border-radius:12px;
 	vertical-align:middle;
 	margin-right:30px;
-}
-.page_content .state_tips .red{
-	background:#f99090;
-}
-.page_content .state_tips .green{
-	background:#9ee29e;
-}
-.page_content .state_tips .yellow{
-	background:#efef5c;
-}
-.page_content .state_tips .blue{
-	background:#7073f1;
 }
 /*编辑交易配置页面begin*/
 .edit_content{
@@ -603,15 +650,14 @@
 
 
 .page_footer{
-	height: 55px;
   border-top: 1px solid #f4f4f4;
   text-align: left;
   padding: 0 10px;
 }
 .page_footer span{
 	display: inline-block;
-  height: 55px;
-  line-height: 55px;
+  font-size:15px;
+  line-height: 25px;
 }
 
 
