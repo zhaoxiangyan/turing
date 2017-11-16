@@ -311,7 +311,7 @@
 												img.src = e.target.result;
 					}
 					reader.readAsDataURL(file)
-				},				
+				}			
     }
 }
 </script>

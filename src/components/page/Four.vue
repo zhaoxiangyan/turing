@@ -76,6 +76,80 @@
                  </el-col>
 				</el-row>	-->
 				<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>扣款协议：</span>
+			  </el-col>
+			 <el-col  :span="16" class="li_right">
+		      <a class="preview" href="http://192.168.0.133/system/file/agreement.pdf" target="_blank"><i class="el-icon-document"></i>委托扣款协议</a>
+			 </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span></span>
+			  </el-col>
+			  <el-col  :span="16" class="li_right">
+			   <a class="download" href="http://192.168.0.133/system/file/agreement.zip">下载协议</a>
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议上传方式：</span>
+			  </el-col>
+			  <el-col    :span="16" class="li_right radio35">
+                  <el-switch  v-model="switch0"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
+			  </el-col>			 
+			</el-row>
+			<div v-if="switch0">
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>上传PDF文件：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+					<input type="file" id="debit_file" accept="application/pdf"  @change="uploadDebit()"  name="withholdPdf">
+					<span class="mask user_mask">{{debit}}</span>
+			  </el-col>  
+			</el-row>
+			</div>
+			<div v-else>
+			<el-row class="li" >
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第一页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<input type="file" id="debit_file1" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadDebit1()" name="withholdPic">
+				<span class="mask user_mask1">{{debit1}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file1">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			    <img id="debit_img1">
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第二页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<input type="file" id="debit_file2" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadDebit2()" name="withholdPic">
+				<span class="mask user_mask2">{{debit2}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file2">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			     <img id="debit_img2">
+			  </el-col>
+			</el-row>
+			</div>
+
+
+
+				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>使用的平台：</span>
 				  </el-col>
@@ -98,7 +172,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 					   <el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
-                  </el-col>
+          </el-col>
 				</el-row>	
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -106,7 +180,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 					   <el-input type="password" v-model="password" placeholder="请输入MT4密码" ></el-input>
-                  </el-col>
+          </el-col>
 				</el-row>	
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -114,7 +188,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 					   <el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
-                  </el-col>
+          </el-col>
 				</el-row>	
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -122,7 +196,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
 				    	<el-switch on-text="" off-text="" v-model="switch1" :width="80"></el-switch>
-                  </el-col>
+          </el-col>
 				</el-row>
 				<el-row class="li" v-show="switch1">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -130,7 +204,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 					   <el-input type="password" v-model="password1" placeholder="请输入新的MT4密码" ></el-input>
-                  </el-col>
+          </el-col>
 				</el-row>	
 				<el-row class="li" v-show="switch1">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -138,7 +212,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 					   <el-input type="password" v-model="repassword1" placeholder="请再次输入新的MT4密码" ></el-input>
-                  </el-col>
+          </el-col>
 				</el-row>	
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -146,7 +220,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 					   <el-input v-model="input1" placeholder="请输入投资金额（单位：美元）"></el-input>
-                 </el-col>
+          </el-col>
 				</el-row>	
 			    <el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -163,7 +237,7 @@
 									</el-option>
 								</el-select>
 					  	</template>
-                 </el-col>
+          </el-col>
 				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -171,7 +245,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
 					<el-switch  class="disable" v-model="switch2"  on-text="同意"  off-text="不同意" :width='80' disabled></el-switch>
-                  </el-col>
+          </el-col>
 				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -180,7 +254,7 @@
 				  <el-col :span="16" class="li_right radio35 small_text">
 					<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>
 					  	<el-input v-model="input5" placeholder="自定义回撤百分比" v-show="switch3"></el-input>
-                  </el-col>
+          </el-col>
 				</el-row>
 		</el-row>
 		<div slot="footer" class="dialog-footer">
@@ -201,6 +275,16 @@
     name: 'Four',
     data() {
       return {
+    // 上传扣款协议
+		 switch0:false,
+    // 扣款协议pdf
+	   debit:'上传协议pdf文件',
+		 debit_file:false,
+  	// 扣款协议img
+     debit1:'上传协议第一页',
+		 debit2:'上传协议第二页',
+		 debit_file1:false,
+		 debit_file2:false,
 		//   账户投资资金select
 		input1: '',
 		// 使用的平台select
@@ -303,6 +387,50 @@
            console.log(index, row);
 					 self.dialogFormVisible = true;
         },
+				// 委托扣款协议pdf文件
+				uploadDebit(){
+					var self = this;
+					var reader = new FileReader();
+					var file = document.getElementById("debit_file").files[0];
+					self.debit = file.name;
+					//读取文件过程方法
+					reader.onload = function (e) {
+						console.log("成功读取....");
+						self.debit_file = true;
+					}
+					reader.readAsDataURL(file)
+				},
+				// 委托扣款协议img文件
+				uploadDebit1(){
+					var self = this;
+					var reader = new FileReader();
+					var file = document.getElementById("debit_file1").files[0];
+					self.debit1 = file.name;
+					//读取文件过程方法
+					reader.onload = function (e) {
+						console.log("成功读取....");
+						self.debit_file1 = true;
+						var img = document.getElementById("debit_img1");
+												img.style.display = 'inline-block';
+												img.src = e.target.result;
+					}
+					reader.readAsDataURL(file)
+				},
+				uploadDebit2(){
+					var self = this;
+					var reader = new FileReader();
+					var file = document.getElementById("debit_file2").files[0];
+					self.debit2 = file.name;
+					//读取文件过程方法
+					reader.onload = function (e) {
+						console.log("成功读取....");
+						self.debit_file2 = true;
+						var img = document.getElementById("debit_img2");
+												img.style.display = 'inline-block';
+												img.src = e.target.result;
+					}
+					reader.readAsDataURL(file)
+				},					
 				// 删除交易配置
 				delete_setting() {
         this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
@@ -398,7 +526,7 @@
 .edit_content  .li{
 	margin-top:35px;
 	/*padding:0 30px;*/
-	height:35px;
+	/*height:35px;*/
 	text-align:left;
 }
 .edit_content .li a.preview{
@@ -426,7 +554,7 @@
 	margin-right:10px;
 }
 .edit_content .li div{
-	height:35px;
+	/*height:35px;*/
 }
 .edit_content .li_left{}
 .li_left span{
@@ -438,7 +566,7 @@
 	font-weight:bold;
 }
 .edit_content .li_right{
-	padding-right:30px;
+	/*padding-right:30px;*/
 }
 .li_right a{}
 .capital .el-select{
@@ -486,5 +614,61 @@
 }
 
 
+
+
+/*扣款协议上传*/
+.li_right a.download,.file_box input,.file_box span,.file_box{
+    display: inline-block; */
+    /* margin: 0 10px 10px 0; */
+    padding: 0;
+    /* min-width: 90px; */
+    height: 35px;
+    line-height: 35px;
+    border-radius: 4px;
+    text-align: center;
+}
+.li_right a.download{
+   	display: block;
+    box-sizing: border-box;
+    color: #20a0ff;
+    vertical-align: middle;
+    border: 1px solid #bfcbd9;
+}
+.li_right a.download:hover{
+    border-color: #20a0ff;
+}
+.file_box input[type='file']{
+    opacity: 0;
+    position: absolute;
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    top: 0px;
+    left: 0px;
+    cursor: pointer;
+    width: 100%;
+}
+.file_box span{
+  	display: block;
+    color: rgb(32, 160, 255);
+    font-size: 15px;
+		cursor: pointer;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.file_box{
+  	border: 1px solid #bfcbd9;
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.file_box:hover{
+	border-color: #20a0ff;
+}
+.li div img{
+	  display:none;
+	  vertical-align: bottom;
+    max-width: 100%;
+}
 
 </style>

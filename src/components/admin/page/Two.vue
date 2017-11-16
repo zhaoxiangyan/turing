@@ -139,6 +139,14 @@
           </el-col>
 				</el-row>
 				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5"  class="li_left">
+				    <span>手持身份证正面：</span>
+				  </el-col>
+				  <el-col :span="16"  class="li_right">
+				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>手持身份证正面照</a>
+          </el-col>
+				</el-row>
+				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>邮箱：</span>
 				  </el-col>

@@ -37,6 +37,15 @@
                             <div>
                                 <img id="img2" >
                                 <span class="error" v-show="error.file21">*请上传身份证反面照</span>
+                            </div>
+                            <p class="file_box">
+                                <span class="input_title">手持身份证正面：</span>
+                                <a href="javascript:void(0)">{{file_name3}}</a>
+                                <input class="input_content" type="file" name='idcardPic' id="file3" @change="uploadCard3()" accept="image/png, image/jpeg, image/gif, image/jpg">
+                            </p>
+                            <div>
+                                <img id="img3" >
+                                <span class="error" v-show="error.file31">*请上传手持身份证正面照</span>
                                 <span class="tips">注意事项：上传的单张图片大小不要超过2M；否则影响审核！</span>
                             </div>
                             <div class="checked_div">
@@ -67,13 +76,16 @@
                 file1: false,
                 file_name2:'点击选择图片上传',
                 file2: false,
+                file_name3:'点击选择图片上传',
+                file3:false,
                 checked:false,
                 error: {
                     name1:false,
                     email1:false,
                     card1:false,
                     file11:false,
-                    file21:false
+                    file21:false,
+                    file31:false
                 }
             }
         },
@@ -164,6 +176,22 @@
                     img.style.display = 'inline-block';
                     img.src = e.target.result;
                     self.file2 = true;
+                    //或者 img.src = this.result;  //e.target == this
+                }
+                reader.readAsDataURL(file)
+            },
+            uploadCard3(){
+                var self = this;
+                var reader = new FileReader();
+                var file = document.getElementById("file3").files[0];
+                self.file_name3 = file.name;
+                //读取文件过程方法
+                reader.onload = function (e) {
+                    console.log("成功读取....");
+                    var img = document.getElementById("img3");
+                    img.style.display = 'inline-block';
+                    img.src = e.target.result;
+                    self.file3 = true;
                     //或者 img.src = this.result;  //e.target == this
                 }
                 reader.readAsDataURL(file)
@@ -287,7 +315,7 @@ ul,ol,li{
     background:#fff;
 }
 .input_title{
-    width:100px;
+    width:120px;
     color:#000;
 }
 .input_title{
@@ -302,9 +330,9 @@ ul,ol,li{
     height:40px;
     line-height:40px;
     font-size:14px;
-    width:220px;
+    width:200px;
 }
-#img1,#img2{
+#img1,#img2,#img3{
     display:none;
     max-width:100%;
     max-height:150px;
@@ -319,11 +347,12 @@ ul,ol,li{
     position:absolute;
     color:#3175d1;
     display:inline-block;
-    width:220px;
+    width:200px;
     height:40px;
     text-align:left;
     line-height:40px;
     font-size:15px;
+    overflow:hidden;
 }
 span.tips{
     display:block;

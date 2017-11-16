@@ -37,20 +37,14 @@
 		prop="phone"
 		label="手机号码">
 	</el-table-column>
+	<el-table-column
+		prop="platform"
+		label="使用的平台">
+	</el-table-column>
     <el-table-column
-	  :formatter="Accounts"
-      prop="accounts"
-      label="关联MT4账号">
-    </el-table-column>
-    <el-table-column
-      prop="debit"
-      label="委托扣款协议">
-	<template slot-scope="scope">
-        <el-tag
-          :type="scope.row.debit === '已通过' ? 'success' : 'danger'"
-          close-transition>{{scope.row.debit}}</el-tag>
-    </template>  
-    </el-table-column>		
+      prop="account"
+      label="MT4账号">
+    </el-table-column>	
 		<el-table-column
       prop="user"
       label="三方合作协议"
@@ -63,7 +57,7 @@
     </el-table-column>
 		<el-table-column
       prop="state_text"
-      label="运行状态"
+      label="处理状态"
       width="150"
       :filters="[{ text: '未处理', value: '未处理' }, { text: '已处理', value: '已处理' }]"
       :filter-method="filterTag"
@@ -109,7 +103,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 					   <el-input v-model="name" placeholder="用户真实姓名" :disabled='true' ></el-input>
-                </el-col>
+          </el-col>
 				</el-row>	
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
@@ -117,7 +111,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right">
 					   <el-input v-model="phone" placeholder="用户手机号码" :disabled='true' ></el-input>
-                </el-col>
+          </el-col>
 				</el-row>	
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6"  class="li_left">
@@ -125,7 +119,7 @@
 				  </el-col>
 				  <el-col :span="16"  class="li_right">
 				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>您已签约三方合作协议</a>
-                  </el-col>
+          </el-col>
 				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
@@ -133,50 +127,50 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
 					<el-switch  v-model="switch7"  on-text="已通过"  off-text="未通过" :width='80'></el-switch>
-                  </el-col>
-				</el-row>
+          </el-col>
+				</el-row>	 
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-				    <span>委托扣款协议：</span>
+				    <span>使用的平台：</span>
 				  </el-col>
-				  <el-col :span="16" class="li_right">
-				     	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>用户委托扣款协议</a>
-                  </el-col>
-				</el-row>
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-				    <span>扣款协议是否通过：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch8"  on-text="已通过"  off-text="未通过" :width='80'></el-switch>
-                  </el-col>
+				  <el-col :span="16" class="li_right platform select100">
+					    <template>
+								<el-select v-model="value1" placeholder="请选择">
+									<el-option
+									v-for="item in options1"
+									:key="item.value1"
+									:label="item.label1"
+									:value="item.value1">
+									</el-option>
+								</el-select>
+					  	</template>
+          </el-col>
 				</el-row>	
-				<el-row class="li textarea_box">
-				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-				    <span>关联MT4账号：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input class="mt4_input" type="text" v-for="number in numbers" :key="number.index" v-model="number.value" :disabled="whether" placeholder="请输入协议相关联的MT4账号"></el-input>
-                 </el-col>
-				</el-row>		    
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-				    <span>操作：</span>
+				    <span>MT4账号：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-                        <el-button type="primary" @click="Locking" v-if="whether">解锁</el-button>
-						<el-button type="primary" @click="Locking" v-else>锁定</el-button>
-						<el-button  @click="addMT4" :disabled="whether">新增</el-button>
-						<el-button @click="removeMT4" :disabled="whether">删除</el-button>
-                 </el-col>
-				</el-row>		    
-				<!--<el-row class="li">
+					   <el-input v-model="input2" placeholder="请输入MT4账号" disabled></el-input>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
+				    <span>MT4密码：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					   <el-input v-model="password" placeholder="请输入MT4密码" disabled></el-input>
+          </el-col>
+				</el-row>	
+
+
+				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
 				    <span>是否发送信息：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch6"  on-text="发送"  off-text="不发送" :width='80'></el-switch>
-                  </el-col>
+					   <el-switch  v-model="switch6"  on-text="发送"  off-text="不发送" :width='80'></el-switch>
+          </el-col>
 				</el-row>
 				<el-row class="li textarea_box" v-show="switch6" >
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
@@ -184,15 +178,15 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right textarea_div" >
 					  <el-input type="textarea" v-model="value2"></el-input>
-                 </el-col>
-				</el-row>-->
+          </el-col>
+				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
 				    <span>是否处理：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch4"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
-                  </el-col>
+				   	<el-switch  v-model="switch4"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
+          </el-col>
 				</el-row>
 		</el-row>
 		<div slot="footer" class="dialog-footer">
@@ -222,7 +216,7 @@
           value1: '1',
           label1: 'GQ-capital'
         }],
-        value1: '1',
+    value1: '1',
 		// MT4账号
 		input2: '',
 		// MT4密码
@@ -264,22 +258,23 @@
 		switch8:false,
 		// 管理关联MT4账号
 		//  添加MT4账号
-		numbers:[
-			{value:''}
-		],
+		// numbers:[
+		// 	{value:''}
+		// ],
 		// 管理MT4账号操作
 		// 关联MT4账号是否可编辑
-		whether:true,
+		// whether:true,
 		// 搜索框
 		input6: '',
-        select: '0',
+    select: '0',
 		// 表格数据
 		tableData: [{
 			id:'1',
 			date: '2016-05-02',
 			name:'gdf',
 			phone:'15212345678',
-			accounts:[123,456,789],
+			platform: 'GQ-capital',
+			account:'745456',
 			debit:'已通过',
 			user:'未通过',
 			state:'1',
@@ -289,7 +284,8 @@
 			date: '2016-05-02',
 			name:'tfd',
 			phone:'15212345678',
-			accounts:[123,456,789],
+			platform: 'GQ-capital',
+			account:'12124',
 			debit:'已通过',
 			user:'未通过',
 			state:'2',
@@ -299,7 +295,8 @@
 			date: '2016-05-02',
 			name:'err',
 			phone:'15212345678',
-			accounts:[123,456,789],
+			platform: 'GQ-capital',
+			account:'123',
 			debit:'已通过',
 			user:'未通过',
 			state:'3',
@@ -309,7 +306,8 @@
 			date: '2016-05-02',
 			name:'fss',
 			phone:'15212345678',
-			accounts:[123,456,789],
+			platform: 'GQ-capital',
+			account:'4567',
 			debit:'已通过',
 			user:'未通过',
 			state:'4',
@@ -332,20 +330,6 @@
 						}else if(row.state == '4'){
 							return 'four-row';
 						}
-        },
-		// 多个MT4账号json读取
-		Accounts (row, column) {
-                const arr = row[column.property]
-                /* 这里的 if(arr === undefined)
-                 * 是根据自己的需求，决定arr长度为0时的判断条件
-                 * 可以和这个不同
-                 */ 
-                if(arr === undefined){
-                    return '0'
-                } else {
-                    return (arr.join(","));
-                }
-				console.log(cellValue);
         },
         // 表格编辑按钮
         handleEdit(index, row) {
@@ -370,34 +354,17 @@
             message: '已取消删除'
           });          
         });
-        },
+    },
 	  filterTag(value, row) {
         return row.state_text === value;
-      },
+    },
 	  // 分页
 	  handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-      },
-		// 添加MT4账号
-	  Locking(){
-          this.whether = !this.whether;
-	  },
-	  addMT4(){
-		var self = this;
-		self.numbers.push({
-			value:''
-		})
-      },
-	  removeMT4(){
-		var self = this;
-		var index = self.numbers.length-1;
-		if(index !== 0){
-			self.numbers.splice(index,1)
-		}
-	  }
+    }
     }
 }
 </script>

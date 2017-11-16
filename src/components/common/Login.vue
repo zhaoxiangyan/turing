@@ -151,8 +151,8 @@
       var self = this;
       self.empty1 = false;
       var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
-      var pswReg = /^\w{6,16}$/;
-      // 6-16位字母、数字和下划线
+      var pswReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+      // 8-16位字母和数字的组合
       if (self.phone1 === '' || self.password === '') {
         // alert('输入框不能为空')
          self.message1 = "请填写完整";
@@ -163,7 +163,7 @@
            self.empty1 = true;
            return false;
       }else if(!pswReg.test(self.password)){
-           self.message1 = '请输入格式正确的密码（6-16位字母、数字和下划线）';
+           self.message1 = '请输入格式正确的密码（8-16位字母和数字的组合）';
            self.empty1 = true;
            return false;
       }else {

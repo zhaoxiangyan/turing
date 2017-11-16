@@ -17,7 +17,7 @@
                             <p><input type="text" id="messageCode" placeholder="请输入短信验证码" v-model="code"> <input type="submit" v-model="sendMessage" :disabled='disabled' id="send" @click="sendCaptcha"></p>
                             <div class="error_div"><span class="error" v-show="error.code1">*短信验证码错误</span></div>
                             <p><input type="password" id="psw" placeholder="请输入密码" v-model="password"> </p>
-                            <div class="error_div"><span class="error" v-show="error.password1">*请输入格式正确的密码（6-16位字母、数字和下划线）</span></div>
+                            <div class="error_div"><span class="error" v-show="error.password1">*请输入格式正确的密码（8-16位字母和数字的组合）</span></div>
                             <p><input type="password" id="repsw" placeholder="请再次输入密码" v-model="repassword"> </p>
                             <div class="error_div"><span class="error" v-show="error.repassword1">*两次密码不一致</span></div>
                             <div class="checked_div">
@@ -130,8 +130,8 @@
             register() {
                 var self = this;
                 var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
-                var pswReg = /^\w{6,16}$/;
-                // 6-16位字母、数字和下划线
+                var pswReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+                // 8-16位字母和数字的组合
                 if (self.phone === '' || !phoneReg.test(self.phone)) {
                      self.error.phone1 = true;
                      return false;

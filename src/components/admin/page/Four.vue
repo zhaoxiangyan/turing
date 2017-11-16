@@ -134,6 +134,14 @@
 				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>扣款协议是否通过：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right radio35">
+				    	<el-switch  v-model="switch8"  on-text="已通过"  off-text="未通过" :width='80'></el-switch>
+          </el-col>
+				</el-row>	
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>使用的平台：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right platform select100">
@@ -276,6 +284,7 @@
       return {
 		name:'赵先生',
 		phone:'15112345678',
+		switch8:false,
 		//   账户投资资金select
 		input1: '',
 		// 使用的平台select
