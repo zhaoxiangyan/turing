@@ -1,19 +1,18 @@
 <template>
 	<div class="Four">
-	<div v-title>我的交易信息</div>
+	<div v-title>我的账户信息</div>
 	    <div class="page_title">
-		    <span><i class="el-icon-edit"></i>我的交易信息</span>
+		    <span><i class="el-icon-edit"></i>我的账户信息</span>
 		    <el-breadcrumb separator="/">
 				<el-breadcrumb-item :to="{path:'/home'}">首页</el-breadcrumb-item>
-				<el-breadcrumb-item>我的交易信息</el-breadcrumb-item>
+				<el-breadcrumb-item>我的账户信息</el-breadcrumb-item>
 	    	</el-breadcrumb>
 		</div>	
         <div class="page_content">
 <template>
   <el-table
     :data="tableData"
-    style="width: 100%"
-    :row-class-name="tableRowClassName">
+    style="width: 100%">
     <el-table-column
       prop="date"
       label="日期"
@@ -41,6 +40,24 @@
       prop="retracement"
       label="最大回撤">
     </el-table-column>
+		<el-table-column
+      prop="state"
+      label="账户状态">
+<template slot-scope="scope">
+      <el-tag v-if="scope.row.state === '1'"
+          type="danger"
+          close-transition>审核未通过</el-tag>
+      <el-tag v-else-if="scope.row.state === '2'"
+          type="success"
+          close-transition>正在运行</el-tag>
+			<el-tag v-else-if="scope.row.state === '3'"
+          type="warning"
+          close-transition>等待审核</el-tag>
+			<el-tag v-else-if="scope.row.state === '4'"
+          type="primary"
+          close-transition>停止运行</el-tag>
+</template>  
+    </el-table-column>
     <el-table-column
       label="操作"
       width="100">
@@ -54,7 +71,7 @@
     </el-table-column>
   </el-table>
 </template>  
-<p class="state_tips">审核未通过：<span class="red"></span>正在运行：<span class="green"></span>等待审核：<span class="yellow"></span>停止运行：<span class="blue"></span></p>
+<p class="state_tips"><a href="/system/two">去添加账户</a></p>
         </div>
         <!--编辑交易配置页面begin-->
 		<el-dialog title="交易配置" :visible.sync="dialogFormVisible">
@@ -239,14 +256,14 @@
 					  	</template>
           </el-col>
 				</el-row>
-				<el-row class="li">
+				<!--<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>同意挂机费用：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
 					<el-switch  class="disable" v-model="switch2"  on-text="同意"  off-text="不同意" :width='80' disabled></el-switch>
           </el-col>
-				</el-row>
+				</el-row>-->
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>最大回撤选择：</span>
@@ -369,18 +386,6 @@
       };
     },
     methods: {
-        // 获取数据状态，类名表格
-	      tableRowClassName(row, index) {
-						if(row.state == '1'){
-							return 'red-row';
-						}else if(row.state == '2'){
-							return 'green-row';
-						}else if(row.state == '3'){
-							return 'yellow-row';
-						}else if(row.state == '4'){
-							return 'blue-row';
-						}
-        },
         // 表格编辑按钮
         handleEdit(index, row) {
 					 var self = this;
@@ -497,7 +502,12 @@
 	height:30px;
 	line-height:30px;
 	text-align:left;
-	padding-left:30px;
+	padding-right:30px;
+	text-align:right;
+}
+.page_content .state_tips a{
+	font-size:15px;
+	color:#20a0ff;
 }
 .page_content .state_tips span{
  	display:inline-block;
