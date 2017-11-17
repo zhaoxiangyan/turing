@@ -28,19 +28,6 @@
             </el-row>
             <el-row class="li">
               <el-col  :xs="7" :sm="6" :md="5" :lg="5">
-                 <span class="title">邮箱：</span>
-              </el-col>
-              <el-col  :span="16">
-                <!--<el-input v-model="input2" placeholder="989746@qq.com"></el-input>-->
-<el-input placeholder="请输入邮箱" v-model="input2">
-<el-tooltip slot="append" content="修改邮箱" placement="top">
-    <el-button  icon="edit" @click="dialogFormVisible = true" ></el-button>
-</el-tooltip>    
-</el-input>
-              </el-col>
-            </el-row>
-            <el-row class="li">
-              <el-col  :xs="7" :sm="6" :md="5" :lg="5">
                  <span class="title">手机号码：</span>
               </el-col>
               <el-col  :span="16">
@@ -52,6 +39,19 @@
 </el-input>                
               </el-col>
             </el-row>
+            <el-row class="li">
+              <el-col  :xs="7" :sm="6" :md="5" :lg="5">
+                 <span class="title">邮箱：</span>
+              </el-col>
+              <el-col  :span="16">
+                <!--<el-input v-model="input2" placeholder="989746@qq.com"></el-input>-->
+<el-input placeholder="请输入邮箱" v-model="input2">
+<el-tooltip slot="append" content="修改邮箱" placement="top">
+    <el-button  icon="edit" @click="dialogFormVisible = true" ></el-button>
+</el-tooltip>    
+</el-input>
+              </el-col>
+            </el-row>           
             <el-row class="li">
               <el-col  :xs="7" :sm="6" :md="5" :lg="5">
                  <span class="title">最近登录时间：</span>

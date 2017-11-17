@@ -48,6 +48,8 @@
 			  </el-col>
 			  <el-col    :span="16" class="li_right radio35">
                   <el-switch  v-model="switch0"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
+									<i v-if="switch0">*请上传pdf格式的文件，大小不要超过2M</i>
+									<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
 			  </el-col>			 
 			</el-row>
 			<div v-if="switch0">
@@ -202,8 +204,10 @@
 				    <span>建议回撤：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35 small_text">
-					<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比" v-show="switch3"></el-input>
+					    <!--<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>-->
+							<el-radio class="radio" v-model="switch3" label="0">35%</el-radio>
+              <el-radio class="radio" v-model="switch3" label="1">自定义</el-radio>
+					  	<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false"></el-input>
           </el-col>
 				</el-row>
 		</el-row>
@@ -264,7 +268,7 @@
 		// 同意挂机费用
 		switch2:false,
 		// 建议回撤
-		switch3:false,
+		switch3:'0',
 		input5: ''
       };
     },
@@ -273,7 +277,7 @@
 				testIMG(img){
 						var path = img.value;
 						var fileExt = path.substring(path.lastIndexOf(".")).toLowerCase();
-						if (!fileExt.match(/.jpg|.gif|.png|.bmp/i)) {	// 上传的文件不是图片，请重新上传
+						if (!fileExt.match(/.jpg|.jpeg|.gif|.png|.bmp/i)) {	// 上传的文件不是图片，请重新上传
 								return false;
 						}
 						var size = (img.files[0].size / 1024).toFixed(0);
@@ -301,7 +305,7 @@
 					var reader = new FileReader();
 					var fileID = document.getElementById("debit_file");
 					if(!this.testPDF(fileID)){
-                    alert("文件大小类型不符");
+										self.$message.error('上传文件大小类型不符');
                     fileID.value = "";
                     return false;
           }else{
@@ -321,7 +325,7 @@
 					var reader = new FileReader();
 					var fileID = document.getElementById("debit_file1");
 					if(!this.testIMG(fileID)){
-                    alert("图片大小类型不符");
+										self.$message.error('图片大小类型不符');
                     fileID.value = "";
                     return false;
           }else{
@@ -343,7 +347,7 @@
 					var reader = new FileReader();
 					var fileID = document.getElementById("debit_file2");
 					if(!this.testIMG(fileID)){
-                    alert("图片大小类型不符");
+										self.$message.error('图片大小类型不符');
                     fileID.value = "";
                     return false;
           }else{
@@ -464,6 +468,10 @@
 }
 .radio35{
 	line-height:35px;
+}
+.radio35 i{
+	color:#76838f;
+	font-style:normal;
 }
 .small_text .el-input{
 	float:right;

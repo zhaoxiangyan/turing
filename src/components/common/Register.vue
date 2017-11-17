@@ -22,7 +22,7 @@
                             <div class="error_div"><span class="error" v-show="error.repassword1">*两次密码不一致</span></div>
                             <div class="checked_div">
                                 <input type="checkbox" id="checkbox" v-model="checked"> 同意并接受
-                                <a href="/system/glhProtocol" class="" target="_blank">图灵用户协议</a>
+                                <a href="/system/protocol" class="" target="_blank">图灵用户协议</a>
                             </div>
                             <div class="phone-submit">
                                 <input type="submit" id="submit" value="注册" v-if="checked" @click="register">
@@ -162,24 +162,16 @@
                         url: '/turingcloud/register?phone='+self.phone+'&msmCode='+self.code+'&password='+self.password
                     }).then(function(res){
                         console.log(res);
-                       if(res.data.rcode == '0'||res.data.rcode == '1'){
-                           alert('注册成功');
-                           self.$router.push('/system/add');
-                       }else if(res.data.rcode =='2'){
-                           alert('账号已注册,资料审核中');
-                       }else if(res.data.rcode == '3'){
-                           alert('账号已注册,请登录');
-                           self.$router.push('/system/login');
-                       }else if(res.data.rcode == '4'){
-                           alert('账号已注册,资料审核未通过，请重新填写个人资料');
-                           self.$router.push('/system/add');
-                       }else if(res.data.rcode == '6'){
-                           alert('验证码过期,请重新发送验证码');
-                       }else if(res.data.rcode == '7'){
-                           alert('验证码错误,请重新填写');
-                       }else{
-                           alert('Error');
-                       }
+                         var storage = window.sessionStorage; 
+                         storage["userId"] = res.response.data.message;
+                         self.$message({
+                            showClose: true,
+                            message: '注册成功',
+                            type: 'success',
+                            onClose:function(){
+                                self.$router.push('/system/add');
+                            }
+                         });
                     }).catch(function(err){
                         console.log(err);
                         self.http_message = err.response.data.message;

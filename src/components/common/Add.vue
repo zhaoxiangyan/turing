@@ -46,11 +46,11 @@
                             <div>
                                 <img id="img3" >
                                 <span class="error" v-show="error.file31">*请上传手持身份证正面照</span>
-                                <span class="tips">注意事项：上传的单张图片大小不要超过2M；否则影响审核！</span>
+                                <span class="tips">注意事项：上传的图片格式为jpg/jpeg/gif/png,大小不要超过2M；否则影响审核！</span>
                             </div>
                             <div class="checked_div">
                                 <input type="checkbox" id="checkbox" v-model="checked"> 同意并接受
-                                <a href="/system/glhProtocol" class="" target="_blank">图灵用户协议</a>
+                                <a href="/system/protocol" class="" target="_blank">图灵用户协议</a>
                             </div>
                             <div class="confirm-submit">
                                 <input type="submit" id="submit" value="确认提交" v-if="checked" >
@@ -152,7 +152,7 @@
             testIMG(img){
                 var path = img.value;
                 var fileExt = path.substring(path.lastIndexOf(".")).toLowerCase();
-                if (!fileExt.match(/.jpg|.gif|.png|.bmp/i)) {
+                if (!fileExt.match(/.jpg|.jpeg|.gif|.png|.bmp/i)) {
                     // 上传的文件不是图片，请重新上传
                    return false;
                 }
@@ -169,7 +169,7 @@
                 var reader = new FileReader();
                 var fileID = document.getElementById("file1");
                 if(!this.testIMG(fileID)){
-                    alert("图片大小类型不符");
+                    self.$message.error('图片大小类型不符');
                     fileID.value = "";
                     return false;
                 }else{
@@ -192,7 +192,7 @@
                 var reader = new FileReader();
                 var fileID = document.getElementById("file2");
                 if(!this.testIMG(fileID)){
-                    alert("图片大小类型不符");
+                    self.$message.error('图片大小类型不符');
                     fileID.value = "";
                     return false;
                 }else{
@@ -215,7 +215,7 @@
                 var reader = new FileReader();
                 var fileID = document.getElementById("file3");
                 if(!this.testIMG(fileID)){
-                    alert("图片大小类型不符");
+                    self.$message.error('图片大小类型不符');
                     fileID.value = "";
                     return false;
                 }else{

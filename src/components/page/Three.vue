@@ -18,33 +18,7 @@
                 <el-input v-model="input1" placeholder="Andy" :disabled="true"></el-input>
               </el-col>
             </el-row>
-            <el-row class="li">
-              <el-col  :xs="7" :sm="6" :md="5" :lg="5">
-                 <span class="title">邮箱：</span>
-              </el-col>
-              <el-col  :span="16">
-                <!--<el-input v-model="input2" placeholder="989746@qq.com"></el-input>-->
-<el-input placeholder="请输入邮箱" v-model="input2">
-<el-tooltip slot="append" content="修改邮箱" placement="top">
-    <el-button  icon="edit" @click="dialogFormVisible = true" ></el-button>
-</el-tooltip>    
-</el-input>
-              </el-col>
-            </el-row>
-            <el-row class="li">
-              <el-col  :xs="7" :sm="6" :md="5" :lg="5">
-                 <span class="title">手机号码：</span>
-              </el-col>
-              <el-col  :span="16">
-               <!-- <el-input v-model="input3" placeholder="1388888888"></el-input>-->
-<el-input placeholder="请输入手机号码" v-model="input3">
-<el-tooltip slot="append" content="修改手机号码" placement="top">
-    <el-button  icon="edit" @click="dialogFormVisible1 = true" ></el-button>
-</el-tooltip>    
-</el-input>                
-              </el-col>
-            </el-row>
-            <el-row class="li">
+             <el-row class="li">
               <el-col  :xs="7" :sm="6" :md="5" :lg="5">
                  <span class="title">身份证号码：</span>
               </el-col>
@@ -73,6 +47,32 @@
     <el-button slot="append" icon="edit" v-popover:popover5 ></el-button>
 </el-input>
 <!--<v-distpicker></v-distpicker>-->
+              </el-col>
+            </el-row>
+            <el-row class="li">
+              <el-col  :xs="7" :sm="6" :md="5" :lg="5">
+                 <span class="title">手机号码：</span>
+              </el-col>
+              <el-col  :span="16">
+               <!-- <el-input v-model="input3" placeholder="1388888888"></el-input>-->
+<el-input placeholder="请输入手机号码" v-model="input3">
+<el-tooltip slot="append" content="修改手机号码" placement="top">
+    <el-button  icon="edit" @click="dialogFormVisible1 = true" ></el-button>
+</el-tooltip>    
+</el-input>                
+              </el-col>
+            </el-row>
+            <el-row class="li">
+              <el-col  :xs="7" :sm="6" :md="5" :lg="5">
+                 <span class="title">邮箱：</span>
+              </el-col>
+              <el-col  :span="16">
+                <!--<el-input v-model="input2" placeholder="989746@qq.com"></el-input>-->
+<el-input placeholder="请输入邮箱" v-model="input2">
+<el-tooltip slot="append" content="修改邮箱" placement="top">
+    <el-button  icon="edit" @click="dialogFormVisible = true" ></el-button>
+</el-tooltip>    
+</el-input>
               </el-col>
             </el-row>
             <el-row class="li">

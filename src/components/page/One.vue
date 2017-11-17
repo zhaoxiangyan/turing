@@ -31,6 +31,8 @@
 			  </el-col>
 			  <el-col :span="16" class="li_right radio35">
                 <el-switch  v-model="switch1"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
+									<i v-if="switch1">*请上传pdf格式的文件，大小不要超过2M</i>
+									<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
 			  </el-col>
 			</el-row>  
 		  <div v-if="switch1">	 		
@@ -220,7 +222,7 @@
 			testIMG(img){
 					var path = img.value;
 					var fileExt = path.substring(path.lastIndexOf(".")).toLowerCase();
-					if (!fileExt.match(/.jpg|.gif|.png|.bmp/i)) {
+					if (!fileExt.match(/.jpg|.jpeg|.gif|.png|.bmp/i)) {
 							// 上传的文件不是图片，请重新上传
 							return false;
 					}
@@ -254,7 +256,7 @@
 			var reader = new FileReader();
 			var fileID = document.getElementById("user_file");
 			if(!this.testPDF(fileID)){
-                    alert("文件大小类型不符");
+										self.$message.error('文件大小类型不符');
                     fileID.value = "";
                     return false;
       }else{
@@ -304,7 +306,7 @@
 			var reader = new FileReader();
 			var fileID = document.getElementById("user_file1");
 			if(!this.testIMG(fileID)){
-                    alert("图片大小类型不符");
+										self.$message.error('图片大小类型不符');
                     fileID.value = "";
                     return false;
       }else{
@@ -326,7 +328,7 @@
 			var reader = new FileReader();
 			var fileID = document.getElementById("user_file2");
 			if(!this.testIMG(fileID)){
-                    alert("图片大小类型不符");
+										self.$message.error('图片大小类型不符');
                     fileID.value = "";
                     return false;
       }else{
@@ -348,7 +350,7 @@
 			var reader = new FileReader();
 			var fileID = document.getElementById("user_file3");
 			if(!this.testIMG(fileID)){
-                    alert("图片大小类型不符");
+										self.$message.error('图片大小类型不符');
                     fileID.value = "";
                     return false;
       }else{
@@ -575,6 +577,10 @@
 
 .radio35{
     line-height: 35px;
+}
+.radio35 i{
+	color:#76838f;
+	font-style:normal;
 }
 .select100 .el-select{
     width: 100%;

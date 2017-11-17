@@ -242,8 +242,10 @@
 				    <span>建议回撤：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35 small_text">
-					<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' disabled ></el-switch>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比" v-show="switch3" :disabled="true"></el-input>
+				     <!--	<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' disabled ></el-switch>-->
+						  <el-radio class="radio" v-model="switch3" label="0" disabled>35%</el-radio>
+              <el-radio class="radio" v-model="switch3" label="1" disabled>自定义</el-radio>
+					  	<el-input v-model="input5" placeholder="自定义回撤百分比"  disabled></el-input>
           </el-col>
 				</el-row>
 				<el-row class="li" v-show="!switch5">
@@ -347,7 +349,7 @@
 		// 同意挂机费用
 		switch2:true,
 		//建议回撤
-		switch3:true,
+		switch3:'0',
 		input5: '45%',
 		// 管理员是否处理
 		switch4:false,

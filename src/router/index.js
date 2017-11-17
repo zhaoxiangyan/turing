@@ -30,9 +30,13 @@ export default new Router({
       component: resolve => require(['../components/common/Register.vue'], resolve)
     },
     {
-      path: '/system/email',
-      component: resolve => require(['../components/common/Email.vue'], resolve)
+      path: '/system/protocol',
+      component: resolve => require(['../components/common/Protocol.vue'], resolve)
     },
+    // {
+    //   path: '/system/email',
+    //   component: resolve => require(['../components/common/Email.vue'], resolve)
+    // },
     {
       path: '/system/add',
       component: resolve => require(['../components/common/Add.vue'], resolve)

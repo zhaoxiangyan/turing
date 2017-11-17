@@ -1,6 +1,6 @@
 <template>
 	<div class="copyright">
-     <p>Copyright&nbsp;&copy;&nbsp;2015-2017 <b>CRM System</b>.<i>All rights reserved.</i><span>Version&nbsp;1.0.1</span></p>
+     <p>Copyright&nbsp;&copy;&nbsp;2015-2017 <b>图灵智能交易系统</b>.<i>版权所有</i><span>Version&nbsp;1.0.1</span></p>
 	</div>	
 </template>
 <script>
