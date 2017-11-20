@@ -56,6 +56,9 @@
                                 <input type="submit" id="submit" value="确认提交" v-if="checked" >
                                 <input type="submit" id="submit" disabled="disabled" value="确认提交" v-else>
                             </div>
+                            <div id="http_message" class="error" v-show="http_mess">
+                                {{http_message}}
+                            </div>
                            </form>
                         </div>
                     </div>
@@ -69,6 +72,8 @@
         name: 'Add',
         data() {
             return {
+                userId: '',
+                detailInforId:'',
                 name: '',
                 email: '',
                 card: '',
@@ -79,6 +84,8 @@
                 file_name3:'点击选择图片上传',
                 file3:false,
                 checked:false,
+                http_mess:false,
+                http_message:'',
                 error: {
                     name1:false,
                     email1:false,
@@ -109,7 +116,14 @@
             //         }).catch(function(err){
             //            alert("AJAX失败");
             //         }); 
-            // 线上代码end        
+            // 线上代码end    
+            var self = this;
+            if(!sessionStorage.getItem("userId")){
+                self.$router.push('/system/register');
+            }else{
+                self.userId = sessionStorage.getItem("userId");    
+                self.detailInforId = sessionStorage.getItem("detailInforId");
+            }
         },
         watch:{
             name:function(){
@@ -144,6 +158,14 @@
                      self.error.file21 = true;
                 }else{
                     self.error.file21 = false;
+                }
+            },
+            file3:function(){
+                 var self = this;
+                if(self.file3 == false){
+                     self.error.file31 = true;
+                }else{
+                    self.error.file31 = false;
                 }
             }
         },
@@ -246,6 +268,7 @@
                      self.error.email1 = true;
                      return false;
                 } else if(self.card === '' || !cardReg.test(self.card)){
+                     self.error.email1 = false;
                      self.error.card1 = true;
                      return false;
                 } else if(self.file1 == false){
@@ -254,31 +277,36 @@
                 } else if(self.file2 == false){
                       self.error.file21 = true;
                       return false;
+                } else if(self.file3 == false){
+                      self.error.file31 = true;
+                      return false;
                 } else {
                     var image = new FormData();
+                    image.append('userId',self.userId);
                     image.append('username',self.name);
+                    image.append('email',self.email);
                     image.append('idcard',self.card);
-                    image.append('idcardPic',document.getElementById("file1").files[0]);
-                    image.append('idcardPic',document.getElementById("file2").files[0]);
+                    image.append('multipartFile1',document.getElementById("file1").files[0]);
+                    image.append('multipartFile2',document.getElementById("file2").files[0]);
+                    image.append('multipartFile3',document.getElementById("file3").files[0]);
                     self.$http({
                         method: 'post',
-                        url: '/turingcloud/fillInfor',
+                        url: '/turingcloud/userInfor',
                         // headers: { "Content-Type": "multipart/form-data;charset=UTF-8"},
                         // headers: { 'Content-Type': 'application/json;charset=UTF-8'},
                         data:image
                     }).then(function(res){
-                    //    alert(res.data);
-                        if(res.data == '0'){
-                            alert('资料提交成功，请等待审核');
-                            self.$router.push('/system/login');
-                        }else if(res.data == '1'){
-                            alert('请先注册手机号码');
-                            self.$router.push('/system/register');
-                        }else if(res.data == '2'){
-                            alert('身份证上传错误，请重新上传');
-                            return false;
+                        if(res.data.success == false){
+                            self.$message.error(res.data.message);
                         }else{
-                            alert('Error');
+                            self.$message({
+                                    showClose: true,
+                                    message: res.data.message,
+                                    type: 'success',
+                                    onClose:function(){
+                                        self.$router.push('/system/login');
+                                    }
+                            });
                         }
                     }).catch(function(err){
                        alert("AJAX失败");

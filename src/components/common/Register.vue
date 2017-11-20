@@ -12,7 +12,7 @@
                             <!--手机用户注册-->
                             <p><span class="country">中国(+0086)</span> <input type="text" id="phone" placeholder="请输入手机号码" v-model="phone"></p>
                             <div class="error_div"><span class="error" v-show="error.phone1">*请输入正确的手机号码</span></div>
-                            <p><input type="text" id="imgCode" placeholder="请输入图形验证码" v-model="img_code"> <img src="http://192.168.0.133/turingcloud/captcha/gen" id="veriImg" class="areaNum graph" onclick="this.src='http://192.168.0.133/turingcloud/captcha/gen?random='+Math.random()"></p>
+                            <p><input type="text" id="imgCode" placeholder="请输入图形验证码" v-model="img_code"> <img src="http://192.168.0.119/turingcloud/captcha/gen" id="veriImg" class="areaNum graph" onclick="this.src='http://192.168.0.119/turingcloud/captcha/gen?random='+Math.random()"></p>
                             <div class="error_div"><span class="error" v-show="error.img_code1">*图形验证码错误</span></div>
                             <p><input type="text" id="messageCode" placeholder="请输入短信验证码" v-model="code"> <input type="submit" v-model="sendMessage" :disabled='disabled' id="send" @click="sendCaptcha"></p>
                             <div class="error_div"><span class="error" v-show="error.code1">*短信验证码错误</span></div>
@@ -128,9 +128,14 @@
                 } else {
                      self.$http({
                          method: 'post',
-                         url: '/turingcloud/sendMsmCode?phone='+self.phone+'&imageCode='+self.img_code
+                         url: '/turingcloud/msmCode/send?phone='+self.phone+'&imageCode='+self.img_code
                      }).then(function(res){
-                        self.countDown();
+                        if(res.data.success == true){
+                            self.countDown();
+                        }else{
+                            self.http_message = res.data.message;
+                            self.http_mess = true;
+                        }  
                      }).catch(function(err){
                         self.http_mess = true;
                         self.http_message = err.response.data.message;
@@ -161,21 +166,27 @@
                         method: 'post',
                         url: '/turingcloud/register?phone='+self.phone+'&msmCode='+self.code+'&password='+self.password
                     }).then(function(res){
-                        console.log(res);
-                         var storage = window.sessionStorage; 
-                         storage["userId"] = res.response.data.message;
-                         self.$message({
-                            showClose: true,
-                            message: '注册成功',
-                            type: 'success',
-                            onClose:function(){
-                                self.$router.push('/system/add');
-                            }
-                         });
+                        // console.log(res);
+                         if(res.data.success == true){
+                                var storage = window.sessionStorage; 
+                                storage["userId"] = res.data.body.id;
+                                if(res.data.body.detailInformation != null){
+                                   storage["detailInforId"] = res.data.body.detailInformation.id;
+                                }
+                                self.$message({
+                                    showClose: true,
+                                    message: '注册成功',
+                                    type: 'success',
+                                    onClose:function(){
+                                        self.$router.push('/system/add');
+                                    }
+                                });
+                         }else{
+                              self.http_message = res.data.message;
+                              self.http_mess = true; 
+                         }    
                     }).catch(function(err){
-                        console.log(err);
-                        self.http_message = err.response.data.message;
-                        self.http_mess = true;  
+                         console.log(err);
                     });
                     // self.$router.push('/add')
                     // alert('注册成功');

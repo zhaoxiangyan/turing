@@ -30,11 +30,11 @@ module.exports = {
     proxyTable: {
       // 本地代理服务器跨域并统一后端URL
       '/turingcloud': { 
-        target: 'http://192.168.0.133', 
-        changeOrigin: true, 
-        pathRewrite: { 
-        '^/turingcloud': '/turingcloud' 
-        } 
+        target: 'http://192.168.0.119', 
+        changeOrigin: true
+        // pathRewrite: { 
+        // '^/turingcloud': '/turingcloud' 
+        // } 
         } 
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
