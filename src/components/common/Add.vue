@@ -1,7 +1,7 @@
 <template>
     <div class="add">
       <div v-title>填写个人资料</div>
-        <div class="box">
+        <div class="box" v-show="all">
             <div id="add_title">
                 <span>填写个人资料</span>
             </div>
@@ -72,6 +72,10 @@
         name: 'Add',
         data() {
             return {
+                all:false,
+                phone:'',
+                password:'',
+                code:'',
                 userId: '',
                 detailInforId:'',
                 name: '',
@@ -96,34 +100,46 @@
                 }
             }
         },
-        mounted: function () {
-            // 线上代码begin
-            //    var self = this;
-            //    self.$http({
-            //             method: 'post',
-            //             url: '/turingcloud/checkUserStatus'
-            //             // headers: { "Content-Type": "multipart/form-data;charset=UTF-8"},
-            //             // headers: { 'Content-Type': 'application/json;charset=UTF-8'},
-            //         }).then(function(res){
-            //             if(res.data == '0'){
-            //                 console.log('用户已注册，请填写资料');
-            //             }else if(res.data == '1'){
-            //                 alert('请先注册手机号码');
-            //                 self.$router.push('/system/register');
-            //             }else{
-            //                 alert('Error');
-            //             }
-            //         }).catch(function(err){
-            //            alert("AJAX失败");
-            //         }); 
-            // 线上代码end    
+        mounted: function() {
             var self = this;
-            if(!sessionStorage.getItem("userId")){
-                self.$router.push('/system/register');
-            }else{
-                self.userId = sessionStorage.getItem("userId");    
-                self.detailInforId = sessionStorage.getItem("detailInforId");
+            if(sessionStorage.getItem("password")){
+                self.phone = sessionStorage.getItem("phone1");
+                self.password = sessionStorage.getItem("password")
+                self.$http({
+                        method: 'post',
+                        url: '/turingcloud/userInfor/byPassword?username='+self.phone+'&password='+self.password
+                    }).then(function(res){
+                        // console.log(res);
+                        var storage = window.sessionStorage; 
+                        storage["userId"] = res.data.body.id;
+                        if(res.data.body.detailInformation != null){
+                                   storage["detailInforId"] = res.data.body.detailInformation.id;
+                        }
+                        self.updatesession();
+                    }).catch(function(err){
+                       alert("AJAX失败");
+                    }); 
+            }else if(sessionStorage.getItem("msmCode")){
+                self.phone = sessionStorage.getItem("phone2");
+                self.code = sessionStorage.getItem("msmCode");
+                self.$http({
+                        method: 'post',
+                        url: '/turingcloud/userInfor/byMsm?phone='+self.phone+'&msmCode='+self.code
+                    }).then(function(res){
+                        // console.log(res);
+                        var storage = window.sessionStorage; 
+                        storage["userId"] = res.data.body.id;
+                        if(res.data.body.detailInformation != null){
+                                   storage["detailInforId"] = res.data.body.detailInformation.id;
+                        }
+                        self.updatesession();
+                    }).catch(function(err){
+                       alert("AJAX失败");
+                    }); 
+            }else {
+               self.updatesession();
             }
+  
         },
         watch:{
             name:function(){
@@ -136,8 +152,8 @@
                 }
             },
             card:function(){
-               var self = this;
-               var cardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                var self = this;
+                var cardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
                 if(self.card === '' || !cardReg.test(self.card)){
                      self.error.card1 = true;
                 }else{
@@ -145,7 +161,7 @@
                 }
             },
             file1:function(){
-                  var self = this;
+                var self = this;
                 if(self.file1 == false){
                      self.error.file11 = true;
                 }else{
@@ -170,6 +186,16 @@
             }
         },
         methods: {
+            updatesession(){ 
+            var self = this;
+            if(!sessionStorage.getItem("userId")){
+                self.$router.push('/system/register');
+            }else{
+                self.all = true;
+                self.userId = sessionStorage.getItem("userId");    
+                self.detailInforId = sessionStorage.getItem("detailInforId");
+            }
+            },
             // 检测图片格式大小符合
             testIMG(img){
                 var path = img.value;
@@ -283,6 +309,9 @@
                 } else {
                     var image = new FormData();
                     image.append('userId',self.userId);
+                    if(self.detailInforId){
+                       image.append('detailInforId',self.detailInforId);
+                    }
                     image.append('username',self.name);
                     image.append('email',self.email);
                     image.append('idcard',self.card);

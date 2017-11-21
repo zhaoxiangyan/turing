@@ -12,7 +12,7 @@
                             <!--手机用户注册-->
                             <p><span class="country">中国(+0086)</span> <input type="text" id="phone" placeholder="请输入手机号码" v-model="phone"></p>
                             <div class="error_div"><span class="error" v-show="error.phone1">*请输入正确的手机号码</span></div>
-                            <p><input type="text" id="imgCode" placeholder="请输入图形验证码" v-model="img_code"> <img src="http://192.168.0.133/turingcloud/captcha/gen" id="veriImg" class="areaNum graph" onclick="this.src='http://192.168.0.133/turingcloud/captcha/gen?random='+Math.random()"></p>
+                            <p><input type="text" id="imgCode" placeholder="请输入图形验证码" v-model="img_code"> <img src="http://192.168.0.119/turingcloud/captcha/gen" id="veriImg" class="areaNum graph" onclick="this.src='http://192.168.0.119/turingcloud/captcha/gen?random='+Math.random()"></p>
                             <div class="error_div"><span class="error" v-show="error.img_code1">*图形验证码错误</span></div>
                             <p><input type="text" id="messageCode" placeholder="请输入短信验证码" v-model="code"> <input type="submit" v-model="sendMessage" :disabled='disabled' id="send" @click="sendCaptcha"></p>
                             <div class="error_div"><span class="error" v-show="error.code1">*短信验证码错误</span></div>
@@ -22,6 +22,9 @@
                             <div class="error_div"><span class="error" v-show="error.repassword1">*两次密码不一致</span></div>
                             <div class="phone-submit">
                                 <input type="submit" id="submit" value="提交" @click="find">
+                            </div>
+                            <div id="http_message" class="error" v-show="http_mess">
+                                {{http_message}}
                             </div>
                         </div>
                     </div>
@@ -48,7 +51,9 @@
                     code1:false,
                     password1:false,
                     repassword1:false
-                }
+                },
+                http_mess:false,
+                http_message:''
             }
         },
         watch:{
@@ -61,28 +66,28 @@
                 }else{
                      self.error.phone1 = true;
                 }
-            },
-            // 图形验证码
-            img_code:function(){
-                /*var pswReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;*/
-                var self = this;
-                if(self.img_code.length!=4){
-                   self.error.img_code1 = true;
-                }else{
-                this.$http({
-                        method: 'post',
-                        url: '/turingcloud/captcha/validate?captcha='+self.img_code,
-                    }).then(function(res){
-                       if(res.data.rcode == '0'){
-                           self.error.img_code1 = false;
-                       }else{
-                           self.error.img_code1 = true;
-                       }
-                    }).catch(function(err){
-                       alert("AJAX失败");
-                    });  
-                }
             }
+            // 图形验证码
+            // img_code:function(){
+            //     /*var pswReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/;*/
+            //     var self = this;
+            //     if(self.img_code.length!=4){
+            //        self.error.img_code1 = true;
+            //     }else{
+            //     this.$http({
+            //             method: 'post',
+            //             url: '/turingcloud/captcha/validate?captcha='+self.img_code,
+            //         }).then(function(res){
+            //            if(res.data.rcode == '0'){
+            //                self.error.img_code1 = false;
+            //            }else{
+            //                self.error.img_code1 = true;
+            //            }
+            //         }).catch(function(err){
+            //            alert("AJAX失败");
+            //         });  
+            //     }
+            // }
         },
         methods: {
             // 发送验证码倒计时
@@ -106,19 +111,31 @@
             sendCaptcha(){
                 var self = this;
                 var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+                self.http_mess = false;
                 if (self.phone === '' || !phoneReg.test(self.phone)) {
-                     self.error.phone1 = true;
+                    self.http_message = '*请输入正确的手机号码';
+                    self.http_mess = true;
+                    //  self.error.phone1 = true;
                      return false;
-                } else if(self.error.img_code1 == true){
+                } else if(self.img_code.length!=4){
+                    //   self.error.img_code1 = true;
+                    self.http_message = '*图形验证码错误';
+                    self.http_mess = true;
                       return false;
                 } else {
                      self.$http({
                          method: 'post',
-                         url: '/turingcloud/sendMsmCode?phone='+self.phone
+                         url: '/turingcloud/msmCode/send?phone='+self.phone+'&imageCode='+self.img_code
                      }).then(function(res){
-                        self.countDown();
+                        if(res.data.success == true){
+                            self.countDown();
+                        }else{
+                            self.http_message = res.data.message;
+                            self.http_mess = true;
+                        }  
                      }).catch(function(err){
-
+                        self.http_mess = true;
+                        self.http_message = err.response.data.message;
                      });
                 }
             },
@@ -131,9 +148,6 @@
                 if (self.phone === '' || !phoneReg.test(self.phone)) {
                      self.error.phone1 = true;
                      return false;
-                } else if(self.error.img_code1 == true||self.img_code === ''){
-                      self.error.img_code1 = true;
-                      return false;
                 } else if(self.password === ''|| !pswReg.test(self.password)){
                      self.error.password1 = true;
                      return false;
@@ -143,27 +157,23 @@
                 } else {
                     self.$http({
                         method: 'post',
-                        url: '/turingcloud/findWithPhone?phone='+self.phone+'&msmCode='+self.code
+                        url: '/turingcloud/findBackPassword?phone='+self.phone+'&msmCode='+self.code+'&password='+self.password
                     }).then(function(res){
-                       if(res.data.rcode == '0'||res.data.rcode == '1'){
-                           alert('注册成功');
-                           self.$router.push('/system/login');
-                       }else if(res.data.rcode =='2'){
-                           alert('账号已注册,资料审核中');
-                       }else if(res.data.rcode == '3'){
-                           alert('账号已注册,请登录');
-                           self.$router.push('/system/login');
-                       }else if(res.data.rcode == '4'){
-                           alert('账号已注册,资料审核未通过，请重新填写个人资料');
-                           self.$router.push('/system/login');
-                       }else if(res.data.rcode == '6'){
-                           alert('验证码过期,请重新发送验证码');
-                       }else if(res.data.rcode == '7'){
-                           alert('验证码错误,请重新填写');
-                       }else{
-                           alert('Error');
-                       }
+                        if(res.data.success == true){
+                            self.$message({
+                                    showClose: true,
+                                    message: res.data.message,
+                                    type: 'success',
+                                    onClose:function(){
+                                        self.$router.push('/system/');
+                                    }
+                            });
+                        }else if(res.data.success == false){
+                            self.http_message = res.data.message;
+                            self.http_mess = true; 
+                        }
                     }).catch(function(err){
+                        console.log(err);
                        alert("AJAX失败");
                     });
                     // self.$router.push('/add')
@@ -290,7 +300,7 @@ ul,ol,li{
 }
 .phone-submit{
     width:100%;
-    height:40px;
+    /*height:40px;*/
 }
 #submit-find{
     line-height: 40px;

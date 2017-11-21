@@ -67,7 +67,7 @@
         //         }).catch(function(err){
         //             console.log("AJAX失败");
         //         }); 
-        //  线上代码end
+        //  线上代码end  
       },
       methods: {
         //折叠导航栏
@@ -81,8 +81,8 @@
           var self = this;
           if(command == '/system/'){
              self.$http({
-              method: 'post',
-              url: '/turingcloud/user/logout'
+              method: 'get',
+              url: '/turingcloud/logout'
               }).then(function(res){
                   self.$router.push('/system/');
               }).catch(function(err){

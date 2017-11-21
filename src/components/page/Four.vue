@@ -98,7 +98,7 @@
 			     <span>扣款协议：</span>
 			  </el-col>
 			 <el-col  :span="16" class="li_right">
-		      <a class="preview" href="http://192.168.0.133/system/file/agreement.pdf" target="_blank"><i class="el-icon-document"></i>委托扣款协议</a>
+		      <a class="preview" href="http://192.168.0.119/system/file/委托扣款三方协议v170731.pdf" target="_blank"><i class="el-icon-document"></i>委托扣款协议</a>
 			 </el-col>
 			</el-row>
 			<el-row class="li">
@@ -106,7 +106,7 @@
 			     <span></span>
 			  </el-col>
 			  <el-col  :span="16" class="li_right">
-			   <a class="download" href="http://192.168.0.133/system/file/agreement.zip">下载协议</a>
+			   <a class="download" href="http://192.168.0.119/system/file/委托扣款三方协议v170731.zip">下载协议</a>
 			  </el-col>
 			</el-row>
 			<el-row class="li">

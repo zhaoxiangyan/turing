@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import * as actions from './actions'
-// import * as getters from './getters'
+import * as getters from './getters'
 
 Vue.use(Vuex)
 
@@ -20,9 +20,7 @@ const mutations = {
 // 创建 store 实例
 export default new Vuex.Store({
   actions,
-  getters: {
-    getcollapsed: state => state.collapsed
-  },
+  getters,
   state,
   mutations
 })

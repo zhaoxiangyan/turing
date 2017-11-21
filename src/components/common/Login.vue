@@ -16,16 +16,15 @@
             <img src="../../assets/img/login_02.png">
    	  	 		<input type="password" name="password"  v-model="password" placeholder="请输入密码" id="password" >
    	  	 	</div>
-          <div class="re">
-            <label for="keepPwd"><input type="checkbox" id="keepPwd" v-model="repassword">记住密码</label>
+          <div class="re clearfix">
+            <!--<label for="keepPwd"><input type="checkbox" id="keepPwd" v-model="repassword">记住密码</label>-->
             <a href="/system/findpassword">忘记密码？</a>
           </div>
    	  	 	<div class="login_div">
    	  	 		<input type="button" value="登录" id="submit1" @click="login1" >
    	  	 		</input>
    	  	 	</div>
-          <div id="login_message" class="error" v-show="empty1">
-             {{message1}}
+          <div id="login_message" class="error" v-show="empty1" v-html="message1">
           </div>
    	  	 </form>
           <form class="code_form" v-else @keyup.13="login2">
@@ -45,8 +44,7 @@
    	  	 		<input type="button" value="登录" id="submit2" @click="login2">
    	  	 		</input>
    	  	 	</div>
-          <div id="code_message" class="error" v-show="empty2">
-             {{message2}}
+          <div id="code_message" class="error" v-show="empty2" v-html="message2">
           </div>
    	  	 </form>
          <div class="register_div">
@@ -63,11 +61,11 @@
       // 密码验证码登录切换
       switch: true,
       // 密码登录
-      phone1: '',
-      password: '',
+      phone1: '15179820718',
+      password: 'yan151798',
       repassword: false,
       empty1:false,
-      message1:'请填写完整',
+      message1:'',
       // 验证码登录
       phone2: '',
       code: '',
@@ -78,7 +76,7 @@
     }
   },
   mounted() {
-    this.getUser();
+    // this.getUser();
   },
   watch:{
     phone2:function(){
@@ -90,42 +88,9 @@
       }else{
          self.empty2 = false;
          self.disabled = false;
-        //  self.$http({
-        //       method: 'post',
-        //       url: '/turingcloud/login/checkUserStatus?phone='+self.phone2
-        //  }).then(function(res){
-        //     if(res.data == '0'){
-        //       self.empty = false;
-        //       return false;
-        //     }else if(res.data == '1'){
-        //       self.message2 = '手机号码不存在,请先注册';
-        //       self.empty2 = true;
-        //     }else if(res.data == '2'){
-        //       self.message2 = '资料未填写，请先填写资料';
-        //       self.empty2 = true;
-        //       self.$router.push('/add');
-        //     }else if(res.data == '3'){
-        //       self.message2 = '资料正在审核中';
-        //       self.empty2 = true;
-        //     }else if(res.data == '4'){
-        //       self.message2 = '资料审核未通过，请重新填写资料';
-        //       self.empty2 = true;
-        //     }else{
-        //       alert('Error');
-        //     }
-        //  }).catch(function(err){
-        //     alert("AJAX失败");
-        //  });
       }
     }
-    // code:function(){
-    //   if(self.code === ''){
-    //     self.message2 = '请输入验证码';
-    //     self.empty2 = true;
-    //   }else{
 
-    //   }
-    // }
   },
   methods: {
     // 登录方式切换
@@ -167,16 +132,16 @@
            self.empty1 = true;
            return false;
       }else {
-        var storage = window.localStorage; 
-        if(self.repassword){
-          storage["phone"] = self.phone1; 
-          storage["password"] = self.password; 
-          storage["repassword"] =  self.repassword; 
-        }else{
-          storage.removeItem("phone");
-          storage.removeItem("password");
-          storage.removeItem("repassword");
-        }
+        // var storage = window.localStorage; 
+        // if(self.repassword){
+        //   storage["phone"] = self.phone1; 
+        //   storage["password"] = self.password; 
+        //   storage["repassword"] =  self.repassword; 
+        // }else{
+        //   storage.removeItem("phone");
+        //   storage.removeItem("password");
+        //   storage.removeItem("repassword");
+        // }
          // 此处加入后台AJAX验证
         var formdata1 = new FormData();
             formdata1.append('username',self.phone1);
@@ -186,7 +151,8 @@
               url: '/turingcloud/login',
               data:formdata1
          }).then(function(res){
-            console.log("用户信息："+res.data);
+            var storage = window.sessionStorage; 
+            storage["user"] = res.data.principal.id;
             self.$message({
               message: '登录成功',
               type: 'success',
@@ -195,9 +161,12 @@
               }
             });
          }).catch(function(err){
+           var storage = window.sessionStorage; 
+            storage["phone1"] = self.phone1;
+            storage["password"] = self.password; 
             // 手机号密码错误统一500错误，需要改接口
-            self.message2 = '用户名密码错误';
-            self.empty2 = true;
+            self.message1 = err.response.data.message;
+            self.empty1 = true;
          });
       }
     },
@@ -269,25 +238,24 @@
               formdata2.append('msmCode',self.code);
               self.$http({
               method: 'post',
-              url: '/turingcloud/loginbyMsm',
+              url: '/turingcloud/byMsm',
               data: formdata2
               }).then(function(res){
-                console.log(res);
-            // }else if(res.data == '1'){
-            //   self.message2 = '手机号码不存在,请先注册';
-            //   self.empty2 = true;
-            // }else if(res.data == '2'){
-            //   self.message2 = '资料未填写，请先填写资料';
-            //   self.empty2 = true;
-            //   self.$router.push('/system/add');
-            // }else if(res.data == '3'){
-            //   self.message2 = '资料正在审核中';
-            //   self.empty2 = true;
-            // }else if(res.data == '4'){
-            //   self.message2 = '资料审核未通过，请重新填写资料';
-            //   self.empty2 = true;
+                var storage = window.sessionStorage; 
+                 storage["user"] = res.data.authorities.principal.id;
+                self.$message({
+                  message: '登录成功',
+                  type: 'success',
+                  onClose:function(){
+                      self.$router.push('/system/home');
+                  }
+                });
          }).catch(function(err){
-            alert("AJAX失败");
+            var storage = window.sessionStorage; 
+            storage["phone2"] = self.phone2;
+            storage["msmCode"] = self.code;
+            self.message2 = err.response.data.message;
+            self.empty2 = true;
          });
          // 此处加入后台AJAX验证
         
