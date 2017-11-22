@@ -282,7 +282,8 @@
 		<div slot="footer" class="dialog-footer">
 		  <el-button type="primary" @click="dialogFormVisible = false">提交修改</el-button>
 			<el-button type="danger" @click="stop">停止挂机</el-button>
-			<!--<el-button type="danger" @click="delete_setting">删除</el-button>-->
+			<!--看后期开发需求是否需要删除账户信息功能-->
+			<!--<el-button type="danger" @click="delete_setting">删除</el-button>--> 
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
     </div>
 		</el-dialog>
@@ -297,6 +298,7 @@
     name: 'Four',
     data() {
       return {
+			userid:'',
     // 上传扣款协议
 		 switch0:false,
     // 扣款协议pdf
@@ -390,6 +392,32 @@
 		dialogFormVisible: false
       };
     },
+		mounted:function(){
+			var self = this;
+      if(localStorage["userid"]){
+        self.userid = localStorage.getItem("userid");
+      }else{
+        self.$router.push('/system/');
+      } 
+			// 获取用户所有的交易信息
+			if(self.userid === ''){
+				return false;
+			}else{
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/trnsaction/'+self.userid
+								}).then(function(res){
+										if(res.data.success == true){
+												console.log(res.data.body);
+												// 表格数据返回无限长
+										}else if(res.data.success == false){
+												self.$message.error(res.data.message);
+										}
+								}).catch(function(err){
+										alert("AJAX失败");
+								});
+			}
+		},
     methods: {
 			  // 检测图片格式大小符合
 				testIMG(img){
@@ -417,12 +445,6 @@
 						}
 						return true;
 				},
-        // 表格编辑按钮
-        handleEdit(index, row) {
-					 var self = this;
-           console.log(index, row);
-					 self.dialogFormVisible = true;
-        },
 				// 委托扣款协议pdf文件
 				uploadDebit(){
 					var self = this;
@@ -487,29 +509,64 @@
 							}
 							reader.readAsDataURL(file)
 					}
-				},					
+				},		
+				// 表格编辑按钮
+        handleEdit(index, row) {
+					 var self = this;
+					//  alert(row.id);
+					self.$http({
+								method: 'get',
+								url: '/turingcloud/trnsaction/'+self.userid+'/'+row.id
+						}).then(function(res){
+								if(res.data.success == true){
+									 console.log(res.data.body);
+										// 返回数据放进交易配置编辑模态框
+								}else if(res.data.success == false){
+									 self.$message.error(res.data.message);
+								}
+						}).catch(function(err){
+								alert("AJAX失败");
+						});
+					 self.dialogFormVisible = true;
+        },			
 				// 删除交易配置
-				delete_setting() {
-        this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '等待后台删除!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
-      },
-			// 提交停止挂机
-			stop(){
-				self.$message.error('停止挂机');
-			}
+				// delete_setting() {
+				// 		this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
+				// 			confirmButtonText: '确定',
+				// 			cancelButtonText: '取消',
+				// 			type: 'warning'
+				// 		}).then(() => {
+				// 			this.$message({
+				// 				type: 'success',
+				// 				message: '等待后台删除!'
+				// 			});
+				// 		}).catch(() => {
+				// 			this.$message({
+				// 				type: 'info',
+				// 				message: '已取消删除'
+				// 			});          
+				// 		});
+        // },
+				// 提交停止挂机
+				stop(){
+					var self = this;
+					// self.$message.error('停止挂机');
+						this.$confirm('此操作将停止该MT4账号的挂机, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							this.$message({
+								type: 'success',
+								message: '等待后台停止挂机模式!'
+							});
+						}).catch(() => {
+							this.$message({
+								type: 'info',
+								message: '已取消提交'
+							});          
+						});
+				}
     }
 }
 </script>

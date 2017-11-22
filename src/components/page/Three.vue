@@ -55,7 +55,7 @@
               </el-col>
               <el-col  :span="16">
                <!-- <el-input v-model="input3" placeholder="1388888888"></el-input>-->
-<el-input placeholder="请输入手机号码" v-model="body.phone">
+<el-input placeholder="请输入手机号码" v-bind:value="body.phone">
 <el-tooltip slot="append" content="修改手机号码" placement="top">
     <el-button  icon="edit" @click="dialogFormVisible1 = true" ></el-button>
 </el-tooltip>    
@@ -68,7 +68,7 @@
               </el-col>
               <el-col  :span="16">
                 <!--<el-input v-model="input2" placeholder="989746@qq.com"></el-input>-->
-<el-input placeholder="请输入邮箱" v-model="body.email">
+<el-input placeholder="请输入邮箱" v-bind:value="body.email">
 <el-tooltip slot="append" content="修改邮箱" placement="top">
     <el-button  icon="edit" @click="dialogFormVisible = true" ></el-button>
 </el-tooltip>    
@@ -93,7 +93,7 @@
 <el-dialog title="修改用户邮箱" :visible.sync="dialogFormVisible">
   <el-form :model="form">
     <el-form-item label="原邮箱：" :label-width="formLabelWidth">
-      <el-input v-model="body.email"  placeholder="请输入旧的邮箱地址" :disabled="true"></el-input>
+      <el-input v-bind:value="body.email"  placeholder="请输入旧的邮箱地址" :disabled="true"></el-input>
     </el-form-item>
     <el-form-item label="新邮箱：" :label-width="formLabelWidth">
       <el-input v-model="form.newemail"  placeholder="请输入新的邮箱地址"></el-input>
@@ -115,19 +115,23 @@
 <el-dialog title="修改手机号码" :visible.sync="dialogFormVisible1">
   <el-form :model="form1">
     <el-form-item label="旧的手机号码：" :label-width="formLabelWidth1">
-      <el-input v-model="body.phone" placeholder="请输入旧的手机号码" :disabled="true" ></el-input>
+      <el-input v-bind:value="body.phone" placeholder="请输入旧的手机号码" :disabled="true" ></el-input>
     </el-form-item>
     <el-form-item label="短信验证码：" :label-width="formLabelWidth1">
-      <el-input class="code_box"  v-model="form1.code" placeholder="请输入短信验证码"></el-input>
-      <el-button  type="text">发送短信验证码至原手机号码</el-button>
+      <el-input class="code_box"  v-model="form1.oldcode" placeholder="请输入短信验证码"></el-input>
+      <el-button  type="text" @click="sendoldCode()" :disabled="form1.sendoldstatus">{{form1.sendoldtext}}</el-button>
     </el-form-item>
     <el-form-item label="新的手机号码：" :label-width="formLabelWidth1">
       <el-input v-model="form1.newphone" placeholder="请输入新的手机号码" ></el-input>    
     </el-form-item>
+    <el-form-item label="短信验证码：" :label-width="formLabelWidth1">
+      <el-input class="code_box"  v-model="form1.newcode" placeholder="请输入短信验证码"></el-input>
+      <el-button  type="text" @click="sendnewCode()" :disabled="form1.sendnewstatus">{{form1.sendnewtext}}</el-button>
+    </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-    <el-button type="primary" @click="dialogFormVisible1 = false">确 定</el-button>
+    <el-button type="primary" @click="modifyPhone()" :disabled="!modifyphone_button" >确 定</el-button>
   </div>
 </el-dialog>
 <!--修改密码模态框-->
@@ -145,7 +149,7 @@
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-    <el-button type="primary" @click="dialogFormVisible2 = false">确 定</el-button>
+    <el-button type="primary" @click="modifyPassword()" :disabled="!modifypassword_button">确 定</el-button>
   </div>
 </el-dialog>
 	</div>	
@@ -178,8 +182,13 @@
         // 修改手机号码模态框
         dialogFormVisible1: false,
         form1: {
-          code: '',
-          newphone: ''
+          oldcode: '',
+          sendoldstatus:false,
+          sendoldtext:'发送短信验证码至旧手机号码',
+          newphone: '',
+          newcode: '',
+          sendnewstatus:false,
+          sendnewtext:'发送短信验证码至新手机号码'
         },
         formLabelWidth1: '120px',
         // 修改密码模态框
@@ -197,19 +206,34 @@
     components:{
       // VDistpicker
     },
+    computed:{
+       modifyphone_button:function(){
+          var self = this;
+          if(self.form1.oldcode === ''||self.form1.newphone === ''||self.form1.newcode === ''){
+            return false;
+          }else{
+            return true;
+          }
+       },
+       modifypassword_button:function(){
+          var self = this;
+          if(self.form2.oldpassword === ''||self.form2.newpassword === ''||self.form2.repassword === ''){
+            return false;
+          }else{
+            return true;
+          }
+       }
+    },
     mounted:function(){
       var self = this;
       if(localStorage["userid"]){
         self.userid = localStorage.getItem("userid");
       }else{
-        self.$message({
-            message: '用户登录失效，请重新登录！',
-            type: 'error',
-            onClose:function(){
-                self.$router.push('/system/');
-            }
-         });
+        self.$router.push('/system/');
       }
+      if(self.userid === ''){
+        return false;
+      }else{
       self.$http({
           method: 'get',
           url: '/turingcloud/user/'+self.userid,
@@ -230,6 +254,7 @@
           }).catch(function(err){
               console.log("AJAX失败");
           }); 
+      }
     },
     filters: {
       // 时间过滤器
@@ -265,8 +290,8 @@
       // 发送邮件至新邮箱
       sendEmail(){
            var self = this;
-           var emailExp = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-           if(self.form.newemail === ''|| !emailExp.test(self.form.newemail)){
+           var emailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+           if(self.form.newemail === ''|| !emailReg.test(self.form.newemail)){
              self.$message({
                 message: '请输入有效的邮箱地址',
                 type: 'warning'
@@ -309,6 +334,149 @@
                   }).catch(function(err){
                       console.log("AJAX失败");
                   }); 
+      },
+      // 发送旧手机验证码倒计时
+      countdownoldCode(){
+          var self = this;
+          self.form1.sendoldtext = '重新发送(59)';
+          var _step = 58;
+          var _res = setInterval(function(){
+              self.form1.sendoldtext = '重新发送('+_step+')';
+              _step-=1;
+              if(_step<=0){
+                  self.form1.sendoldstatus = false;
+                  self.form1.sendoldtext = '发送短信验证码至旧手机号码';
+                  clearInterval(_res);
+              }else{
+                    self.form1.sendoldstatus = true;
+              }
+          },1000);
+      },
+      // 发送验证码至旧手机号码
+      sendoldCode(){
+           var self = this;
+           self.$http({
+                    method: 'post',
+                    url: '/turingcloud/phone/oldPhone/sendMsm?phone='+self.body.phone
+                    }).then(function(res){
+                      if(res.data.success == true){
+                        self.countdownoldCode();
+                      }else if(res.data.success == false){
+                        self.$message.error(res.data.message);
+                      }
+                    }).catch(function(err){
+                        console.log("AJAX失败");
+                    }); 
+      },
+      // 发送新手机验证码倒计时
+      countdownnewCode(){
+          var self = this;
+          self.form1.sendnewtext = '重新发送(59)';
+          var _step = 58;
+          var _res = setInterval(function(){
+              self.form1.sendnewtext = '重新发送('+_step+')';
+              _step-=1;
+              if(_step<=0){
+                  self.form1.sendnewstatus = false;
+                  self.form1.sendnewtext = '发送短信验证码至新手机号码';
+                  clearInterval(_res);
+              }else{
+                    self.form1.sendnewstatus = true;
+              }
+          },1000);
+      },
+      // 发送验证码至新手机号码
+      sendnewCode(){
+           var self = this;
+           var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+           if(self.form1.newphone === ''|| !phoneReg.test(self.form1.newphone)){
+             self.$message({
+                message: '请输入有效的新手机号码',
+                type: 'warning'
+              });
+              return false;
+           }else{
+           self.$http({
+                    method: 'post',
+                    url: '/turingcloud/phone/newPhone/sendMsm?phone='+self.form1.newphone
+                    }).then(function(res){
+                      if(res.data.success == true){
+                        self.countdownnewCode();
+                      }else if(res.data.success == false){
+                        self.$message.error(res.data.message);
+                      }
+                    }).catch(function(err){
+                        console.log("AJAX失败");
+                    }); 
+           }
+      },
+      // 确定修改手机号码
+      modifyPhone(){
+        var self = this;
+        var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+        if(self.form1.newphone === ''||phoneReg.test(self.form1.newphone)){
+          self.$message({
+                message: '请输入有效的新手机号码',
+                type: 'warning'
+              });
+              return false;
+        }else{
+           self.$http({
+                    method: 'post',
+                    url: '/turingcloud/phone/'+self.userid+'/modifiedPhone?newPhone='+self.form1.newphone+'&newMsm='+self.form1.newcode+'&oldPhone='+self.body.phone+'&oldMsm='+self.form1.oldcode
+                    }).then(function(res){
+                      if(res.data.success == true){
+                        self.$message({
+                          message: '手机号码修改成功',
+                          type: 'success'
+                        });
+                      }else if(res.data.success == false){
+                        self.$message.error(res.data.message);
+                      }
+                    }).catch(function(err){
+                        console.log("AJAX失败");
+                    }); 
+        }
+      },
+      // 修改登录密码
+      modifyPassword(){
+        var self = this;
+        var pswReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
+        if (self.form2.oldpassword === '' || !pswReg.test(self.form2.oldpassword)) {
+                self.$message({
+                      message: '请输入旧的登录密码',
+                      type: 'warning'
+                    });
+                return false;
+        } else if(self.form2.newpassword === ''|| !pswReg.test(self.form2.newpassword)){
+              self.$message({
+                      message: '请输入格式正确的新登录密码（8-16位字母和数字的组合）',
+                      type: 'warning'
+                    });
+                return false;
+        } else if(self.form2.repassword != self.form2.newpassword ){
+              self.$message({
+                      message: '两次密码不一致',
+                      type: 'warning'
+                    });
+                return false;
+        } else {
+           self.$http({
+                    method: 'post',
+                    url: '/turingcloud/user/'+self.userid+'/modifiedPassword?oldPassword='+self.form2.oldpassword+'&newPassword='+self.form2.newpassword
+                    }).then(function(res){
+                      if(res.data.success == true){
+                        self.$message({
+                          message: '登录密码修改成功',
+                          type: 'success'
+                        });
+                      }else if(res.data.success == false){
+                        self.$message.error(res.data.message);
+                      }
+                    }).catch(function(err){
+                        console.log("AJAX失败");
+                    }); 
+        }
       }
     }
 }

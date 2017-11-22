@@ -217,6 +217,15 @@
 		
       };
     },
+		mounted:function(){
+      var self = this;
+      if(localStorage["userid"]){
+        self.userid = localStorage.getItem("userid");
+      }else{
+        self.$router.push('/system/');
+      }   
+			// 加入审核未通过的数据
+    },
     methods: {
 			// 检测图片格式大小符合
 			testIMG(img){
@@ -418,12 +427,6 @@
 							  self.$message.error('MT4密码不能为空');
 						 }else if(self.repassword != self.password){
 							  self.$message.error('两次密码不一致');
-						 }else if(self.input1 === ''){
-							  self.$message.error('账户投资资金不能为空');
-						 }else if(self.value3 === ''){
-							 self.$message.error('请至少选择一种挂机模式');
-						 }else if(self.retreatRate === ''){
-							 self.$message.error('建议回撤未填写');
 						 }else{
 							      var httpform = new FormData();
                     httpform.append('fileType',self.switch1);
@@ -431,13 +434,9 @@
                     httpform.append('platform',self.value1);
                     httpform.append('mt4Account',self.input2);
 										httpform.append('mt4Password',self.password);
-										httpform.append('capital',self.input1);
-										httpform.append('mode',self.value3);
-										httpform.append('agreeHangupCosts',self.switch2);
-										httpform.append('retreatRate',self.retreatRate);
                     self.$http({
                         method: 'post',
-                        url: '/turingcloud/trnsaction/'+self.userid,
+                        url: '/turingcloud/coopContract/'+self.userid,
                         data:httpform
                     }).then(function(res){
                         if(res.data.success == false){
@@ -455,7 +454,7 @@
 						 }
 					 }else{
                // 上传图片方式
-						 if(self.user_file1 == false || self.user_file2 == false){
+						 if(self.user_file1 == false || self.user_file2 == false || self.user_file3 == false){
                  self.$message.error('上传图片文件出错');
 						 }else if(self.value1 === ''){
 							  self.$message.error('请选择使用的平台');
@@ -465,27 +464,18 @@
 							  self.$message.error('MT4密码不能为空');
 						 }else if(self.repassword != self.password){
 							  self.$message.error('两次密码不一致');
-						 }else if(self.input1 === ''){
-							  self.$message.error('账户投资资金不能为空');
-						 }else if(self.value3 === ''){
-							 self.$message.error('请至少选择一种挂机模式');
-						 }else if(self.retreatRate === ''){
-							 self.$message.error('建议回撤未填写');
 						 }else{
 							      var httpform = new FormData();
                     httpform.append('fileType',self.switch1);
                     httpform.append('multipartFile1',document.getElementById("user_file1").files[0]);
 										httpform.append('multipartFile2',document.getElementById("user_file2").files[0]);
+										httpform.append('multipartFile3',document.getElementById("user_file3").files[0]);
                     httpform.append('platform',self.value1);
                     httpform.append('mt4Account',self.input2);
 										httpform.append('mt4Password',self.password);
-										httpform.append('capital',self.input1);
-										httpform.append('mode',self.value3);
-										httpform.append('agreeHangupCosts',self.switch2);
-										httpform.append('retreatRate',self.retreatRate);
                     self.$http({
                         method: 'post',
-                        url: '/turingcloud/trnsaction/'+self.userid,
+                        url: '/turingcloud/coopContract/'+self.userid,
                         data:httpform
                     }).then(function(res){
                         if(res.data.success == false){

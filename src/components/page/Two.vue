@@ -279,13 +279,7 @@
       if(localStorage["userid"]){
         self.userid = localStorage.getItem("userid");
       }else{
-        self.$message({
-            message: '用户登录失效，请重新登录！',
-            type: 'error',
-            onClose:function(){
-                self.$router.push('/system/');
-            }
-         });
+        self.$router.push('/system/');
       }   
     },
 		watch:{
