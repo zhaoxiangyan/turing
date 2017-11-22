@@ -153,9 +153,9 @@
          }).then(function(res){
             var storage = window.localStorage; 
             if(storage["userid"]){
-              storage.setItem["userid"] = res.data.principal.id;
+              storage.setItem("userid",res.data.principal.id);
             }else{
-              storage["userid"] = res.data.principal.id;
+              storage.setItem("userid",res.data.principal.id);
             }
             self.$message({
               message: '登录成功',

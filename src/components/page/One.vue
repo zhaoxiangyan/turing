@@ -151,7 +151,7 @@
 		</el-row>	  
 		<div class="page_footer clearfix">
 		   <span>风险警告：外汇和差价合约交易以及任何金融资产进行的交易都涉及高风险，都有损失部分和全部投资资金的可能性，未必适合每一位投资者。在决定参与交易之前，您应该审慎考虑您的投资目标、经验等级、财政状况及风险承受能力。您需要承担相关保证金的支付和交易带来的损失，如果没有足够资金承担损失，请不要贸然进行投资交易。图灵不会为市场风险导致的损失承担任何责任，请确保您已经阅读并完全理解图灵的政策披露描述。</span>
-			 <a href="javascript:void(0)">提交</a>
+			 <a href="javascript:void(0)" @click="submitAgreement()">提交</a>
 		</div>
 	</div>	
 </template>
@@ -176,7 +176,7 @@
 		 user_file3:false,
 		 // 使用的平台select
 		options1: [{
-          value1: '1',
+          value1: 'GQCapital-Live',
           label1: 'GQCapital-Live'
         }],
     value1: '',
@@ -188,13 +188,13 @@
 		// 反馈信息
 		value2:'',
 	//    扣款协议pdf
-	   debit:'上传协议pdf文件',
-		 debit_file:false,
+	  //  debit:'上传协议pdf文件',
+		//  debit_file:false,
 	//    扣款协议img
-     debit1:'上传协议第一页',
-		 debit2:'上传协议第二页',
-		 debit_file1:false,
-		 debit_file2:false,
+    //  debit1:'上传协议第一页',
+		//  debit2:'上传协议第二页',
+		//  debit_file1:false,
+		//  debit_file2:false,
 		//  上传出错
 		 error:{
 			//  扣款协议pdf
@@ -270,36 +270,36 @@
 				reader.readAsDataURL(file)
 			}
 		},
-		uploadUserPDF() {
-			var self = this;
-		      self.error.user = false;
-			if(self.user_file == false){
-					self.error.user_text = '上传协议出错';
-					self.error.user = true;
-					return false;
-			}else {
-				var userid = window.sessionStorage['userId'];
-				var image = new FormData();
-				image.append('cooperationPdf',document.getElementById("user_file").files[0]);
-				self.$http({
-					method: 'post',
-					url: '/turingcloud/user/'+userid+'/contract/pdf/addCooperation',
-					data:image
-				}).then(function(res){
-			    	if(res.status == '201'){
-						alert('协议上传成功，请等待审核');
-					}else if(res.status == '400'){
-						alert('用户数据获取错误，请重新登录');
-					}else if(res.status == '500'){
-						alert('文件因服务器内部存储失败');
-					}else{
-						alert('Error：协议上传出错');
-					}
-				}).catch(function(err){
-					alert("AJAX失败");
-				});
-			}
-	    },		
+		// uploadUserPDF() {
+		// 	var self = this;
+		//       self.error.user = false;
+		// 	if(self.user_file == false){
+		// 			self.error.user_text = '上传协议出错';
+		// 			self.error.user = true;
+		// 			return false;
+		// 	}else {
+		// 		var userid = window.sessionStorage['userId'];
+		// 		var image = new FormData();
+		// 		image.append('cooperationPdf',document.getElementById("user_file").files[0]);
+		// 		self.$http({
+		// 			method: 'post',
+		// 			url: '/turingcloud/user/'+userid+'/contract/pdf/addCooperation',
+		// 			data:image
+		// 		}).then(function(res){
+		// 	    	if(res.status == '201'){
+		// 				alert('协议上传成功，请等待审核');
+		// 			}else if(res.status == '400'){
+		// 				alert('用户数据获取错误，请重新登录');
+		// 			}else if(res.status == '500'){
+		// 				alert('文件因服务器内部存储失败');
+		// 			}else{
+		// 				alert('Error：协议上传出错');
+		// 			}
+		// 		}).catch(function(err){
+		// 			alert("AJAX失败");
+		// 		});
+		// 	}
+	  //   },		
 		// 三方合作协议img文件
 		uploadUser1(){
 			var self = this;
@@ -367,42 +367,142 @@
 				reader.readAsDataURL(file)
 			}
 		},
-		uploadUserIMG() {
-			var self = this;
-		      self.error.user1 = false;
-			if(self.user_file1 == false){
-					self.error.user_text1 = '上传协议第一页出错';
-					self.error.user1 = true;
-					return false;
-			} else if(self.user_file2 == false){
-					self.error.user_text1 = '上传协议第二页出错';
-					self.error.user1 = true;
-					return false;
-			} else if(self.user_file3 == false){
-					self.error.user_text1 = '上传协议第三页出错';
-					self.error.user1 = true;
-					return false;
-			} else {
-				var image = new FormData();
-				image.append('cooperationPic',document.getElementById("user_file1").files[0]);
-				image.append('cooperationPic',document.getElementById("user_file2").files[0]);
-				image.append('cooperationPic',document.getElementById("user_file3").files[0]);
-				self.$http({
-					method: 'post',
-					url: '/turingcloud/user/upload/cooperationPic',
-					data:image
-				}).then(function(res){
-				//    alert(res.data);
-					if(res.data == true){
-						alert('协议上传成功，请等待审核');
-					}else{
-						alert('Error：协议上传出错');
-					}
-				}).catch(function(err){
-					alert("AJAX失败");
-				});
+		// uploadUserIMG() {
+		// 	var self = this;
+		//       self.error.user1 = false;
+		// 	if(self.user_file1 == false){
+		// 			self.error.user_text1 = '上传协议第一页出错';
+		// 			self.error.user1 = true;
+		// 			return false;
+		// 	} else if(self.user_file2 == false){
+		// 			self.error.user_text1 = '上传协议第二页出错';
+		// 			self.error.user1 = true;
+		// 			return false;
+		// 	} else if(self.user_file3 == false){
+		// 			self.error.user_text1 = '上传协议第三页出错';
+		// 			self.error.user1 = true;
+		// 			return false;
+		// 	} else {
+		// 		var image = new FormData();
+		// 		image.append('cooperationPic',document.getElementById("user_file1").files[0]);
+		// 		image.append('cooperationPic',document.getElementById("user_file2").files[0]);
+		// 		image.append('cooperationPic',document.getElementById("user_file3").files[0]);
+		// 		self.$http({
+		// 			method: 'post',
+		// 			url: '/turingcloud/user/upload/cooperationPic',
+		// 			data:image
+		// 		}).then(function(res){
+		// 		//    alert(res.data);
+		// 			if(res.data == true){
+		// 				alert('协议上传成功，请等待审核');
+		// 			}else{
+		// 				alert('Error：协议上传出错');
+		// 			}
+		// 		}).catch(function(err){
+		// 			alert("AJAX失败");
+		// 		});
+		// 	}
+	  //   },
+			// 提交合作协议
+			submitAgreement(){
+				 var self = this;
+           if(self.switch1 == true){
+            // 上传pdf文件方式
+						 if(self.user_file == false){
+                 self.$message.error('上传PDF文件出错');
+						 }else if(self.value1 === ''){
+							  self.$message.error('请选择使用的平台');
+						 }else if(self.input2 === ''){
+							  self.$message.error('MT4账号不能为空');
+						 }else if(self.password === ''){
+							  self.$message.error('MT4密码不能为空');
+						 }else if(self.repassword != self.password){
+							  self.$message.error('两次密码不一致');
+						 }else if(self.input1 === ''){
+							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.value3 === ''){
+							 self.$message.error('请至少选择一种挂机模式');
+						 }else if(self.retreatRate === ''){
+							 self.$message.error('建议回撤未填写');
+						 }else{
+							      var httpform = new FormData();
+                    httpform.append('fileType',self.switch1);
+                    httpform.append('multipartFile1',document.getElementById("user_file").files[0]);
+                    httpform.append('platform',self.value1);
+                    httpform.append('mt4Account',self.input2);
+										httpform.append('mt4Password',self.password);
+										httpform.append('capital',self.input1);
+										httpform.append('mode',self.value3);
+										httpform.append('agreeHangupCosts',self.switch2);
+										httpform.append('retreatRate',self.retreatRate);
+                    self.$http({
+                        method: 'post',
+                        url: '/turingcloud/trnsaction/'+self.userid,
+                        data:httpform
+                    }).then(function(res){
+                        if(res.data.success == false){
+                            self.$message.error(res.data.message);
+                        }else{
+                            self.$message({
+                                    showClose: true,
+                                    message: "提交成功",
+                                    type: 'success'
+                            });
+                        }
+                    }).catch(function(err){
+                       alert("AJAX失败");
+                    });
+						 }
+					 }else{
+               // 上传图片方式
+						 if(self.user_file1 == false || self.user_file2 == false){
+                 self.$message.error('上传图片文件出错');
+						 }else if(self.value1 === ''){
+							  self.$message.error('请选择使用的平台');
+						 }else if(self.input2 === ''){
+							  self.$message.error('MT4账号不能为空');
+						 }else if(self.password === ''){
+							  self.$message.error('MT4密码不能为空');
+						 }else if(self.repassword != self.password){
+							  self.$message.error('两次密码不一致');
+						 }else if(self.input1 === ''){
+							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.value3 === ''){
+							 self.$message.error('请至少选择一种挂机模式');
+						 }else if(self.retreatRate === ''){
+							 self.$message.error('建议回撤未填写');
+						 }else{
+							      var httpform = new FormData();
+                    httpform.append('fileType',self.switch1);
+                    httpform.append('multipartFile1',document.getElementById("user_file1").files[0]);
+										httpform.append('multipartFile2',document.getElementById("user_file2").files[0]);
+                    httpform.append('platform',self.value1);
+                    httpform.append('mt4Account',self.input2);
+										httpform.append('mt4Password',self.password);
+										httpform.append('capital',self.input1);
+										httpform.append('mode',self.value3);
+										httpform.append('agreeHangupCosts',self.switch2);
+										httpform.append('retreatRate',self.retreatRate);
+                    self.$http({
+                        method: 'post',
+                        url: '/turingcloud/trnsaction/'+self.userid,
+                        data:httpform
+                    }).then(function(res){
+                        if(res.data.success == false){
+                            self.$message.error(res.data.message);
+                        }else{
+                            self.$message({
+                                    showClose: true,
+                                    message: "提交成功",
+                                    type: 'success'
+                            });
+                        }
+                    }).catch(function(err){
+                       alert("AJAX失败");
+                    });
+						 }
+					 }
 			}
-	    }
     }
 }
 </script>

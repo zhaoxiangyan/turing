@@ -214,7 +214,7 @@
 		<div class="page_footer clearfix">
 		   <!--<span>交易有风险，入市须谨慎！</span>-->
 			 <span>风险警告：外汇和差价合约交易以及任何金融资产进行的交易都涉及高风险，都有损失部分和全部投资资金的可能性，未必适合每一位投资者。在决定参与交易之前，您应该审慎考虑您的投资目标、经验等级、财政状况及风险承受能力。您需要承担相关保证金的支付和交易带来的损失，如果没有足够资金承担损失，请不要贸然进行投资交易。图灵不会为市场风险导致的损失承担任何责任，请确保您已经阅读并完全理解图灵的政策披露描述。</span>
-			 <a href="javascript:void(0)">提交</a>
+			 <el-button type="success" @click="submitSetting()" :disabled="!switch2">提交</el-button>
 		</div>
 	</div>	
 </template>
@@ -222,6 +222,7 @@
  export default {
     data() {
       return {
+		  userid:'',
 	  // 上传扣款协议
 		 switch0:false,
     // 扣款协议pdf
@@ -236,7 +237,7 @@
 		input1: '',
 		// 使用的平台select
 		options1: [{
-          value1: '1',
+          value1: 'GQCapital-Live',
           label1: 'GQCapital-Live'
         }],
     value1: '',
@@ -252,16 +253,16 @@
 		repassword1:'',
 		// 使用挂机模式
 		options3: [{
-          value3: '选项1',
+          value3: '1',
           label3: '成长型'
         }, {
-          value3: '选项2',
+          value3: '2',
           label3: '宏利先锋型'
         }, {
-          value3: '选项3',
+          value3: '3',
           label3: '趋势策略型'
         }, {
-          value3: '选项4',
+          value3: '4',
           label3: '综合尊享型'
         }],
     value3: '',
@@ -269,9 +270,38 @@
 		switch2:false,
 		// 建议回撤
 		switch3:'0',
-		input5: ''
+		input5: '',
+		retreatRate: '35%'
       };
     },
+		mounted:function(){
+      var self = this;
+      if(localStorage["userid"]){
+        self.userid = localStorage.getItem("userid");
+      }else{
+        self.$message({
+            message: '用户登录失效，请重新登录！',
+            type: 'error',
+            onClose:function(){
+                self.$router.push('/system/');
+            }
+         });
+      }   
+    },
+		watch:{
+			 switch3:function(){
+				  var self = this;
+          if(self.switch3 == "0"){
+						self.retreatRate = "35%";
+					}else if(self.switch3 == "1"){
+						self.retreatRate = self.input5;
+					}
+			 },
+			 input5:function(){
+				  var self = this;
+					self.retreatRate = self.input5;
+			 }
+		},
     methods: {
 			  // 检测图片格式大小符合
 				testIMG(img){
@@ -363,7 +393,107 @@
 						}
 						reader.readAsDataURL(file)
 					}
-				}			
+				},
+				// 提交交易配置			
+				submitSetting(){
+					 var self = this;
+           if(self.switch0 == true){
+            // 上传pdf文件方式
+						 if(self.debit_file == false){
+                 self.$message.error('上传PDF文件出错');
+						 }else if(self.value1 === ''){
+							  self.$message.error('请选择使用的平台');
+						 }else if(self.input2 === ''){
+							  self.$message.error('MT4账号不能为空');
+						 }else if(self.password === ''){
+							  self.$message.error('MT4密码不能为空');
+						 }else if(self.repassword != self.password){
+							  self.$message.error('两次密码不一致');
+						 }else if(self.input1 === ''){
+							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.value3 === ''){
+							 self.$message.error('请至少选择一种挂机模式');
+						 }else if(self.retreatRate === ''){
+							 self.$message.error('建议回撤未填写');
+						 }else{
+							      var httpform = new FormData();
+                    httpform.append('fileType',self.switch0);
+                    httpform.append('multipartFile1',document.getElementById("debit_file").files[0]);
+                    httpform.append('platform',self.value1);
+                    httpform.append('mt4Account',self.input2);
+										httpform.append('mt4Password',self.password);
+										httpform.append('capital',self.input1);
+										httpform.append('mode',self.value3);
+										httpform.append('agreeHangupCosts',self.switch2);
+										httpform.append('retreatRate',self.retreatRate);
+                    self.$http({
+                        method: 'post',
+                        url: '/turingcloud/trnsaction/'+self.userid,
+                        data:httpform
+                    }).then(function(res){
+                        if(res.data.success == false){
+                            self.$message.error(res.data.message);
+                        }else{
+                            self.$message({
+                                    showClose: true,
+                                    message: "提交成功",
+                                    type: 'success'
+                            });
+                        }
+                    }).catch(function(err){
+                       alert("AJAX失败");
+                    });
+						 }
+					 }else{
+               // 上传图片方式
+						 if(self.debit_file1 == false || self.debit_file2 == false){
+                 self.$message.error('上传图片文件出错');
+						 }else if(self.value1 === ''){
+							  self.$message.error('请选择使用的平台');
+						 }else if(self.input2 === ''){
+							  self.$message.error('MT4账号不能为空');
+						 }else if(self.password === ''){
+							  self.$message.error('MT4密码不能为空');
+						 }else if(self.repassword != self.password){
+							  self.$message.error('两次密码不一致');
+						 }else if(self.input1 === ''){
+							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.value3 === ''){
+							 self.$message.error('请至少选择一种挂机模式');
+						 }else if(self.retreatRate === ''){
+							 self.$message.error('建议回撤未填写');
+						 }else{
+							      var httpform = new FormData();
+                    httpform.append('fileType',self.switch0);
+                    httpform.append('multipartFile1',document.getElementById("debit_file1").files[0]);
+										httpform.append('multipartFile2',document.getElementById("debit_file2").files[0]);
+                    httpform.append('platform',self.value1);
+                    httpform.append('mt4Account',self.input2);
+										httpform.append('mt4Password',self.password);
+										httpform.append('capital',self.input1);
+										httpform.append('mode',self.value3);
+										httpform.append('agreeHangupCosts',self.switch2);
+										httpform.append('retreatRate',self.retreatRate);
+                    self.$http({
+                        method: 'post',
+                        url: '/turingcloud/trnsaction/'+self.userid,
+                        data:httpform
+                    }).then(function(res){
+                        if(res.data.success == false){
+                            self.$message.error(res.data.message);
+                        }else{
+                            self.$message({
+                                    showClose: true,
+                                    message: "提交成功",
+                                    type: 'success'
+                            });
+                        }
+                    }).catch(function(err){
+                       alert("AJAX失败");
+                    });
+						 }
+					 }
+				}
     }
 }
 </script>
@@ -492,17 +622,10 @@
 	font-size:15px;
   line-height: 25px;
 }
-.page_footer a{
+.page_footer button{
 	float:right;
-	display:inline-block;
 	width:80px;
-	height:35px;
 	margin:10px 0;
-	background:#21b548;
-	color:#fff;
-	text-align:center;
-	line-height:35px;
-	border-radius:4px;
 }
 
 /*修改样式*/

@@ -321,8 +321,6 @@
                     self.$http({
                         method: 'post',
                         url: '/turingcloud/userInfor',
-                        // headers: { "Content-Type": "multipart/form-data;charset=UTF-8"},
-                        // headers: { 'Content-Type': 'application/json;charset=UTF-8'},
                         data:image
                     }).then(function(res){
                         if(res.data.success == false){

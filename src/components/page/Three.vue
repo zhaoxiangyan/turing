@@ -100,22 +100,22 @@
     </el-form-item>
     <el-form-item label="是否收到邮件：" :label-width="formLabelWidth">
       <template>
-								<el-radio class="radio" v-model="form.radio" label="1">已接收邮件</el-radio>
-								<el-radio class="radio" v-model="form.radio" label="2">邮件未收到</el-radio>
+								<el-radio class="radio" v-model="form.radio" label="2">已接收邮件</el-radio>
+								<el-radio class="radio" v-model="form.radio" label="1">邮件未收到</el-radio>
 			</template>
-      <el-button  type="text">发送邮件至原邮箱</el-button>
+      <el-button  type="text" @click="sendEmail()" :disabled="form.sendstatus" >{{form.sendtext}}</el-button>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
     <el-button @click="dialogFormVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+    <el-button type="primary" @click="modifyEmail()" :disabled="form.radio ==1 ? true:false ">确 定</el-button>
   </div>
 </el-dialog>
 <!--修改手机号码模态框-->
 <el-dialog title="修改手机号码" :visible.sync="dialogFormVisible1">
   <el-form :model="form1">
     <el-form-item label="旧的手机号码：" :label-width="formLabelWidth1">
-      <el-input v-model="form1.oldphone" placeholder="请输入旧的手机号码" ></el-input>
+      <el-input v-model="body.phone" placeholder="请输入旧的手机号码" :disabled="true" ></el-input>
     </el-form-item>
     <el-form-item label="短信验证码：" :label-width="formLabelWidth1">
       <el-input class="code_box"  v-model="form1.code" placeholder="请输入短信验证码"></el-input>
@@ -156,6 +156,7 @@
  export default {
     data() {
       return {
+        userid:'',
         all:false,
         body:{
           addr:'',
@@ -165,24 +166,18 @@
           phone:'',
           username:''
         },
-		    input1: '赵',
-        input2: '9876710@qq.com',
-        input3: '1517982',
-        input4: '360421199311104214',
-        input6: '',
-        input7: '2017/11/02', 
         // 修改邮箱模态框
         dialogFormVisible: false,
         form: {
-          oldemail: '',
           radio: '1',
-          newemail: ''
+          newemail: '',
+          sendtext: '发送邮件至新邮箱',
+          sendstatus: false
         },
         formLabelWidth: '120px',
         // 修改手机号码模态框
         dialogFormVisible1: false,
         form1: {
-          oldphone: '',
           code: '',
           newphone: ''
         },
@@ -205,7 +200,7 @@
     mounted:function(){
       var self = this;
       if(localStorage["userid"]){
-        var id = localStorage.getItem("userid");
+        self.userid = localStorage.getItem("userid");
       }else{
         self.$message({
             message: '用户登录失效，请重新登录！',
@@ -217,7 +212,7 @@
       }
       self.$http({
           method: 'get',
-          url: '/turingcloud/user/'+id,
+          url: '/turingcloud/user/'+self.userid,
           }).then(function(res){
             if(res.data.success == true){
               self.body = res.data.body;
@@ -250,7 +245,71 @@
       }
     },
     methods: {
-  
+      // 发送邮件倒计时
+      countdownEmail(){
+          var self = this;
+          self.form.sendtext = '重新发送(59)';
+          var _step = 58;
+          var _res = setInterval(function(){
+              self.form.sendtext = '重新发送('+_step+')';
+              _step-=1;
+              if(_step<=0){
+                  self.form.sendstatus = false;
+                  self.form.sendtext = '发送邮件至新邮箱';
+                  clearInterval(_res);
+              }else{
+                    self.form.sendstatus = true;
+              }
+          },1000);
+      },
+      // 发送邮件至新邮箱
+      sendEmail(){
+           var self = this;
+           var emailExp = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+           if(self.form.newemail === ''|| !emailExp.test(self.form.newemail)){
+             self.$message({
+                message: '请输入有效的邮箱地址',
+                type: 'warning'
+              });
+              return false;
+           }else{
+           self.$http({
+                    method: 'post',
+                    url: '/turingcloud/'+self.userid+'/validateEmail?email='+self.form.newemail
+                    }).then(function(res){
+                      if(res.data.success == true){
+                        self.countdownEmail();
+                      }
+                    }).catch(function(err){
+                        console.log("AJAX失败");
+                    }); 
+           }
+      },
+      //  确定修改邮箱地址
+      modifyEmail:function(){
+        var self = this;
+         self.$http({
+                  method: 'post',
+                  url: '/turingcloud/'+self.userid+'/midifyEmail?email='+self.form.newemail
+                  }).then(function(res){
+                    console.log(res.data);
+                    if(res.data.success == false){
+                      self.$message({
+                        message: res.data.message,
+                        type: 'warning'
+                      });
+                    }else if(res.data.success == true){
+                      self.$message({
+                        message: '邮箱修改成功',
+                        type: 'success'
+                      });
+                    }
+                    // if(res.data.success == true){
+                    // }
+                  }).catch(function(err){
+                      console.log("AJAX失败");
+                  }); 
+      }
     }
 }
 </script>
@@ -345,7 +404,7 @@
 }
 .page_footer a{
 	display:inline-block;
-	width:80px;
+	width:110px;
 	height:35px;
 	margin-top:10px;
 	background:#21b548;
