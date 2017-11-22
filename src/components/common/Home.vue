@@ -14,7 +14,6 @@
     import vSidebar from './Sidebar.vue'
      import vCopyright from '../page/Copyright.vue'
     import {mapGetters} from 'vuex'
-    import {mapActions} from 'vuex'
     export default {
        data () {
         return {
@@ -27,8 +26,7 @@
       computed: {
         // 使用对象展开运算符将getters混入computed对象中
         ...mapGetters([
-            'getcollapsed',
-            'getalled'
+            'getcollapsed'
         ]) 
       },
       mounted: function(){
@@ -51,11 +49,6 @@
                 }).catch(function(err){
                     console.log("AJAX失败");
                 }); 
-      },
-      methods: {
-          ...mapActions([
-          'changealled'
-          ])
       }
     }
 </script>
