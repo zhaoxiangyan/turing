@@ -151,8 +151,12 @@
               url: '/turingcloud/login',
               data:formdata1
          }).then(function(res){
-            var storage = window.sessionStorage; 
-            storage["user"] = res.data.principal.id;
+            var storage = window.localStorage; 
+            if(storage["userid"]){
+              storage.setItem["userid"] = res.data.principal.id;
+            }else{
+              storage["userid"] = res.data.principal.id;
+            }
             self.$message({
               message: '登录成功',
               type: 'success',
@@ -241,8 +245,12 @@
               url: '/turingcloud/byMsm',
               data: formdata2
               }).then(function(res){
-                var storage = window.sessionStorage; 
-                 storage["user"] = res.data.authorities.principal.id;
+                var storage = window.localStorage; 
+                if(storage["userid"]){
+                  storage.setItem["userid"] = res.data.principal.id;
+                }else{
+                  storage["userid"] = res.data.principal.id;
+                }
                 self.$message({
                   message: '登录成功',
                   type: 'success',

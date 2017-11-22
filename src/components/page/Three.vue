@@ -1,5 +1,5 @@
 <template>
-	<div class="three">
+	<div class="three" v-show="all">
 	<div v-title>个人信息</div>
 	    <div class="page_title">
 		    <span>个人信息</span>
@@ -15,7 +15,7 @@
                  <span class="title">真实姓名：</span>
               </el-col>
               <el-col  :span="16">
-                <el-input v-model="input1" placeholder="Andy" :disabled="true"></el-input>
+                <el-input v-model="body.username" placeholder="请输入真实姓名" :disabled="true"></el-input>
               </el-col>
             </el-row>
              <el-row class="li">
@@ -23,7 +23,7 @@
                  <span class="title">身份证号码：</span>
               </el-col>
               <el-col  :xs="16" :sm="16" :md="16" :lg="16">
-                <el-input v-model="input4" placeholder="3604211996467461452" :disabled="true"></el-input>
+                <el-input v-model="body.idcard" placeholder="请输入身份证号码" :disabled="true"></el-input>
               </el-col>
             </el-row>
             <el-row class="li">
@@ -43,7 +43,7 @@
     <el-button type="primary" size="mini" @click="visible2 = false">确定</el-button>
   </div>
 </el-popover>                           
-<el-input v-model="input6" placeholder="如：广东深圳">
+<el-input v-model="body.addr" placeholder="如：广东深圳">
     <el-button slot="append" icon="edit" v-popover:popover5 ></el-button>
 </el-input>
 <!--<v-distpicker></v-distpicker>-->
@@ -55,7 +55,7 @@
               </el-col>
               <el-col  :span="16">
                <!-- <el-input v-model="input3" placeholder="1388888888"></el-input>-->
-<el-input placeholder="请输入手机号码" v-model="input3">
+<el-input placeholder="请输入手机号码" v-model="body.phone">
 <el-tooltip slot="append" content="修改手机号码" placement="top">
     <el-button  icon="edit" @click="dialogFormVisible1 = true" ></el-button>
 </el-tooltip>    
@@ -68,7 +68,7 @@
               </el-col>
               <el-col  :span="16">
                 <!--<el-input v-model="input2" placeholder="989746@qq.com"></el-input>-->
-<el-input placeholder="请输入邮箱" v-model="input2">
+<el-input placeholder="请输入邮箱" v-model="body.email">
 <el-tooltip slot="append" content="修改邮箱" placement="top">
     <el-button  icon="edit" @click="dialogFormVisible = true" ></el-button>
 </el-tooltip>    
@@ -80,20 +80,23 @@
                  <span class="title">最近登录时间：</span>
               </el-col>
               <el-col  :span="16">
-                <el-input v-model="input7" placeholder="2017/11/02" :disabled="true"></el-input>
+                <el-input v-bind:value="body.lastLoginTime | timeFilter" placeholder="2017/11/02" :disabled="true"></el-input>
               </el-col>
             </el-row>
           </el-col>
 		</el-row>
         <div class="page_footer">
-		      <a href="javascript:void(0)"  @click="dialogFormVisible2 = true" >修改密码</a>
+		      <a href="javascript:void(0)"  @click="dialogFormVisible2 = true" >修改登录密码</a>
 			    <!--<a href="javascript:void(0)" class="fr">保存修改</a>-->
 		</div>
 <!--修改邮箱模态框-->
 <el-dialog title="修改用户邮箱" :visible.sync="dialogFormVisible">
   <el-form :model="form">
     <el-form-item label="原邮箱：" :label-width="formLabelWidth">
-      <el-input v-model="form.oldemail"  placeholder="请输入旧的邮箱地址"></el-input>
+      <el-input v-model="body.email"  placeholder="请输入旧的邮箱地址" :disabled="true"></el-input>
+    </el-form-item>
+    <el-form-item label="新邮箱：" :label-width="formLabelWidth">
+      <el-input v-model="form.newemail"  placeholder="请输入新的邮箱地址"></el-input>
     </el-form-item>
     <el-form-item label="是否收到邮件：" :label-width="formLabelWidth">
       <template>
@@ -101,9 +104,6 @@
 								<el-radio class="radio" v-model="form.radio" label="2">邮件未收到</el-radio>
 			</template>
       <el-button  type="text">发送邮件至原邮箱</el-button>
-    </el-form-item>
-    <el-form-item label="新邮箱：" :label-width="formLabelWidth">
-      <el-input v-model="form.newemail"  placeholder="请输入新的邮箱地址"></el-input>
     </el-form-item>
   </el-form>
   <div slot="footer" class="dialog-footer">
@@ -156,6 +156,15 @@
  export default {
     data() {
       return {
+        all:false,
+        body:{
+          addr:'',
+          email:'',
+          idcard:'',
+          lastLoginTime:'',
+          phone:'',
+          username:''
+        },
 		    input1: '赵',
         input2: '9876710@qq.com',
         input3: '1517982',
@@ -193,8 +202,54 @@
     components:{
       // VDistpicker
     },
+    mounted:function(){
+      var self = this;
+      if(localStorage["userid"]){
+        var id = localStorage.getItem("userid");
+      }else{
+        self.$message({
+            message: '用户登录失效，请重新登录！',
+            type: 'error',
+            onClose:function(){
+                self.$router.push('/system/');
+            }
+         });
+      }
+      self.$http({
+          method: 'get',
+          url: '/turingcloud/user/'+id,
+          }).then(function(res){
+            if(res.data.success == true){
+              self.body = res.data.body;
+              self.all = true;
+            }else{
+              // self.$message.error('用户登录失效，请重新登录！');
+                self.$message({
+                  message: '用户登录失效，请重新登录！',
+                  type: 'error',
+                  onClose:function(){
+                      self.$router.push('/system/');
+                  }
+                });
+            }
+          }).catch(function(err){
+              console.log("AJAX失败");
+          }); 
+    },
+    filters: {
+      // 时间过滤器
+      timeFilter:function(value){
+          var date = new Date(value);
+          var Y = date.getFullYear()+'-';
+          var  M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+          var D = date.getDate() + ' ';
+          var h = date.getHours() + ':';
+          var m = date.getMinutes() + ':';
+          var s = date.getSeconds();
+            return Y+M+D+h+m+s; 
+      }
+    },
     methods: {
-      // 城市选择器
   
     }
 }
