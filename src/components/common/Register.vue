@@ -169,9 +169,9 @@
                         // console.log(res);
                          if(res.data.success == true){
                                 var storage = window.sessionStorage; 
-                                storage["userId"] = res.data.body.id;
+                                storage.setItem("userid",res.data.body.id);
                                 if(res.data.body.detailInformation != null){
-                                   storage["detailInforId"] = res.data.body.detailInformation.id;
+                                   storage.setItem("detailInforId",res.data.body.detailInformation.id);
                                 }
                                 self.$message({
                                     showClose: true,

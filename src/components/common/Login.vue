@@ -247,9 +247,9 @@
               }).then(function(res){
                 var storage = window.localStorage; 
                 if(storage["userid"]){
-                  storage.setItem["userid"] = res.data.principal.id;
+                  storage.setItem("userid",res.data.principal.id);
                 }else{
-                  storage["userid"] = res.data.principal.id;
+                  storage.setItem("userid",res.data.principal.id);
                 }
                 self.$message({
                   message: '登录成功',
@@ -260,8 +260,8 @@
                 });
          }).catch(function(err){
             var storage = window.sessionStorage; 
-            storage["phone2"] = self.phone2;
-            storage["msmCode"] = self.code;
+            storage.setItem("phone2",self.phone2);
+            storage.setItem("msmCode",self.code);
             self.message2 = err.response.data.message;
             self.empty2 = true;
          });

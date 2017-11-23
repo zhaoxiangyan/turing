@@ -11,10 +11,11 @@
         <div class="page_content">
 <template>
   <el-table
-    :data="tableData"
+    :data="body"
     style="width: 100%">
     <el-table-column
-      prop="date"
+      prop="lastModifiedTime"
+			:formatter="dateFormat" 
       label="日期"
       width="150">
     </el-table-column>
@@ -24,7 +25,7 @@
       width="150">
     </el-table-column>
     <el-table-column
-      prop="account"
+      prop="mt4Account"
       label="MT4账号">
     </el-table-column>
 		<el-table-column
@@ -33,30 +34,52 @@
 			width="190">
     </el-table-column>
 		<el-table-column
-      prop="model"
+      prop="mode"
+			:formatter="modeFormat" 
       label="挂机模式">
     </el-table-column>
 		<el-table-column
-      prop="retracement"
+      prop="retreatRate"
+			:formatter="retreatRateFormat"
       label="最大回撤">
     </el-table-column>
 		<el-table-column
-      prop="state"
-      label="账户状态"
+      prop="isHangUp"
+      label="是否挂机"
 			width="95">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.state === '1'"
+      <el-tag v-if="scope.row.isHangUp === '1'"
           type="danger"
-          close-transition>审核未通过</el-tag>
-      <el-tag v-else-if="scope.row.state === '2'"
+          close-transition>是</el-tag>
+      <el-tag v-else-if="scope.row.isHangUp === '0'"
           type="success"
-          close-transition>正在运行</el-tag>
-			<el-tag v-else-if="scope.row.state === '3'"
-          type="warning"
-          close-transition>等待审核</el-tag>
-			<el-tag v-else-if="scope.row.state === '4'"
-          type="primary"
-          close-transition>停止运行</el-tag>
+          close-transition>否</el-tag>
+</template>  
+    </el-table-column>
+		<el-table-column
+      prop="handleStatus"
+      label="是否处理"
+			width="95">
+<template slot-scope="scope">
+      <el-tag v-if="scope.row.handleStatus === '1'"
+          type="danger"
+          close-transition>是</el-tag>
+      <el-tag v-else-if="scope.row.handleStatus === '0'"
+          type="success"
+          close-transition>否</el-tag>
+</template>  
+    </el-table-column>
+		<el-table-column
+      prop="isPass"
+      label="是否通过"
+			width="95">
+<template slot-scope="scope">
+      <el-tag v-if="scope.row.isPass === '1'"
+          type="danger"
+          close-transition>是</el-tag>
+      <el-tag v-else-if="scope.row.isPass === '0'"
+          type="success"
+          close-transition>否</el-tag>
 </template>  
     </el-table-column>
     <el-table-column
@@ -67,7 +90,7 @@
       </template>
     </el-table-column>
 		<el-table-column
-      prop="message"
+      prop="handleResultDescription"
       label="备注">
     </el-table-column>
   </el-table>
@@ -294,6 +317,7 @@
 	</div>	
 </template>
 <script>
+ import moment from 'moment'
  export default {
     name: 'Four',
     data() {
@@ -348,6 +372,7 @@
 		switch3:'0',
 		input5: '',
 		// 表格数据
+		body:[],
 		tableData: [{
 			id:'1',
 			date: '2016-05-02',
@@ -408,8 +433,9 @@
 								url: '/turingcloud/trnsaction/'+self.userid
 								}).then(function(res){
 										if(res.data.success == true){
-												console.log(res.data.body);
+												// console.log(res.data.body);
 												// 表格数据返回无限长
+												self.body = res.data.body;
 										}else if(res.data.success == false){
 												self.$message.error(res.data.message);
 										}
@@ -510,6 +536,42 @@
 							reader.readAsDataURL(file)
 					}
 				},		
+				// 日期格式化
+				dateFormat:function(row, column) {  
+          var date = row[column.property];  
+          if (date == undefined) {  
+             return "";  
+          }  
+          return moment(date).format("YYYY-MM-DD");  
+        },  
+				// 挂机模式格式化
+				modeFormat:function(row, column) {  
+          var mode = row[column.property];  
+          if (mode == undefined) {  
+             return "";  
+          }  
+          if(mode == "1"){
+						return "成长型";
+					}else if(mode == "2"){
+            return "宏利先锋型";
+					}else if(mode == "3"){
+						return "趋势策略型";
+					}else if(mode == "4"){
+						return "综合尊享型";
+					}else{
+						return " ";
+					}
+        },  
+				retreatRateFormat:function(row, column) {  
+          var retreatRate = row[column.property];  
+          if (retreatRate == undefined) {  
+             return "";  
+          }  
+					if(isNaN(retreatRate) == false){
+						return retreatRate
+					}
+          
+        },  
 				// 表格编辑按钮
         handleEdit(index, row) {
 					 var self = this;

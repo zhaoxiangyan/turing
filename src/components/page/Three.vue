@@ -243,13 +243,7 @@
               self.all = true;
             }else{
               // self.$message.error('用户登录失效，请重新登录！');
-                self.$message({
-                  message: '用户登录失效，请重新登录！',
-                  type: 'error',
-                  onClose:function(){
-                      self.$router.push('/system/');
-                  }
-                });
+                self.$router.push('/system/');
             }
           }).catch(function(err){
               console.log("AJAX失败");

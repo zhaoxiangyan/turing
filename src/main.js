@@ -3,6 +3,7 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
+// import moment from 'moment'
 // var Index = require('element-ui/lib/theme-default/index.css')
 import Vuex from 'vuex'
 import store from './vuex/store'
