@@ -11,7 +11,7 @@
         <div class="page_content">
 <template>
   <el-table
-    :data="body"
+    :data="tablebody"
     style="width: 100%">
     <el-table-column
       prop="lastModifiedTime"
@@ -30,8 +30,8 @@
     </el-table-column>
 		<el-table-column
       prop="capital"
-      label="投资资金（单位：美元）"
-			width="190">
+      label="投资资金（：美元）"
+			width="170">
     </el-table-column>
 		<el-table-column
       prop="mode"
@@ -48,12 +48,12 @@
       label="是否挂机"
 			width="95">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.isHangUp === '1'"
+      <el-tag v-if="scope.row.isHangUp === '0'"
           type="danger"
-          close-transition>是</el-tag>
-      <el-tag v-else-if="scope.row.isHangUp === '0'"
-          type="success"
           close-transition>否</el-tag>
+      <el-tag v-else-if="scope.row.isHangUp === '1'"
+          type="success"
+          close-transition>是</el-tag>
 </template>  
     </el-table-column>
 		<el-table-column
@@ -61,12 +61,12 @@
       label="是否处理"
 			width="95">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.handleStatus === '1'"
+      <el-tag v-if="scope.row.handleStatus === '0'"
           type="danger"
-          close-transition>是</el-tag>
-      <el-tag v-else-if="scope.row.handleStatus === '0'"
-          type="success"
           close-transition>否</el-tag>
+      <el-tag v-else-if="scope.row.handleStatus === '1'"
+          type="success"
+          close-transition>是</el-tag>
 </template>  
     </el-table-column>
 		<el-table-column
@@ -74,12 +74,12 @@
       label="是否通过"
 			width="95">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.isPass === '1'"
+      <el-tag v-if="scope.row.isPass === '0'"
           type="danger"
-          close-transition>是</el-tag>
-      <el-tag v-else-if="scope.row.isPass === '0'"
-          type="success"
           close-transition>否</el-tag>
+      <el-tag v-else-if="scope.row.isPass === '1'"
+          type="success"
+          close-transition>是</el-tag>
 </template>  
     </el-table-column>
     <el-table-column
@@ -100,22 +100,6 @@
         <!--编辑交易配置页面begin-->
 		<el-dialog title="交易配置" :visible.sync="dialogFormVisible">
 		<el-row class="edit_content">
-			    <!--<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5"  class="li_left">
-				    <span>三方合作协议：</span>
-				  </el-col>
-				  <el-col :span="16"  class="li_right">
-				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>您已签约三方合作协议</a>
-                  </el-col>
-				</el-row>
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>委托扣款协议：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-				     	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>您已签约委托扣款协议</a>
-                 </el-col>
-				</el-row>	-->
 				<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>扣款协议：</span>
@@ -132,24 +116,72 @@
 			   <a class="download" href="http://192.168.0.119/system/file/委托扣款三方协议v170731.zip">下载协议</a>
 			  </el-col>
 			</el-row>
-			<el-row class="li">
+      <el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>协议上传方式：</span>
 			  </el-col>
 			  <el-col    :span="16" class="li_right radio35">
-                  <el-switch  v-model="switch0"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
-									<i v-if="switch0">*请上传pdf格式的文件，大小不要超过2M</i>
+                  <el-switch  v-model="modalbody.contract.filetype"  off-value="img" on-value="pdf" off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90' :disabled="modalbody.contract.isPass == '0'?false:true"></el-switch>
+									<i v-if="modalbody.contract.filetype == 'img'?false:true">*请上传pdf格式的文件，大小不要超过2M</i>
 									<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
 			  </el-col>			 
 			</el-row>
-			<div v-if="switch0">
+  		<!--上传pdf文件已通过-->
+			<div v-if="uploadStatus == '1'">
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>上传PDF文件：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+					<span class="mask user_mask">{{modalbody.contract.file1}}</span>
+			  </el-col>  
+			</el-row>		
+			</div>
+      <!--上传图片协议已通过-->
+			<div v-else-if="uploadStatus == '2'">
+			<el-row class="li" >
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第一页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<span class="mask user_mask1">{{modalbody.contract.file1}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file1">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			    <img id="debit_img1">
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第二页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<span class="mask user_mask2">{{modalbody.contract.file2}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file2">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			     <img id="debit_img2">
+			  </el-col>
+			</el-row>
+			</div>
+			<!--上传pdf文件未通过-->
+			<div v-else-if="uploadStatus == '3'">
+			<div v-if="modalbody.contract.filetype == 'img'?false:true">
 			<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>上传PDF文件：</span>
 			  </el-col>
 			  <el-col  :span="16" class="file_box li_right">
 					<input type="file" id="debit_file" accept="application/pdf"  @change="uploadDebit()"  name="withholdPdf">
-					<span class="mask user_mask">{{debit}}</span>
+					<span class="mask user_mask">{{modalbody.contract.file1}}</span>
 			  </el-col>  
 			</el-row>
 			</div>
@@ -189,6 +221,57 @@
 			  </el-col>
 			</el-row>
 			</div>
+			</div>
+		  <!--上传图片协议未通过-->
+		  <div v-else-if="uploadStatus == '4'">
+			<div v-if="modalbody.contract.filetype == 'img'?false:true">
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>上传PDF文件：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+					<input type="file" id="debit_file" accept="application/pdf"  @change="uploadDebit()"  name="withholdPdf">
+					<span class="mask user_mask">{{debit}}</span>
+			  </el-col>  
+			</el-row>
+			</div>
+			<div v-else>
+			<el-row class="li" >
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第一页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<input type="file" id="debit_file1" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadDebit1()" name="withholdPic">
+				<span class="mask user_mask1">{{modalbody.contract.file1}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file1">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			    <img id="debit_img1">
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第二页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<input type="file" id="debit_file2" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadDebit2()" name="withholdPic">
+				<span class="mask user_mask2">{{modalbody.contract.file2}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file2">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			     <img id="debit_img2">
+			  </el-col>
+			</el-row>
+			</div>
+			</div>
 
 
 
@@ -198,12 +281,12 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right platform select100">
 					    <template>
-								<el-select v-model="value1" placeholder="请选择">
+								<el-select v-model="modalbody.platform" placeholder="请选择">
 									<el-option
 									v-for="item in options1"
-									:key="item.value1"
+									:key="item.platform"
 									:label="item.label1"
-									:value="item.value1">
+									:value="item.platform">
 									</el-option>
 								</el-select>
 					  	</template>
@@ -214,42 +297,26 @@
 				    <span>MT4账号：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
+					   <el-input v-model="modalbody.mt4Account" placeholder="请输入MT4账号" :disabled="true"></el-input>
           </el-col>
 				</el-row>	
-				<!--<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>MT4密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input type="password" v-model="password" placeholder="请输入MT4密码" ></el-input>
-          </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>确认MT4密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
-          </el-col>
-				</el-row>	-->
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>修改MT4密码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-				    	<el-switch on-text="" off-text="" v-model="switch1" :width="80"></el-switch>
+				    	<el-switch on-text="" off-text="" v-model="modalbody.isChangePassword" off-value="0" on-value="1" :width="80"></el-switch>
           </el-col>
 				</el-row>
-				<el-row class="li" v-show="switch1">
+				<el-row class="li" v-show="modalbody.isChangePassword == '0'?false:true">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>新的MT4密码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input type="password" v-model="password1" placeholder="请输入新的MT4密码" ></el-input>
+					   <el-input type="password" v-model="modalbody.newPassword" placeholder="请输入新的MT4密码" ></el-input>
           </el-col>
 				</el-row>	
-				<el-row class="li" v-show="switch1">
+				<el-row class="li" v-show="modalbody.isChangePassword == '0'?false:true">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>确认新的MT4密码：</span>
 				  </el-col>
@@ -262,7 +329,7 @@
 				    <span>账户投资资金：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input1" placeholder="请输入投资金额（单位：美元）"></el-input>
+					   <el-input v-model="modalbody.capital" placeholder="请输入投资金额（单位：美元）"></el-input>
           </el-col>
 				</el-row>	
 			    <el-row class="li">
@@ -271,7 +338,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right select100">
 					    <template>
-								<el-select v-model="value3" placeholder="请选择">
+								<el-select v-model="modalbody.mode" placeholder="请选择">
 									<el-option
 									v-for="item in options3"
 									:key="item.value3"
@@ -282,14 +349,6 @@
 					  	</template>
           </el-col>
 				</el-row>
-				<!--<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>同意挂机费用：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right radio35">
-					<el-switch  class="disable" v-model="switch2"  on-text="同意"  off-text="不同意" :width='80' disabled></el-switch>
-          </el-col>
-				</el-row>-->
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>建议回撤：</span>
@@ -324,7 +383,7 @@
       return {
 			userid:'',
     // 上传扣款协议
-		 switch0:false,
+		 switch0:"img",
     // 扣款协议pdf
 	   debit:'上传协议pdf文件',
 		 debit_file:false,
@@ -337,10 +396,10 @@
 		input1: '',
 		// 使用的平台select
 		options1: [{
-          value1: '1',
+          platform: 'GQCapital-Live',
           label1: 'GQCapital-Live'
         }],
-        value1: '',
+        platform: '',
 		// MT4账号
 		input2: '',
 		// MT4密码
@@ -353,26 +412,25 @@
 		repassword1:'',
 		// 使用挂机模式
 		options3: [{
-          value3: '选项1',
+          value3: '1',
           label3: '成长型'
         }, {
-          value3: '选项2',
+          value3: '2',
           label3: '宏利先锋型'
         }, {
-          value3: '选项3',
+          value3: '3',
           label3: '趋势策略型'
         }, {
-          value3: '选项4',
+          value3: '4',
           label3: '综合尊享型'
         }],
-        value3: '',
+      value3: '',
 		// 同意挂机费用
 		switch2:true,
 		//建议回撤
 		switch3:'0',
 		input5: '',
 		// 表格数据
-		body:[],
 		tableData: [{
 			id:'1',
 			date: '2016-05-02',
@@ -383,40 +441,45 @@
 			retracement: '35%',
 			state:'1',
 			message:'最大回撤过大'
-		}, {
-			id:'2',
-			date: '2016-05-02',
-			platform: 'GQCapital-Live',
-			account: '20171105',
-			capital: '5000',
-			model: '成长型',
-			retracement: '35%',
-			state:'2',
-			message:'MT4账号与协议不符'
-		}, {
-			id:'3',
-			date: '2016-05-02',
-			platform: 'GQCapital-Live',
-			account: '20171105',
-			capital: '5000',
-			model: '成长型',
-			retracement: '35%',
-			state:'3',
-			message:'账户资金不足'
-		}, {
-			id:'4',
-			date: '2016-05-02',
-			platform: 'GQCapital-Live',
-			account: '20171105',
-			capital: '5000',
-			model: '成长型',
-			retracement: '35%',
-			state:'4',
-			message:'账户正在运行'
 		}],
-		dialogFormVisible: false
+		dialogFormVisible: false,
+		// 后台返回数据
+		// 表格数据
+		tablebody:[],
+		// 编辑账户信息模态框数据
+		modalbody:{
+			id:1,
+			platform:"GQCapital-Live",
+			mt4Account:"45654",
+			mt4Password:"123456",
+			isChangePassword:"0",
+			newPassword:null,
+			capital:1200.0,
+			mode:"1",
+			agreeHangUpCosts:true,
+			retreatRate:12.0,
+			createTime:1511404528000,
+			lastModifiedTime:1511404528000,
+			handleStatus:"0",
+			handleResultDescription:null,
+			isHangUp:"0",
+      contract:{
+				isPass:"0",
+				filetype:"img",
+				file1:"192fdsf.jpg",
+				file2:"fdsf.jpg",
+				file3:null,
+				id:1,
+				contractType:"扣款协议",
+				handleStatus:"0",
+				handleResultDescription:null,
+			}
+		}
       };
     },
+		computed:{
+			
+		},
 		mounted:function(){
 			var self = this;
       if(localStorage["userid"]){
@@ -435,7 +498,7 @@
 										if(res.data.success == true){
 												// console.log(res.data.body);
 												// 表格数据返回无限长
-												self.body = res.data.body;
+												self.tablebody = res.data.body;
 										}else if(res.data.success == false){
 												self.$message.error(res.data.message);
 										}
@@ -443,6 +506,10 @@
 										alert("AJAX失败");
 								});
 			}
+			// 编辑页面建议回撤初始化
+ 			self.monitorRetracement();
+			//  协议上传显示状态初始化
+			self.uploadStatus();
 		},
     methods: {
 			  // 检测图片格式大小符合
@@ -562,15 +629,17 @@
 						return " ";
 					}
         },  
+				// 建议回撤格式化
 				retreatRateFormat:function(row, column) {  
           var retreatRate = row[column.property];  
           if (retreatRate == undefined) {  
              return "";  
           }  
 					if(isNaN(retreatRate) == false){
-						return retreatRate
-					}
-          
+						return retreatRate+"%";
+					}else{
+						return "";
+					}  
         },  
 				// 表格编辑按钮
         handleEdit(index, row) {
@@ -582,7 +651,12 @@
 						}).then(function(res){
 								if(res.data.success == true){
 									 console.log(res.data.body);
-										// 返回数据放进交易配置编辑模态框
+									 self.modalbody = res.data.body;
+									 // 返回数据放进交易配置编辑模态框
+									 // 编辑页面建议回撤初始化		
+									 self.monitorRetracement();
+									 // 编辑页面协议上传初始化监听
+			            	self.uploadStatus();
 								}else if(res.data.success == false){
 									 self.$message.error(res.data.message);
 								}
@@ -590,7 +664,36 @@
 								alert("AJAX失败");
 						});
 					 self.dialogFormVisible = true;
-        },			
+        },
+				// 编辑页面建议回撤初始化监听			
+				monitorRetracement(){
+					 var self = this;
+           if(self.modalbody.retreatRate ==35 ){
+						 self.switch3 = "0";
+						 self.input5 = "";
+					 }else{
+						 self.switch3 = "1";
+						 self.input5 = self.modalbody.retreatRate;
+					 }
+					//  self.swicth3
+					//  self.input5
+				},
+				// 编辑页面协议上传初始化监听
+				uploadStatus(){
+           var self = this;
+					 if(self.modalbody.contract.isPass == "1" && self.modalbody.contract.filetype == "pdf"){
+						 return "1";
+					 }
+					 if(self.modalbody.contract.isPass == "1" && self.modalbody.contract.filetype == "img"){
+						 return "2";
+					 }
+					 if(self.modalbody.contract.isPass == "0" && self.modalbody.contract.filetype == "pdf"){
+						 return "3";
+					 }
+					 if(self.modalbody.contract.isPass == "0" && self.modalbody.contract.filetype == "img"){
+						 return "4";
+					 }
+		  	},
 				// 删除交易配置
 				// delete_setting() {
 				// 		this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {

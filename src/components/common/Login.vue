@@ -166,8 +166,8 @@
             });
          }).catch(function(err){
            var storage = window.sessionStorage; 
-            storage["phone1"] = self.phone1;
-            storage["password"] = self.password; 
+            storage.setItem("phone1",self.phone1);
+            storage.setItem("password",self.password); 
             // 手机号密码错误统一500错误，需要改接口
             self.message1 = err.response.data.message;
             self.empty1 = true;

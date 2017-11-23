@@ -34,7 +34,7 @@
       // 密码登录
       phone: '',
       password: '',
-      repassword: false,
+      // repassword: false,
       empty:false,
       message:'请填写完整',
     }
@@ -46,42 +46,49 @@
     login () {
       var self = this;
       self.empty = false;
-      var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
-      var pswReg = /^\w{6,16}$/;
+      // var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+      // var pswReg = /^\w{6,16}$/;
       if (self.phone === '' || self.password === '') {
         // alert('输入框不能为空')
          self.message = "请填写完整";
          self.empty = true;
          return false;
-      }else if(!phoneReg.test(self.phone)){
-           self.message = "请输入正确的手机号码";
-           self.empty = true;
-           return false;
-      }else if(!pswReg.test(self.password)){
-           self.message = '请输入格式正确的密码（6-16位字母、数字和下划线）';
-           self.empty = true;
-           return false;
+      // }else if(!phoneReg.test(self.phone)){
+      //      self.message = "请输入正确的手机号码";
+      //      self.empty = true;
+      //      return false;
+      // }else if(!pswReg.test(self.password)){
+      //      self.message = '请输入格式正确的密码（6-16位字母、数字和下划线）';
+      //      self.empty = true;
+      //      return false;
       }else {
          // 此处加入后台AJAX验证
-        self.$http({
-              method: 'post',
-              url: '/turingcloud/login/byPassword?phone='+self.phone+'&password='+self.password
-         }).then(function(res){
-            if(res.data == '0'){
-              alert('登录成功');
-              self.$router.push('/system/admin/home');
-            }else if(res.data == '1'){
-              alert('登录失败，用户名不存在');
-            }else if(res.data == '2'){
-              alert('登录失败，密码错误');
-            }else if(res.data == '4'){
-              alert('资料正在审核中');
-            }else{
-              alert('Error');
-            }
-         }).catch(function(err){
-            alert("AJAX失败");
-         });
+          var formdata = new FormData();
+              formdata.append('username',self.phone);
+              formdata.append('password',self.password);
+          self.$http({
+                method: 'post',
+                url: '/turingcloud/login',
+                data:formdata
+          }).then(function(res){
+              var storage = window.localStorage; 
+              if(storage["adminid"]){
+                storage.setItem("adminid",res.data.principal.id);
+              }else{
+                storage.setItem("adminid",res.data.principal.id);
+              }
+              self.$message({
+                message: '登录成功',
+                type: 'success',
+                onClose:function(){
+                    self.$router.push('/system/admin/home');
+                }
+              });
+          }).catch(function(err){
+              // 手机号密码错误统一500错误，需要改接口
+              self.message = err.response.data.message;
+              self.empty = true;
+          });
       }
     }
   }
