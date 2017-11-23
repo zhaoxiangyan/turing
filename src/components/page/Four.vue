@@ -49,11 +49,11 @@
 			width="95">
 <template slot-scope="scope">
       <el-tag v-if="scope.row.isHangUp === '0'"
-          type="danger"
-          close-transition>否</el-tag>
-      <el-tag v-else-if="scope.row.isHangUp === '1'"
           type="success"
           close-transition>是</el-tag>
+      <el-tag v-else-if="scope.row.isHangUp === '1'"
+          type="danger"
+          close-transition>否</el-tag>
 </template>  
     </el-table-column>
 		<el-table-column
@@ -97,6 +97,12 @@
 </template>  
 <p class="state_tips"><a href="/system/two" type="primary"><i class="el-icon-plus"></i>添加账户</a></p>
         </div>
+
+<!--图片预览页面模态框-->
+<el-dialog title="图片预览" :visible.sync="dialogImgVisible">
+
+<img  :src="dialogImgUrl"  />
+</el-dialog>
         <!--编辑交易配置页面begin-->
 		<el-dialog title="交易配置" :visible.sync="dialogFormVisible">
 		<el-row class="edit_content">
@@ -127,32 +133,24 @@
 			  </el-col>			 
 			</el-row>
   		<!--上传pdf文件已通过-->
-			<div v-if="uploadStatus == '1'">
+			<div v-if="uploadStatus() == '1'">
 			<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>上传PDF文件：</span>
 			  </el-col>
 			  <el-col  :span="16" class="file_box li_right">
-					<span class="mask user_mask">{{modalbody.contract.file1}}</span>
+					<a class="mask user_mask" target="_blank" :href="'http://192.168.0.111/'+modalbody.contract.file1">{{modalbody.contract.file1}}</a>
 			  </el-col>  
 			</el-row>		
 			</div>
       <!--上传图片协议已通过-->
-			<div v-else-if="uploadStatus == '2'">
+			<div v-else-if="uploadStatus() == '2'">
 			<el-row class="li" >
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>协议第一页：</span>
 			  </el-col>
 			  <el-col  :span="16" class="file_box li_right">
-				<span class="mask user_mask1">{{modalbody.contract.file1}}</span>
-			  </el-col>
-			</el-row>
-			<el-row class="li" v-show="debit_file1">
-			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-			     <span>预览：</span>
-			  </el-col>
-			  <el-col :span="16" class="li_right">
-			    <img id="debit_img1">
+				<span class="mask user_mask1" @click="ViewImg($event)">{{modalbody.contract.file1}}</span>
 			  </el-col>
 			</el-row>
 			<el-row class="li">
@@ -160,22 +158,14 @@
 			     <span>协议第二页：</span>
 			  </el-col>
 			  <el-col  :span="16" class="file_box li_right">
-				<span class="mask user_mask2">{{modalbody.contract.file2}}</span>
-			  </el-col>
-			</el-row>
-			<el-row class="li" v-show="debit_file2">
-			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-			     <span>预览：</span>
-			  </el-col>
-			  <el-col :span="16" class="li_right">
-			     <img id="debit_img2">
+				<span class="mask user_mask2" @click="ViewImg($event)">{{modalbody.contract.file2}}</span>
 			  </el-col>
 			</el-row>
 			</div>
 			<!--上传pdf文件未通过-->
-			<div v-else-if="uploadStatus == '3'">
+			<div v-else-if="uploadStatus() == '3'">
 			<div v-if="modalbody.contract.filetype == 'img'?false:true">
-			<el-row class="li">
+			<el-row class="li ddd">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>上传PDF文件：</span>
 			  </el-col>
@@ -223,7 +213,7 @@
 			</div>
 			</div>
 		  <!--上传图片协议未通过-->
-		  <div v-else-if="uploadStatus == '4'">
+		  <div v-else-if="uploadStatus() == '4'">
 			<div v-if="modalbody.contract.filetype == 'img'?false:true">
 			<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -357,7 +347,9 @@
 				     <!--	<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>-->
 							 <el-radio class="radio" v-model="switch3" label="0">35%</el-radio>
                <el-radio class="radio" v-model="switch3" label="1">自定义</el-radio>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false"></el-input>
+					  	<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false">
+							  <template slot="append">%</template>
+							</el-input>
           </el-col>
 				</el-row>
 		</el-row>
@@ -438,11 +430,14 @@
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
-			retracement: '35%',
+			retracement: '35',
 			state:'1',
 			message:'最大回撤过大'
 		}],
 		dialogFormVisible: false,
+		// 图片预览模态框
+		dialogImgVisible:false,
+		dialogImgUrl: '',
 		// 后台返回数据
 		// 表格数据
 		tablebody:[],
@@ -694,6 +689,13 @@
 						 return "4";
 					 }
 		  	},
+				// 点击预览图片
+				ViewImg(event){
+					var self = this;
+					// dialogImgVisible
+          self.dialogImgUrl = 'http://192.168.0.111/'+event.target.innerText;
+					self.dialogImgVisible = true;
+				},
 				// 删除交易配置
 				// delete_setting() {
 				// 		this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
@@ -940,6 +942,9 @@
 		cursor: pointer;
     box-sizing: border-box;
     overflow: hidden;
+}
+.file_box>a{
+	display:block;
 }
 .file_box{
   	border: 1px solid #bfcbd9;

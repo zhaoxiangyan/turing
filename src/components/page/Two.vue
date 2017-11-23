@@ -207,7 +207,9 @@
 					    <!--<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>-->
 							<el-radio class="radio" v-model="switch3" label="0">35%</el-radio>
               <el-radio class="radio" v-model="switch3" label="1">自定义</el-radio>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false"></el-input>
+					  	<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false">
+							  <template slot="append">%</template>
+							</el-input>
           </el-col>
 				</el-row>
 		</el-row>
@@ -271,7 +273,7 @@
 		// 建议回撤
 		switch3:'0',
 		input5: '',
-		retreatRate: '35%'
+		retreatRate: '35'
       };
     },
 		mounted:function(){
@@ -286,7 +288,7 @@
 			 switch3:function(){
 				  var self = this;
           if(self.switch3 == "0"){
-						self.retreatRate = "35%";
+						self.retreatRate = "35";
 					}else if(self.switch3 == "1"){
 						self.retreatRate = self.input5;
 					}
