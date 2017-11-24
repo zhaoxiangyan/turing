@@ -365,7 +365,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right platform select100">
 					    <template>
-								<el-select v-model="modalbody.platform" placeholder="请选择">
+								<el-select v-model="modalbody.platform" placeholder="请选择" disabled>
 									<el-option
 									v-for="item in options1"
 									:key="item.platform"
@@ -448,7 +448,10 @@
 				</el-row>
 		</el-row>
 		<div slot="footer" class="dialog-footer">
-		  <el-button type="primary" @click="dialogFormVisible = false">提交修改</el-button>
+		  <el-button      v-if="uploadStatus() == '1'" type="primary" @click="modify1(rowid)">提交1111修改</el-button>
+			<el-button v-else-if="uploadStatus() == '2'" type="primary" @click="modify2(rowid)">提交2222修改</el-button>
+			<el-button v-else-if="uploadStatus() == '3'" type="primary" @click="modify3(rowid)">提交3333修改</el-button>
+			<el-button v-else-if="uploadStatus() == '4'" type="primary" @click="modify4(rowid)">提交4444修改</el-button>
 			<el-button type="danger" @click="stop">停止挂机</el-button>
 			<!--看后期开发需求是否需要删除账户信息功能-->
 			<!--<el-button type="danger" @click="delete_setting">删除</el-button>--> 
@@ -566,7 +569,11 @@
 		},
 		// 文件上传方式状态初始化
 		contractisPass:"0",
-		contractfiletype:"img"
+		contractfiletype:"img",
+		// 正在编辑的账户信息id
+		rowid:1,
+		// 监听变化之后的建议回撤
+		retreatRate:"35"
       };
     },
 		computed:{
@@ -602,6 +609,20 @@
  			self.monitorRetracement();
 			//  协议上传显示状态初始化
 			self.uploadStatus();
+		},
+		watch:{
+			 switch3:function(){
+				  var self = this;
+          if(self.switch3 == "0"){
+						self.retreatRate = "35";
+					}else if(self.switch3 == "1"){
+						self.retreatRate = self.input5;
+					}
+			 },
+			 input5:function(){
+				  var self = this;
+					self.retreatRate = self.input5;
+			 }
 		},
     methods: {
 			  // 检测图片格式大小符合
@@ -737,6 +758,7 @@
         handleEdit(index, row) {
 					 var self = this;
 					//  alert(row.id);
+					self.rowid = row.id;
 					self.$http({
 								method: 'get',
 								url: '/turingcloud/trnsaction/'+self.userid+'/'+row.id
@@ -750,6 +772,7 @@
 									 // 编辑页面协议上传初始化监听
 									  self.contractisPass = self.modalbody.contract.isPass;
 										self.contractfiletype = self.modalbody.contract.filetype;
+										self.retreatRate = self.modalbody.retreatRate;
 			            	self.uploadStatus();
 								}else if(res.data.success == false){
 									 self.$message.error(res.data.message);
@@ -795,6 +818,72 @@
 					// dialogImgVisible
           self.dialogImgUrl = 'http://192.168.0.111/'+event.target.innerText;
 					self.dialogImgVisible = true;
+				},
+				// 提交修改  pdf已通过   1
+				modify1(rowid){
+          var self = this;
+
+           self.dialogFormVisible = false;
+				},
+        // 提交修改  图片已通过  2
+				modify2(rowid){
+					 var self = this;
+					   if(self.modalbody.isChangePassword == "0"){
+
+						 if(self.modalbody.capital === ''){
+							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.modalbody.mode === ''){
+							 self.$message.error('请至少选择一种挂机模式');
+						 }else if(self.retreatRate === ''){
+							 self.$message.error('建议回撤未填写');
+						 }else{
+							      var httpform = new FormData();
+                    httpform.append('fileType',null);
+                    httpform.append('isChangePassword',false);
+										httpform.append('capital',self.modalbody.capital);
+										httpform.append('mode',self.modalbody.mode);
+										httpform.append('retreatRate',self.retreatRate);
+                    self.$http({
+                        method: 'post',
+                        url: '/turingcloud/trnsaction/'+self.userid+'/'+rowid,
+                        data:httpform
+                    }).then(function(res){
+                        if(res.data.success == false){
+                            self.$message.error(res.data.message);
+                        }else{
+                            self.$message({
+                                    showClose: true,
+                                    message: "修改成功，请等待审核!",
+                                    type: 'success',
+																		onClose:function(){
+																				// 提交修改成功关闭模态框
+					                              self.dialogFormVisible = false;
+																		}
+                            });
+                        }
+                    }).catch(function(err){
+                       alert("AJAX失败");
+                    });
+						 }
+						 }else if(self.modalbody.isChangePassword == "1"){
+                  // 需要修改密码时
+
+									                      // 提交修改成功关闭模态框
+					                              self.dialogFormVisible = false;
+						 }
+          
+				},
+				// 提交修改  pdf未通过   3
+				modify3(rowid){
+					var self = this;
+					 
+          self.dialogFormVisible = false;
+				},
+				// 提交修改  图片未通过  4
+				modify4(rowid){
+					 var self = this;
+					 
+					 self.dialogFormVisible = false;
 				},
 				// 删除交易配置
 				// delete_setting() {

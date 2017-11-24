@@ -385,7 +385,7 @@
 		}],
 		dialogFormVisible: false,
 		// 表格分页
-		currentPage:4,
+		currentPage:1,
 		// 后台获取数据
 		tablebody:[],
 		// 查询需要提交的数据
@@ -493,16 +493,18 @@
 				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
 					return false;
 				}else{
+					self.search.page = 1;
 					self.search.type = self.select;
 					self.search.condition = self.input6;
 					self.$http({
 								method: 'get',
-								url: '/turingcloud/admin/transactionnn/list'
+								url: '/turingcloud/admin/transactionnn/list?type='+self.search.type+'&condition='+self.search.condition
 						}).then(function(res){
 							if(res.data.success == false){
 								self.$message.error(res.data.message);
 							}else if(res.data.success == true){
                 self.tablebody = res.data.body;
+								self.handleCurrentChange(1);
 								// 页面布局初始化
 							}
 							console.log(res.data);
@@ -511,19 +513,86 @@
 								self.$router.push('/system/admin/login');
 						});
 				}
-
 			},
 			// 分页
 			handleSizeChange(val) {
 				var self = this;
 				self.search.size = val;
         console.log(`每页 ${val} 条`);
-
+				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+					self.search.page = 1;
+					self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/transactionnn/list?size='+self.search.size
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										self.handleCurrentChange(1);
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}else{
+						self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/transactionnn/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										self.handleCurrentChange(1);
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}  
       },
       handleCurrentChange(val) {
 				var self = this;
 				self.search.page = val;
         console.log(`当前页: ${val}`);
+				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+					self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/transactionnn/list?size='+self.search.size+'&page='+(self.search.page-1)
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}else{
+						self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/transactionnn/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}  
       }
     }
 }
