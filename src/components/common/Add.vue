@@ -111,7 +111,7 @@
                     }).then(function(res){
                         // console.log(res);
                         var storage = window.sessionStorage; 
-                        storage["userId"] = res.data.body.id;
+                        storage["userid"] = res.data.body.id;
                         if(res.data.body.detailInformation != null){
                                    storage["detailInforId"] = res.data.body.detailInformation.id;
                         }
@@ -128,7 +128,7 @@
                     }).then(function(res){
                         // console.log(res);
                         var storage = window.sessionStorage; 
-                        storage["userId"] = res.data.body.id;
+                        storage["userid"] = res.data.body.id;
                         if(res.data.body.detailInformation != null){
                                    storage["detailInforId"] = res.data.body.detailInformation.id;
                         }
@@ -188,11 +188,11 @@
         methods: {
             updatesession(){ 
             var self = this;
-            if(!sessionStorage.getItem("userId")){
+            if(!sessionStorage.getItem("userid")){
                 self.$router.push('/system/register');
             }else{
                 self.all = true;
-                self.userId = sessionStorage.getItem("userId");    
+                self.userId = sessionStorage.getItem("userid");    
                 self.detailInforId = sessionStorage.getItem("detailInforId");
             }
             },

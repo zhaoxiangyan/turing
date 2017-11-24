@@ -9,6 +9,8 @@
 	    	</el-breadcrumb>
 		</div>	
 		<el-row class="page_content">
+		<!--还未上传合作协议-->
+		<div class="uploadstatus1" v-if="uploadStatus() == '1'">
 		  <el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>合作协议：</span>
@@ -115,43 +117,330 @@
 								</el-select>
 					  	</template>
           </el-col>
-				</el-row>	
-				<el-row class="li">
+			</el-row>	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>MT4账号：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+					<el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
+				</el-col>
+			</el-row>	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>MT4密码：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+					<el-input type="password" v-model="password" placeholder="请输入MT4密码" ></el-input>
+				</el-col>
+			</el-row>	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>确认MT4密码：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+					<el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
+				</el-col>
+			</el-row>	
+		</div>
+		<!--已上传未通过-->	
+		<div class="uploadstatus2" v-else-if="uploadStatus() == '2'">
+		  <el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>合作协议：</span>
+			  </el-col>
+			  <el-col  :span="16">
+		        <a class="preview" href="http://192.168.0.119/system/file/委托扣款三方协议v170731.pdf" target="_blank"><i class="el-icon-document"></i>三方合作协议</a>
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span></span>
+			  </el-col>
+			  <el-col :span="16">
+			     <a class="download" href="http://192.168.0.119/system/file/委托扣款三方协议v170731.zip">下载协议</a>
+			  </el-col>  
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议上传方式：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right radio35">
+                <el-switch  v-model="databody.filetype"   off-value="img" on-value="pdf"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
+								<i v-if="databody.filetype == 'img'?false:true">*请上传pdf格式的文件，大小不要超过2M</i>
+								<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
+			  </el-col>
+			</el-row>  
+		  <div v-if="databody.filetype == 'img'?false:true">	 		
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>上传PDF文件：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box">
+				<input type="file" id="user_file" accept="application/pdf" @change="uploadUser()" name="cooperationPdf">
+				<span class="mask user_mask">{{user}}</span>
+			  </el-col>
+			</el-row> 
+			</div>
+			<div v-else>
+			<el-row class="li" >
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第一页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box">
+				<input type="file" id="user_file1" accept="image/png, image/jpeg, image/gif, image/jpg"  @change="uploadUser1()" name="cooperationPic">
+				<span class="mask user_mask1">{{user1}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li"  v-show="user_file1">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col  :span="16">
+				<img id="user_img1">
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第二页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box">
+				<input type="file" id="user_file2" accept="image/png, image/jpeg, image/gif, image/jpg"  @change="uploadUser2()" name="cooperationPic">
+				<span class="mask user_mask2">{{user2}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li"  v-show="user_file2">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col  :span="16">
+				<img id="user_img2">
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第三页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box">
+				<input type="file" id="user_file3" accept="image/png, image/jpeg, image/gif, image/jpg"  @change="uploadUser3()" name="cooperationPic">
+				<span class="mask user_mask3">{{user3}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li"  v-show="user_file3">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col  :span="16">
+				<img id="user_img3">
+			  </el-col>
+			</el-row>
+			</div>
+			<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>MT4账号：</span>
+				    <span>使用的平台：</span>
 				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
+				  <el-col :span="16" class="li_right platform select100">
+					    <template>
+								<el-select v-model="databody.platform" placeholder="请选择">
+									<el-option
+									v-for="item in options1"
+									:key="item.value1"
+									:label="item.label1"
+									:value="item.value1">
+									</el-option>
+								</el-select>
+					  	</template>
           </el-col>
-				</el-row>	
-				<el-row class="li">
+			</el-row>	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>MT4账号：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+					<el-input v-model="databody.mt4Account" placeholder="请输入MT4账号" ></el-input>
+				</el-col>
+			</el-row>	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>MT4密码：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+					<el-input type="password" v-model="databody.mt4Password" placeholder="请输入MT4密码" ></el-input>
+				</el-col>
+			</el-row>	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>确认MT4密码：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+					<el-input type="password" v-model="databodyrepassword" placeholder="请再次输入MT4密码" ></el-input>
+				</el-col>
+			</el-row>	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>*反馈信息：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+						<el-input type="textarea" v-model="databody.handleResultDescription" disabled></el-input>
+				</el-col>
+			</el-row>		
+		</div>
+		<!--已上传已通过-->
+		<div class="uploadstatus3" v-else-if="uploadStatus() == '3'">
+		  <el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>合作协议：</span>
+			  </el-col>
+			  <el-col  :span="16">
+		        <a class="preview" href="http://192.168.0.119/system/file/委托扣款三方协议v170731.pdf" target="_blank"><i class="el-icon-document"></i>三方合作协议</a>
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span></span>
+			  </el-col>
+			  <el-col :span="16">
+			     <a class="download" href="http://192.168.0.119/system/file/委托扣款三方协议v170731.zip">下载协议</a>
+			  </el-col>  
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>合作协议：</span>
+			  </el-col>
+			  <el-col  :span="16">
+		        <a class="preview" href="javascript:void(0)" ><i class="el-icon-circle-check"></i>您已签约三方合作协议</a>
+			  </el-col>
+			</el-row>
+			<!--<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议上传方式：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right radio35">
+                <el-switch  v-model="switch1"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
+									<i v-if="switch1">*请上传pdf格式的文件，大小不要超过2M</i>
+									<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
+			  </el-col>
+			</el-row>  
+		  <div v-if="switch1">	 		
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>上传PDF文件：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box">
+				<input type="file" id="user_file" accept="application/pdf" @change="uploadUser()" name="cooperationPdf">
+				<span class="mask user_mask">{{user}}</span>
+			  </el-col>
+			</el-row> 
+			</div>
+			<div v-else>
+			<el-row class="li" >
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第一页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box">
+				<input type="file" id="user_file1" accept="image/png, image/jpeg, image/gif, image/jpg"  @change="uploadUser1()" name="cooperationPic">
+				<span class="mask user_mask1">{{user1}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li"  v-show="user_file1">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col  :span="16">
+				<img id="user_img1">
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第二页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box">
+				<input type="file" id="user_file2" accept="image/png, image/jpeg, image/gif, image/jpg"  @change="uploadUser2()" name="cooperationPic">
+				<span class="mask user_mask2">{{user2}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li"  v-show="user_file2">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col  :span="16">
+				<img id="user_img2">
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第三页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box">
+				<input type="file" id="user_file3" accept="image/png, image/jpeg, image/gif, image/jpg"  @change="uploadUser3()" name="cooperationPic">
+				<span class="mask user_mask3">{{user3}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li"  v-show="user_file3">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col  :span="16">
+				<img id="user_img3">
+			  </el-col>
+			</el-row>
+			</div>-->
+			<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>MT4密码：</span>
+				    <span>使用的平台：</span>
 				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input type="password" v-model="password" placeholder="请输入MT4密码" ></el-input>
+				  <el-col :span="16" class="li_right platform select100">
+					    <template>
+								<el-select v-model="databody.platform" placeholder="请选择" disabled>
+									<el-option
+									v-for="item in options1"
+									:key="item.value1"
+									:label="item.label1"
+									:value="item.value1">
+									</el-option>
+								</el-select>
+					  	</template>
           </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>确认MT4密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
-          </el-col>
-				</el-row>	
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>反馈信息：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					    <el-input type="textarea" v-model="value2" disabled></el-input>
-          </el-col>
-				</el-row>			
+			</el-row>	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>MT4账号：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+					<el-input v-model="databody.mt4Account" placeholder="请输入MT4账号" disabled></el-input>
+				</el-col>
+			</el-row>	
+			<!--<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>MT4密码：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+					<el-input type="password" v-model="password" placeholder="请输入MT4密码" ></el-input>
+				</el-col>
+			</el-row>	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>确认MT4密码：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+					<el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
+				</el-col>
+			</el-row>-->	
+			<el-row class="li">
+				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+					<span>反馈信息：</span>
+				</el-col>
+				<el-col :span="16" class="li_right">
+						<el-input type="textarea" v-model="databody.handleResultDescription" disabled></el-input>
+				</el-col>
+			</el-row>		
+		</div>
 		</el-row>	  
 		<div class="page_footer clearfix">
 		   <span>风险警告：外汇和差价合约交易以及任何金融资产进行的交易都涉及高风险，都有损失部分和全部投资资金的可能性，未必适合每一位投资者。在决定参与交易之前，您应该审慎考虑您的投资目标、经验等级、财政状况及风险承受能力。您需要承担相关保证金的支付和交易带来的损失，如果没有足够资金承担损失，请不要贸然进行投资交易。图灵不会为市场风险导致的损失承担任何责任，请确保您已经阅读并完全理解图灵的政策披露描述。</span>
-			 <a href="javascript:void(0)" @click="submitAgreement()">提交</a>
+			 <a  class="uploadstatus1" v-if="uploadStatus() == '1'" href="javascript:void(0)" @click="submitAgreement()">提交</a>
+			 <a  class="uploadstatus2" v-else-if="uploadStatus() == '2'" href="javascript:void(0)" @click="editAgreement()">提交</a>
+			 <!--<a  class="uploadstatus3" v-if="uploadStatus() == '3'" href="javascript:void(0)" @click="submitAgreement()">提交</a>-->
 		</div>
 	</div>	
 </template>
@@ -213,8 +502,9 @@
 		//  添加MT4账号
 		accounts:[
 			{value:''}
-		]
-		
+		],
+		databody:[],
+		databodyrepassword:''
       };
     },
 		mounted:function(){
@@ -225,6 +515,21 @@
         self.$router.push('/system/');
       }   
 			// 加入审核未通过的数据
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/coopContract/'+self.userid
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.databody = res.data.body;
+								// 页面布局初始化
+                self.uploadStatus();
+							}
+							console.log(res.data);
+						}).catch(function(err){
+								alert("AJAX失败");
+						});
     },
     methods: {
 			// 检测图片格式大小符合
@@ -241,7 +546,6 @@
 							return false;
 					}
 					return true;
-					// alert('你选择的文件大小' + (img.files[0].size / 1024).toFixed(0) + "kb");
 			},
 			// 检测PDF文件格式大小符合
 			testPDF(pdf){
@@ -278,37 +582,7 @@
 				}
 				reader.readAsDataURL(file)
 			}
-		},
-		// uploadUserPDF() {
-		// 	var self = this;
-		//       self.error.user = false;
-		// 	if(self.user_file == false){
-		// 			self.error.user_text = '上传协议出错';
-		// 			self.error.user = true;
-		// 			return false;
-		// 	}else {
-		// 		var userid = window.sessionStorage['userId'];
-		// 		var image = new FormData();
-		// 		image.append('cooperationPdf',document.getElementById("user_file").files[0]);
-		// 		self.$http({
-		// 			method: 'post',
-		// 			url: '/turingcloud/user/'+userid+'/contract/pdf/addCooperation',
-		// 			data:image
-		// 		}).then(function(res){
-		// 	    	if(res.status == '201'){
-		// 				alert('协议上传成功，请等待审核');
-		// 			}else if(res.status == '400'){
-		// 				alert('用户数据获取错误，请重新登录');
-		// 			}else if(res.status == '500'){
-		// 				alert('文件因服务器内部存储失败');
-		// 			}else{
-		// 				alert('Error：协议上传出错');
-		// 			}
-		// 		}).catch(function(err){
-		// 			alert("AJAX失败");
-		// 		});
-		// 	}
-	  //   },		
+		},	
 		// 三方合作协议img文件
 		uploadUser1(){
 			var self = this;
@@ -376,42 +650,6 @@
 				reader.readAsDataURL(file)
 			}
 		},
-		// uploadUserIMG() {
-		// 	var self = this;
-		//       self.error.user1 = false;
-		// 	if(self.user_file1 == false){
-		// 			self.error.user_text1 = '上传协议第一页出错';
-		// 			self.error.user1 = true;
-		// 			return false;
-		// 	} else if(self.user_file2 == false){
-		// 			self.error.user_text1 = '上传协议第二页出错';
-		// 			self.error.user1 = true;
-		// 			return false;
-		// 	} else if(self.user_file3 == false){
-		// 			self.error.user_text1 = '上传协议第三页出错';
-		// 			self.error.user1 = true;
-		// 			return false;
-		// 	} else {
-		// 		var image = new FormData();
-		// 		image.append('cooperationPic',document.getElementById("user_file1").files[0]);
-		// 		image.append('cooperationPic',document.getElementById("user_file2").files[0]);
-		// 		image.append('cooperationPic',document.getElementById("user_file3").files[0]);
-		// 		self.$http({
-		// 			method: 'post',
-		// 			url: '/turingcloud/user/upload/cooperationPic',
-		// 			data:image
-		// 		}).then(function(res){
-		// 		//    alert(res.data);
-		// 			if(res.data == true){
-		// 				alert('协议上传成功，请等待审核');
-		// 			}else{
-		// 				alert('Error：协议上传出错');
-		// 			}
-		// 		}).catch(function(err){
-		// 			alert("AJAX失败");
-		// 		});
-		// 	}
-	  //   },
 			// 提交合作协议
 			submitAgreement(){
 				 var self = this;
@@ -492,6 +730,17 @@
                     });
 						 }
 					 }
+			},
+			// 监听页面布局初始化
+			uploadStatus(){
+				var self = this;
+				if(self.databody == null){
+					return "1";
+				}else if(self.databody.isPass == "0"){
+					return "2";
+				}else if(self.databody.isPass == "1"){
+					return "3"
+				}
 			}
     }
 }
@@ -551,7 +800,7 @@
 	text-align:left;
 	/*margin-right:30px;*/
 }
-.el-icon-document{
+.el-icon-document,.el-icon-circle-check{
 	display:inline-block;
 	color:#fff;
 	height:100%;
@@ -563,6 +812,7 @@
 	float:left;
 	margin-right:20px;
 }
+
 .li_left span{
     display: block;
     height: 35px;

@@ -433,7 +433,10 @@
                             self.$message({
                                     showClose: true,
                                     message: "提交成功",
-                                    type: 'success'
+                                    type: 'success',
+																		onClose:function(){
+																				self.$router.push('/system/home');
+																		}
                             });
                         }
                     }).catch(function(err){

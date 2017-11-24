@@ -164,8 +164,8 @@
 			</div>
 			<!--上传pdf文件未通过-->
 			<div v-else-if="uploadStatus() == '3'">
-			<div v-if="modalbody.contract.filetype == 'img'?false:true">
-			<el-row class="li ddd">
+			<div v-if="contractfiletype == 'img'?false:true">
+			<el-row class="li" v-if="modalbody.contract.filetype == 'img'?false:true">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>上传PDF文件：</span>
 			  </el-col>
@@ -174,7 +174,6 @@
 					<span class="mask user_mask">{{modalbody.contract.file1}}</span>
 			  </el-col>  
 			</el-row>
-			</div>
 			<div v-else>
 			<el-row class="li" >
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -212,10 +211,58 @@
 			</el-row>
 			</div>
 			</div>
+			<div v-else>
+			<el-row class="li" v-if="modalbody.contract.filetype == 'img'?false:true">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>上传PDF文件：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+					<input type="file" id="debit_file" accept="application/pdf"  @change="uploadDebit()"  name="withholdPdf">
+					<span class="mask user_mask">{{modalbody.contract.file1}}</span>
+			  </el-col>  
+			</el-row>
+			<div v-else>
+			<el-row class="li" >
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第一页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<input type="file" id="debit_file1" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadDebit1()" name="withholdPic">
+				<span class="mask user_mask1">{{debit1}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file1">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			    <img id="debit_img1">
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第二页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<input type="file" id="debit_file2" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadDebit2()" name="withholdPic">
+				<span class="mask user_mask2">{{debit2}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file2">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			     <img id="debit_img2">
+			  </el-col>
+			</el-row>
+			</div>
+			</div>
+			</div>
 		  <!--上传图片协议未通过-->
 		  <div v-else-if="uploadStatus() == '4'">
-			<div v-if="modalbody.contract.filetype == 'img'?false:true">
-			<el-row class="li">
+			<div v-if="contractfiletype == 'img'?false:true">
+			<el-row class="li" v-if="modalbody.contract.filetype == 'img'?false:true">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>上传PDF文件：</span>
 			  </el-col>
@@ -224,7 +271,6 @@
 					<span class="mask user_mask">{{debit}}</span>
 			  </el-col>  
 			</el-row>
-			</div>
 			<div v-else>
 			<el-row class="li" >
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -260,6 +306,54 @@
 			     <img id="debit_img2">
 			  </el-col>
 			</el-row>
+			</div>
+			</div>
+			<div v-else>
+			<el-row class="li" v-if="modalbody.contract.filetype == 'img'?false:true">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>上传PDF文件：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+					<input type="file" id="debit_file" accept="application/pdf"  @change="uploadDebit()"  name="withholdPdf">
+					<span class="mask user_mask">{{debit}}</span>
+			  </el-col>  
+			</el-row>
+			<div v-else>
+			<el-row class="li" >
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第一页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<input type="file" id="debit_file1" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadDebit1()" name="withholdPic">
+				<span class="mask user_mask1">{{modalbody.contract.file1}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file1">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			    <img id="debit_img1">
+			  </el-col>
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>协议第二页：</span>
+			  </el-col>
+			  <el-col  :span="16" class="file_box li_right">
+				<input type="file" id="debit_file2" accept="image/png, image/jpeg, image/gif, image/jpg" @change="uploadDebit2()" name="withholdPic">
+				<span class="mask user_mask2">{{modalbody.contract.file2}}</span>
+			  </el-col>
+			</el-row>
+			<el-row class="li" v-show="debit_file2">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span>预览：</span>
+			  </el-col>
+			  <el-col :span="16" class="li_right">
+			     <img id="debit_img2">
+			  </el-col>
+			</el-row>
+			</div>
 			</div>
 			</div>
 
@@ -469,7 +563,10 @@
 				handleStatus:"0",
 				handleResultDescription:null,
 			}
-		}
+		},
+		// 文件上传方式状态初始化
+		contractisPass:"0",
+		contractfiletype:"img"
       };
     },
 		computed:{
@@ -651,6 +748,8 @@
 									 // 编辑页面建议回撤初始化		
 									 self.monitorRetracement();
 									 // 编辑页面协议上传初始化监听
+									  self.contractisPass = self.modalbody.contract.isPass;
+										self.contractfiletype = self.modalbody.contract.filetype;
 			            	self.uploadStatus();
 								}else if(res.data.success == false){
 									 self.$message.error(res.data.message);
@@ -675,17 +774,18 @@
 				},
 				// 编辑页面协议上传初始化监听
 				uploadStatus(){
+					 console.log('运行');
            var self = this;
-					 if(self.modalbody.contract.isPass == "1" && self.modalbody.contract.filetype == "pdf"){
+					 if(self.contractisPass == "1" && self.contractfiletype == "pdf"){
 						 return "1";
 					 }
-					 if(self.modalbody.contract.isPass == "1" && self.modalbody.contract.filetype == "img"){
+					 if(self.contractisPass == "1" && self.contractfiletype == "img"){
 						 return "2";
 					 }
-					 if(self.modalbody.contract.isPass == "0" && self.modalbody.contract.filetype == "pdf"){
+					 if(self.contractisPass == "0" && self.contractfiletype == "pdf"){
 						 return "3";
 					 }
-					 if(self.modalbody.contract.isPass == "0" && self.modalbody.contract.filetype == "img"){
+					 if(self.contractisPass == "0" && self.contractfiletype == "img"){
 						 return "4";
 					 }
 		  	},

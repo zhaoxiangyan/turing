@@ -12,33 +12,33 @@
 <!--用户查询-->
 <el-input placeholder="请输入内容" v-model="input6">
     <el-select v-model="select" slot="prepend" placeholder="请选择" class="search">
-		  <el-option label="所有"   value="0"></el-option>
-      <el-option label="MT4账号" value="1"></el-option>
-      <el-option label="用户姓名" value="2"></el-option>
-      <el-option label="手机号码" value="3"></el-option>
+		  <el-option label="所有"   value="all"></el-option>
+      <el-option label="MT4账号" value="mt4Account"></el-option>
+      <el-option label="用户姓名" value="username"></el-option>
+      <el-option label="手机号码" value="phone"></el-option>
     </el-select>
-    <el-button slot="append" icon="search"></el-button>
+    <el-button slot="append" icon="search" @click="searchButton()"></el-button>
 </el-input>
 <!--交易信息表格table-->
 <template>
   <el-table
-    :data="tableData"
-    style="width: 100%"
-    :row-class-name="tableRowClassName">
+    :data="tablebody"
+    style="width: 100%">
     <el-table-column
-      prop="date"
+      prop="lastModifiedTime"
+			:formatter="dateFormat"
       label="日期">
     </el-table-column>
 		<el-table-column
-		  prop="name"
+		  prop="user.detailInformation.username"
 			label="用户姓名">
 		</el-table-column>
 		<el-table-column
-		  prop="phone"
+		  prop="user.phone"
 			label="手机号码">
 		</el-table-column>
     <el-table-column
-      prop="account"
+      prop="mt4Account"
       label="MT4账号">
     </el-table-column>
     <el-table-column
@@ -51,44 +51,53 @@
 			width="190">
     </el-table-column>
 		<el-table-column
-      prop="model"
+      prop="mode"
+			:formatter="modeFormat" 
       label="挂机模式">
     </el-table-column>
 		<el-table-column
-      prop="retracement"
+      prop="retreatRate"
+			:formatter="retreatRateFormat"
       label="最大回撤">
     </el-table-column>
     <el-table-column
-      prop="state"
-      label="账户状态"
+      prop="isHangUp"
+      label="是否挂机"
 			width="95">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.state === '1'"
+      <el-tag v-if="scope.row.isHangUp === '0'"
           type="danger"
-          close-transition>审核未通过</el-tag>
-      <el-tag v-else-if="scope.row.state === '2'"
+          close-transition>否</el-tag>
+      <el-tag v-else-if="scope.row.isHangUp === '1'"
           type="success"
-          close-transition>正在运行</el-tag>
-			<el-tag v-else-if="scope.row.state === '3'"
-          type="warning"
-          close-transition>等待审核</el-tag>
-			<el-tag v-else-if="scope.row.state === '4'"
-          type="primary"
-          close-transition>停止运行</el-tag>
+          close-transition>是</el-tag>
 </template>  
     </el-table-column>
 		<el-table-column
-      prop="state_text"
+      prop="isPass"
+      label="是否通过"
+			width="95">
+<template slot-scope="scope">
+      <el-tag v-if="scope.row.isPass === '0'"
+          type="danger"
+          close-transition>否</el-tag>
+      <el-tag v-else-if="scope.row.isPass === '1'"
+          type="success"
+          close-transition>是</el-tag>
+</template>  
+    </el-table-column>
+		<el-table-column
+      prop="handleStatus"
       label="是否处理"
-      width="150"
-      :filters="[{ text: '未处理', value: '未处理' }, { text: '已处理', value: '已处理' }]"
-      :filter-method="filterTag"
-      filter-placement="bottom-end">
-      <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.state_text === '未处理' ? 'primary' : 'success'"
-          close-transition>{{scope.row.state_text}}</el-tag>
-      </template>
+			width="95">
+<template slot-scope="scope">
+      <el-tag v-if="scope.row.handleStatus === '0'"
+          type="primary"
+          close-transition>未处理</el-tag>
+      <el-tag v-else-if="scope.row.handleStatus === '1'"
+          type="success"
+          close-transition>已处理</el-tag>
+</template>  
     </el-table-column>
     <el-table-column
       label="操作"
@@ -105,8 +114,8 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="10"
+      :page-sizes="[10, 20, 50]"
+      :page-size="search.size"
       layout="total, sizes, prev, pager, next"
       :total="110">
 </el-pagination>
@@ -274,15 +283,10 @@
 				</el-row>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>账户状态：</span>
+				    <span>审核状态：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-<template>
-    <el-radio class="danger" v-model="radio" label="1" >审核未通过</el-radio>
-    <el-radio class="success" v-model="radio" label="2" >正在运行</el-radio>
-    <el-radio class="warning" v-model="radio" label="3" >等待审核</el-radio>
-		<el-radio class="primary" v-model="radio" label="4" >停止运行</el-radio>
-</template>
+            <el-switch  v-model="switch7"  on-text="审核通过"  off-text="审核不通过" :width='100'></el-switch>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -308,6 +312,7 @@
 	</div>	
 </template>
 <script>
+ import moment from 'moment'
  export default {
     name: 'Four',
     data() {
@@ -319,10 +324,10 @@
 		input1: '',
 		// 使用的平台select
 		options1: [{
-          value1: '1',
+          value1: 'GQCapital-Live',
           label1: 'GQCapital-Live'
         }],
-        value1: '1',
+        value1: 'GQCapital-Live',
 		// MT4账号
 		input2: '',
 		// MT4密码
@@ -360,10 +365,10 @@
 		// 反馈信息
 		value2:'',
 		// 账户状态
-		radio:'3',
+		switch7:false,
 		// 搜索框
 		input6: '',
-    select: '0',
+    select: 'all',
 		// 表格数据
 		tableData: [{
 			id:'1',
@@ -377,48 +382,40 @@
 			retracement: '35%',
 			state:'1',
 			state_text:'已处理'
-		}, {
-			id:'2',
-			date: '2016-05-02',
-			name:'tfd',
-			phone:'15212345678',
-			platform: 'GQCapital-Live',
-			account: '20171105',
-			capital: '5000',
-			model: '成长型',
-			retracement: '35%',
-			state:'2',
-			state_text:'未处理'
-		}, {
-			id:'3',
-			date: '2016-05-02',
-			name:'err',
-			phone:'15212345678',
-			platform: 'GQCapital-Live',
-			account: '20171105',
-			capital: '5000',
-			model: '成长型',
-			retracement: '35%',
-			state:'3',
-			state_text:'已处理'
-		}, {
-			id:'4',
-			date: '2016-05-02',
-			name:'fss',
-			phone:'15212345678',
-			platform: 'GQCapital-Live',
-			account: '20171105',
-			capital: '5000',
-			model: '成长型',
-			retracement: '35%',
-			state:'4',
-			state_text:'未处理'
 		}],
 		dialogFormVisible: false,
 		// 表格分页
-		currentPage:4
+		currentPage:4,
+		// 后台获取数据
+		tablebody:[],
+		// 查询需要提交的数据
+		search:{
+			page:1,
+			size:10,
+      type:'all',
+			condition:'1993'
+		}
       };
     },
+		mounted:function(){
+			var self = this;
+			// 管理用户交易信息的表格初始化
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/admin/transactionnn/list'
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.tablebody = res.data.body;
+								// 页面布局初始化
+							}
+							console.log(res.data);
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/admin/login');
+						});
+		},
     methods: {
         // 表格编辑按钮
         handleEdit(index, row) {
@@ -449,14 +446,83 @@
 			// 	alert('停止挂机');
 			// },
 			// 运行状态筛选
-			filterTag(value, row) {
-        return row.state_text === value;
-      },
+			// filterTag(value, row) {
+      //   return row.state_text === value;
+      // },
+			// 日期格式化
+			dateFormat:function(row, column) {  
+				var date = row[column.property];  
+				if (date == undefined) {  
+						return "";  
+				}  
+				return moment(date).format("YYYY-MM-DD");  
+			},  
+			// 挂机模式格式化
+			modeFormat:function(row, column) {  
+				var mode = row[column.property];  
+				if (mode == undefined) {  
+						return "";  
+				}  
+				if(mode == "1"){
+					return "成长型";
+				}else if(mode == "2"){
+					return "宏利先锋型";
+				}else if(mode == "3"){
+					return "趋势策略型";
+				}else if(mode == "4"){
+					return "综合尊享型";
+				}else{
+					return " ";
+				}
+			},  
+			// 建议回撤格式化
+			retreatRateFormat:function(row, column) {  
+				var retreatRate = row[column.property];  
+				if (retreatRate == undefined) {  
+						return "";  
+				}  
+				if(isNaN(retreatRate) == false){
+					return retreatRate+"%";
+				}else{
+					return "";
+				}  
+			},
+			// 搜索
+			searchButton(){
+				var self = this;
+				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+					return false;
+				}else{
+					self.search.type = self.select;
+					self.search.condition = self.input6;
+					self.$http({
+								method: 'get',
+								url: '/turingcloud/admin/transactionnn/list'
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.tablebody = res.data.body;
+								// 页面布局初始化
+							}
+							console.log(res.data);
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/admin/login');
+						});
+				}
+
+			},
 			// 分页
 			handleSizeChange(val) {
+				var self = this;
+				self.search.size = val;
         console.log(`每页 ${val} 条`);
+
       },
       handleCurrentChange(val) {
+				var self = this;
+				self.search.page = val;
         console.log(`当前页: ${val}`);
       }
     }
