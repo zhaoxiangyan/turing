@@ -12,54 +12,54 @@
 <!--用户查询-->
 <el-input placeholder="请输入内容" v-model="input6">
     <el-select v-model="select" slot="prepend" placeholder="请选择" class="search">
-		  <el-option label="所有"   value="0"></el-option>
-      <el-option label="用户姓名" value="1"></el-option>
-      <el-option label="手机号码" value="2"></el-option>
+		  <el-option label="所有"   value="all"></el-option>
+      <el-option label="用户姓名" value="username"></el-option>
+      <el-option label="手机号码" value="phone"></el-option>
     </el-select>
-    <el-button slot="append" icon="search"></el-button>
+    <el-button slot="append" icon="search" @click="searchButton()"></el-button>
 </el-input>
 <!--个人信息表格table-->
 <template>
   <el-table
-    :data="tableData"
-    style="width: 100%"
-    :row-class-name="tableRowClassName">
+    :data="tablebody"
+    style="width: 100%">
     <el-table-column
-      prop="date"
+      prop="lastLoginTime"
+			:formatter="dateFormat"
       label="最后登录时间">
     </el-table-column>
 		<el-table-column
-		  prop="name"
+		  prop="user.detailInformation.username"
 			label="真实姓名">
 		</el-table-column>
 		<el-table-column
-		  prop="phone"
+		  prop="user.phone"
 			label="手机号码">
 		</el-table-column>
     <el-table-column
-      prop="email"
+      prop="user.email"
       label="邮箱">
     </el-table-column>
     <el-table-column
-      prop="card"
+      prop="user.detailInformation.idcard"
       label="身份证号码">
     </el-table-column>		
 		<el-table-column
-      prop="address"
+      prop="user.detailInformation.addr"
       label="居住地址">
     </el-table-column>
 		<el-table-column
-      prop="state_text"
+      prop="user.detailInformation.handleStatus"
       label="是否处理"
-      width="150"
-      :filters="[{ text: '未处理', value: '未处理' }, { text: '已处理', value: '已处理' }]"
-      :filter-method="filterTag"
-      filter-placement="bottom-end">
-      <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.state_text === '未处理' ? 'primary' : 'success'"
-          close-transition>{{scope.row.state_text}}</el-tag>
-      </template>
+			width="95">
+<template slot-scope="scope">
+      <el-tag v-if="scope.row.user.detailInformation.handleStatus === '0'"
+          type="primary"
+          close-transition>未处理</el-tag>
+      <el-tag v-else-if="scope.row.user.detailInformation.handleStatus === '1'"
+          type="success"
+          close-transition>已处理</el-tag>
+</template>
     </el-table-column>
     <el-table-column
       label="操作"
@@ -72,18 +72,14 @@
 </template>
 <!--个人信息状态指示色-->
 <p class="state_tips">
-      审核通过，可登录<span class="one"></span>
-			审核不通过，还需提交个人资料<span class="two"></span>
-			Three<span class="three"></span>
-			Four<span class="four"></span>
 <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[10, 20, 50, 100]"
-      :page-size="10"
+      :page-sizes="[10, 20, 50]"
+      :page-size="search.size"
       layout="total, sizes, prev, pager, next"
-      :total="110">
+      :total="total">
 </el-pagination>
 </p>
         </div>
@@ -209,6 +205,7 @@
 	</div>	
 </template>
 <script>
+ import moment from 'moment'
  export default {
     name: 'Four',
     data() {
@@ -230,7 +227,7 @@
 		value2:'',
 		// 搜索框
 		input6: '',
-    select: '0',
+    select: 'all',
 		// 表格数据
 		tableData: [{
 			id:'1',
@@ -252,32 +249,55 @@
 			address: '江西九江',
 			state:'2',
 			state_text:'未处理'
-		}, {
-			id:'3',
-			date: '2016-05-02',
-			name:'err',
-			phone:'15212345678',
-			email: '41546546@qq.com',
-			card: '304457188617581245',
-			address: '江西九江',
-			state:'3',
-			state_text:'已处理'
-		}, {
-			id:'4',
-			date: '2016-05-02',
-			name:'fss',
-			phone:'15212345678',
-			email: '41546546@qq.com',
-			card: '304457188617581245',
-			address: '江西九江',
-			state:'4',
-			state_text:'未处理'
 		}],
 		dialogFormVisible: false,
 		// 表格分页
-		currentPage:4
+		currentPage:1,
+		// 后台获取数据
+		total:2,
+		tablebody:[],
+		// 查询需要提交的数据
+		search:{
+			page:1,
+			size:10,
+      type:'all',
+			condition:'1993'
+		}
       };
     },
+		mounted:function(){
+			var self = this;
+			// 用户个人信息的总数
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/admin/user/count'
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.total = res.data.body;
+							}
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/admin/login');
+						});
+			// 管理用户个人信息的表格初始化
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/admin/user/list'
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.tablebody = res.data.body;
+								// 页面布局初始化
+							}
+							console.log(res.data.body);
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/admin/login');
+						});
+		},		
     methods: {
         // 获取数据状态，类名表格
 	      tableRowClassName(row, index) {
@@ -315,16 +335,120 @@
           });          
         });
       },
-			// 处理状态筛选
-			filterTag(value, row) {
-        return row.state_text === value;
-      },
+			// 日期格式化
+			dateFormat:function(row, column) {  
+				var date = row[column.property];  
+				if (date == undefined) {  
+						return "";  
+				}  
+				return moment(date).format("YYYY-MM-DD");  
+			},  
+			// 搜索
+			searchButton(){
+				var self = this;
+				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+					return false;
+				}else{
+					self.search.page = 1;
+					self.search.type = self.select;
+					self.search.condition = self.input6;
+					self.$http({
+								method: 'get',
+								url: '/turingcloud/admin/user/list?type='+self.search.type+'&condition='+self.search.condition
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.tablebody = res.data.body;
+								self.handleCurrentChange(1);
+								// 页面布局初始化
+							}
+							console.log(res.data);
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/admin/login');
+						});
+				}
+			},
 			// 分页
 			handleSizeChange(val) {
+        var self = this;
+				self.search.size = val;
         console.log(`每页 ${val} 条`);
+				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+					self.search.page = 1;
+					self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/user/list?size='+self.search.size
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										self.handleCurrentChange(1);
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}else{
+						self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/user/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										self.handleCurrentChange(1);
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}  
       },
       handleCurrentChange(val) {
+        var self = this;
+				self.search.page = val;
         console.log(`当前页: ${val}`);
+				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+					self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/user/list?size='+self.search.size+'&page='+(self.search.page-1)
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}else{
+						self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/user/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}  
       }
     }
 }

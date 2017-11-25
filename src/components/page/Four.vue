@@ -448,10 +448,8 @@
 				</el-row>
 		</el-row>
 		<div slot="footer" class="dialog-footer">
-		  <el-button      v-if="uploadStatus() == '1'" type="primary" @click="modify1(rowid)">提交1111修改</el-button>
-			<el-button v-else-if="uploadStatus() == '2'" type="primary" @click="modify2(rowid)">提交2222修改</el-button>
-			<el-button v-else-if="uploadStatus() == '3'" type="primary" @click="modify3(rowid)">提交3333修改</el-button>
-			<el-button v-else-if="uploadStatus() == '4'" type="primary" @click="modify4(rowid)">提交4444修改</el-button>
+		  <el-button      v-if="uploadStatus() == '1'||uploadStatus() == '2'" type="primary" @click="modify12(rowid)">提交修改</el-button>
+			<el-button v-else-if="uploadStatus() == '3'||uploadStatus() == '4'" type="primary" @click="modify34(rowid)">提交修改</el-button>
 			<el-button type="danger" @click="stop">停止挂机</el-button>
 			<!--看后期开发需求是否需要删除账户信息功能-->
 			<!--<el-button type="danger" @click="delete_setting">删除</el-button>--> 
@@ -819,17 +817,9 @@
           self.dialogImgUrl = 'http://192.168.0.111/'+event.target.innerText;
 					self.dialogImgVisible = true;
 				},
-				// 提交修改  pdf已通过   1
-				modify1(rowid){
-          var self = this;
-
-           self.dialogFormVisible = false;
-				},
-        // 提交修改  图片已通过  2
-				modify2(rowid){
-					 var self = this;
-					   if(self.modalbody.isChangePassword == "0"){
-
+        // 提交修改  图片已通过  2  // 提交修改  pdf已通过   1
+				modify12(rowid){
+					var self = this;
 						 if(self.modalbody.capital === ''){
 							  self.$message.error('账户投资资金不能为空');
 						 }else if(self.modalbody.mode === ''){
@@ -837,9 +827,83 @@
 						 }else if(self.retreatRate === ''){
 							 self.$message.error('建议回撤未填写');
 						 }else{
-							      var httpform = new FormData();
-                    httpform.append('fileType',null);
+							   var httpform = new FormData();
+							   if(self.modalbody.isChangePassword == "0"){
                     httpform.append('isChangePassword',false);
+								 }else if(self.modalbody.isChangePassword == "1"){
+                      if(self.modalbody.newPassword === ''){
+												self.$message.error('请输入新的MT4密码');
+												return false;
+											}else if(self.modalbody.newPassword != self.repassword1){
+												self.$message.error('两次密码不一致');
+												return false;
+											}
+											httpform.append('isChangePassword',true);
+										  httpform.append('newPassword',self.modalbody.newPassword);
+								 }
+                    httpform.append('fileType',null);
+										httpform.append('capital',self.modalbody.capital);
+										httpform.append('mode',self.modalbody.mode);
+										httpform.append('retreatRate',self.retreatRate);
+                    self.$http({
+                        method: 'post',
+                        url: '/turingcloud/trnsaction/'+self.userid+'/'+rowid,
+                        data:httpform
+                    }).then(function(res){
+                        if(res.data.success == false){
+                            self.$message.error(res.data.message);
+                        }else{
+                            self.$message({
+                                    showClose: true,
+                                    message: "修改成功，请等待审核!",
+                                    type: 'success',
+																		onClose:function(){
+																				// 提交修改成功关闭模态框
+					                              self.dialogFormVisible = false;
+																		}
+                            });
+                        }
+                    }).catch(function(err){
+                       alert("AJAX失败");
+                    });
+						 } 
+				},
+				// 提交修改  pdf未通过   3 				// 提交修改  图片未通过  4
+				modify34(rowid){
+					var self = this;
+						 if(self.modalbody.capital === ''){
+							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.modalbody.mode === ''){
+							 self.$message.error('请至少选择一种挂机模式');
+						 }else if(self.retreatRate === ''){
+							 self.$message.error('建议回撤未填写');
+						 }else{
+							   var httpform = new FormData();
+								//  是否修改密码
+							   if(self.modalbody.isChangePassword == "0"){
+                    httpform.append('isChangePassword',false);
+								 }else if(self.modalbody.isChangePassword == "1"){
+                      if(self.modalbody.newPassword === ''){
+												self.$message.error('请输入新的MT4密码');
+												return false;
+											}else if(self.modalbody.newPassword != self.repassword1){
+												self.$message.error('两次密码不一致');
+												return false;
+											}
+											httpform.append('isChangePassword',true);
+										  httpform.append('newPassword',self.modalbody.newPassword);
+								 }
+								//  是否提交协议
+								if(self.modalbody.contract.filetype == "img" && self.debit_file1 == true && self.debit_file2 == true){
+									 httpform.append('fileType',self.modalbody.contract.filetype);
+									 httpform.append('multipartFile1',document.getElementById("debit_file1").files[0]);
+									 httpform.append('multipartFile2',document.getElementById("debit_file2").files[0]);
+								}else if(self.modalbody.contract.filetype == "pdf" && self.debit_file == true){
+									 httpform.append('fileType',self.modalbody.contract.filetype);
+									 httpform.append('multipartFile1',document.getElementById("debit_file").files[0]);
+								}else{
+									 httpform.append('fileType',null);
+								}   
 										httpform.append('capital',self.modalbody.capital);
 										httpform.append('mode',self.modalbody.mode);
 										httpform.append('retreatRate',self.retreatRate);
@@ -865,25 +929,6 @@
                        alert("AJAX失败");
                     });
 						 }
-						 }else if(self.modalbody.isChangePassword == "1"){
-                  // 需要修改密码时
-
-									                      // 提交修改成功关闭模态框
-					                              self.dialogFormVisible = false;
-						 }
-          
-				},
-				// 提交修改  pdf未通过   3
-				modify3(rowid){
-					var self = this;
-					 
-          self.dialogFormVisible = false;
-				},
-				// 提交修改  图片未通过  4
-				modify4(rowid){
-					 var self = this;
-					 
-					 self.dialogFormVisible = false;
 				},
 				// 删除交易配置
 				// delete_setting() {

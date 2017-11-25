@@ -117,7 +117,7 @@
       :page-sizes="[10, 20, 50]"
       :page-size="search.size"
       layout="total, sizes, prev, pager, next"
-      :total="110">
+      :total="total">
 </el-pagination>
 </p>
         </div>
@@ -387,6 +387,7 @@
 		// 表格分页
 		currentPage:1,
 		// 后台获取数据
+		total:2,
 		tablebody:[],
 		// 查询需要提交的数据
 		search:{
@@ -399,10 +400,24 @@
     },
 		mounted:function(){
 			var self = this;
+			// 用户交易信息的总数
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/admin/transaction/count'
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.total = res.data.body;
+							}
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/admin/login');
+						});
 			// 管理用户交易信息的表格初始化
 			self.$http({
 								method: 'get',
-								url: '/turingcloud/admin/transactionnn/list'
+								url: '/turingcloud/admin/transaction/list'
 						}).then(function(res){
 							if(res.data.success == false){
 								self.$message.error(res.data.message);
@@ -498,7 +513,7 @@
 					self.search.condition = self.input6;
 					self.$http({
 								method: 'get',
-								url: '/turingcloud/admin/transactionnn/list?type='+self.search.type+'&condition='+self.search.condition
+								url: '/turingcloud/admin/transaction/list?type='+self.search.type+'&condition='+self.search.condition
 						}).then(function(res){
 							if(res.data.success == false){
 								self.$message.error(res.data.message);
@@ -523,7 +538,7 @@
 					self.search.page = 1;
 					self.$http({
 										method: 'get',
-										url: '/turingcloud/admin/transactionnn/list?size='+self.search.size
+										url: '/turingcloud/admin/transaction/list?size='+self.search.size
 								}).then(function(res){
 									if(res.data.success == false){
 										self.$message.error(res.data.message);
@@ -540,7 +555,7 @@
 				}else{
 						self.$http({
 										method: 'get',
-										url: '/turingcloud/admin/transactionnn/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size
+										url: '/turingcloud/admin/transaction/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size
 								}).then(function(res){
 									if(res.data.success == false){
 										self.$message.error(res.data.message);
@@ -563,7 +578,7 @@
 				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
 					self.$http({
 										method: 'get',
-										url: '/turingcloud/admin/transactionnn/list?size='+self.search.size+'&page='+(self.search.page-1)
+										url: '/turingcloud/admin/transaction/list?size='+self.search.size+'&page='+(self.search.page-1)
 								}).then(function(res){
 									if(res.data.success == false){
 										self.$message.error(res.data.message);
@@ -579,7 +594,7 @@
 				}else{
 						self.$http({
 										method: 'get',
-										url: '/turingcloud/admin/transactionnn/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
+										url: '/turingcloud/admin/transaction/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
 								}).then(function(res){
 									if(res.data.success == false){
 										self.$message.error(res.data.message);

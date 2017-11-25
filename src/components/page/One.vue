@@ -439,7 +439,7 @@
 		<div class="page_footer clearfix">
 		   <span>风险警告：外汇和差价合约交易以及任何金融资产进行的交易都涉及高风险，都有损失部分和全部投资资金的可能性，未必适合每一位投资者。在决定参与交易之前，您应该审慎考虑您的投资目标、经验等级、财政状况及风险承受能力。您需要承担相关保证金的支付和交易带来的损失，如果没有足够资金承担损失，请不要贸然进行投资交易。图灵不会为市场风险导致的损失承担任何责任，请确保您已经阅读并完全理解图灵的政策披露描述。</span>
 			 <a  class="uploadstatus1" v-if="uploadStatus() == '1'" href="javascript:void(0)" @click="submitAgreement()">提交</a>
-			 <a  class="uploadstatus2" v-else-if="uploadStatus() == '2'" href="javascript:void(0)" @click="editAgreement()">提交</a>
+			 <a  class="uploadstatus2" v-else-if="uploadStatus() == '2'" href="javascript:void(0)" @click="editAgreement()">提交修改</a>
 			 <!--<a  class="uploadstatus3" v-if="uploadStatus() == '3'" href="javascript:void(0)" @click="submitAgreement()">提交</a>-->
 		</div>
 	</div>	
@@ -513,6 +513,7 @@
         self.userid = localStorage.getItem("userid");
       }else{
         self.$router.push('/system/');
+				return false;
       }   
 			// 加入审核未通过的数据
 			self.$http({
@@ -650,14 +651,10 @@
 				reader.readAsDataURL(file)
 			}
 		},
-			// 提交合作协议
-			submitAgreement(){
+		// 提交合作协议
+		submitAgreement(){
 				 var self = this;
-           if(self.switch1 == true){
-            // 上传pdf文件方式
-						 if(self.user_file == false){
-                 self.$message.error('上传PDF文件出错');
-						 }else if(self.value1 === ''){
+             if(self.value1 === ''){
 							  self.$message.error('请选择使用的平台');
 						 }else if(self.input2 === ''){
 							  self.$message.error('MT4账号不能为空');
@@ -667,8 +664,24 @@
 							  self.$message.error('两次密码不一致');
 						 }else{
 							      var httpform = new FormData();
+										if(self.switch1 == true){
+												if(self.user_file == false){
+															self.$message.error('上传PDF文件出错');
+															return false;
+													}else{
+											     	 httpform.append('multipartFile1',document.getElementById("user_file").files[0]);
+													}
+										}else{
+                         if(self.user_file1 == false || self.user_file2 == false || self.user_file3 == false){
+															self.$message.error('上传图片文件出错');
+															return false;
+													}else{
+                              httpform.append('multipartFile1',document.getElementById("user_file1").files[0]);
+															httpform.append('multipartFile2',document.getElementById("user_file2").files[0]);
+															httpform.append('multipartFile3',document.getElementById("user_file3").files[0]);
+													}
+										}
                     httpform.append('fileType',self.switch1);
-                    httpform.append('multipartFile1',document.getElementById("user_file").files[0]);
                     httpform.append('platform',self.value1);
                     httpform.append('mt4Account',self.input2);
 										httpform.append('mt4Password',self.password);
@@ -689,48 +702,54 @@
                     }).catch(function(err){
                        alert("AJAX失败");
                     });
-						 }
-					 }else{
-               // 上传图片方式
-						 if(self.user_file1 == false || self.user_file2 == false || self.user_file3 == false){
-                 self.$message.error('上传图片文件出错');
-						 }else if(self.value1 === ''){
+						 }		 
+		},
+		// 修改三方合作协议
+    editAgreement(){
+				 var self = this;
+             if(self.databody.platform === ''){
 							  self.$message.error('请选择使用的平台');
-						 }else if(self.input2 === ''){
+						 }else if(self.databody.mt4Account === ''){
 							  self.$message.error('MT4账号不能为空');
-						 }else if(self.password === ''){
+						 }else if(self.databody.mt4Password === ''){
 							  self.$message.error('MT4密码不能为空');
-						 }else if(self.repassword != self.password){
+						 }else if(self.databodyrepassword != self.databody.mt4Password){
 							  self.$message.error('两次密码不一致');
 						 }else{
 							      var httpform = new FormData();
-                    httpform.append('fileType',self.switch1);
-                    httpform.append('multipartFile1',document.getElementById("user_file1").files[0]);
-										httpform.append('multipartFile2',document.getElementById("user_file2").files[0]);
-										httpform.append('multipartFile3',document.getElementById("user_file3").files[0]);
-                    httpform.append('platform',self.value1);
-                    httpform.append('mt4Account',self.input2);
-										httpform.append('mt4Password',self.password);
-                    self.$http({
-                        method: 'post',
-                        url: '/turingcloud/coopContract/'+self.userid,
-                        data:httpform
-                    }).then(function(res){
-                        if(res.data.success == false){
-                            self.$message.error(res.data.message);
-                        }else{
-                            self.$message({
-                                    showClose: true,
-                                    message: "提交成功",
-                                    type: 'success'
-                            });
-                        }
-                    }).catch(function(err){
-                       alert("AJAX失败");
-                    });
-						 }
-					 }
-			},
+										if(self.databody.filetype == "img" && self.user_file1 == true && self.user_file2 == true && self.user_file3 == true){
+											    httpform.append('fileType',false);
+											    httpform.append('multipartFile1',document.getElementById("user_file1").files[0]);
+													httpform.append('multipartFile2',document.getElementById("user_file2").files[0]);
+										 			httpform.append('multipartFile3',document.getElementById("user_file3").files[0]);
+										}else if(self.databody.filetype == "pdf" && self.user_file == true){
+											    httpform.append('fileType',true);
+                          httpform.append('multipartFile1',document.getElementById("user_file").files[0]);
+										}else{
+                          httpform.append('fileType',null);
+										}
+													httpform.append('platform',self.databody.platform);
+													httpform.append('mt4Account',self.databody.mt4Account);
+													httpform.append('mt4Password',self.databody.mt4Password);
+													self.$http({
+															method: 'post',
+															url: '/turingcloud/coopContract/'+self.userid,
+															data:httpform
+													}).then(function(res){
+															if(res.data.success == false){
+																	self.$message.error(res.data.message);
+															}else{
+																	self.$message({
+																					showClose: true,
+																					message: "提交修改成功",
+																					type: 'success'
+																	});
+															}
+													}).catch(function(err){
+														alert("AJAX失败");
+													});
+						 }		 
+		},
 			// 监听页面布局初始化
 			uploadStatus(){
 				var self = this;
