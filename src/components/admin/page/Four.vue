@@ -572,21 +572,38 @@
 				},				
 				// 删除交易配置
 				delete_setting() {
-        this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '信息已永久删除!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
+            var self = this;
+						self.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+								self.$http({
+												method: 'delete',
+												url: '/turingcloud/admin/transaction/'+self.userid+'/'+self.rowid
+										}).then(function(res){
+												if(res.data.success == true){
+															self.$message({
+																type: 'success',
+																message: '信息已永久删除!',
+																onClose:function(){
+																		// 删除成功关闭模态框
+																		self.dialogFormVisible = false;
+																}
+															});
+												}else if(res.data.success == false){
+													self.$message.error(res.data.message);
+												}
+										}).catch(function(err){
+												console.log("AJAX失败");
+												self.$router.push('/system/admin');
+										});
+						}).catch(() => {
+							self.$message({
+								type: 'info',
+								message: '已取消删除'
+							});          
+						});
       },
 			// 停止挂机
 			// stop(){
