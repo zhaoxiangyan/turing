@@ -12,29 +12,29 @@
 <!--用户查询-->
 <el-input placeholder="请输入内容" v-model="input6">
     <el-select v-model="select" slot="prepend" placeholder="请选择" class="search">
-		  <el-option label="所有"   value="0"></el-option>
-      <el-option label="MT4账号" value="1"></el-option>
-      <el-option label="用户姓名" value="2"></el-option>
-      <el-option label="手机号码" value="3"></el-option>
+		  <el-option label="所有"   value="all"></el-option>
+      <el-option label="MT4账号" value="mt4Account"></el-option>
+      <el-option label="用户姓名" value="username"></el-option>
+      <el-option label="手机号码" value="phone"></el-option>
     </el-select>
-    <el-button slot="append" icon="search"></el-button>
+    <el-button slot="append" icon="search" @click="searchButton()"></el-button>
 </el-input>
 <!--交易信息表格table-->
 <template>
   <el-table
-    :data="tableData"
-    style="width: 100%"
-    :row-class-name="tableRowClassName">
+    :data="tablebody"
+    style="width: 100%">
     <el-table-column
-      prop="date"
+      prop="lastModifiedTime"
+			:formatter="dateFormat"
       label="日期">
     </el-table-column>
 	<el-table-column
-		prop="name"
+		prop="user.detailInformation.username"
 		label="用户姓名">
 	</el-table-column>
 	<el-table-column
-		prop="phone"
+		prop="user.phone"
 		label="手机号码">
 	</el-table-column>
 	<el-table-column
@@ -42,31 +42,33 @@
 		label="使用的平台">
 	</el-table-column>
     <el-table-column
-      prop="account"
+      prop="mt4Account"
       label="MT4账号">
     </el-table-column>	
 		<el-table-column
-      prop="user"
+      prop="isPass"
       label="三方合作协议"
 			width="190">
-	<template slot-scope="scope">
-        <el-tag
-          :type="scope.row.user === '已通过' ? 'success' : 'danger'"
-          close-transition>{{scope.row.user}}</el-tag>
-    </template>  		
+<template slot-scope="scope">
+      <el-tag v-if="scope.row.isPass === '0'"
+          type="danger"
+          close-transition>未通过</el-tag>
+      <el-tag v-else-if="scope.row.isPass === '1'"
+          type="success"
+          close-transition>已通过</el-tag>
+</template>		
     </el-table-column>
 		<el-table-column
-      prop="state_text"
-      label="处理状态"
-      width="150"
-      :filters="[{ text: '未处理', value: '未处理' }, { text: '已处理', value: '已处理' }]"
-      :filter-method="filterTag"
-      filter-placement="bottom-end">
-      <template slot-scope="scope">
-        <el-tag
-          :type="scope.row.state_text === '未处理' ? 'primary' : 'success'"
-          close-transition>{{scope.row.state_text}}</el-tag>
-      </template>
+      prop="handleStatus"
+      label="是否处理">
+<template slot-scope="scope">
+      <el-tag v-if="scope.row.handleStatus === '0'"
+          type="primary"
+          close-transition>未处理</el-tag>
+      <el-tag v-else-if="scope.row.handleStatus === '1'"
+          type="success"
+          close-transition>已处理</el-tag>
+</template>
     </el-table-column>
     <el-table-column
       label="操作"
@@ -79,22 +81,22 @@
 </template>
 <!--交易信息状态指示色-->
 <p class="state_tips">
-      One<span class="one"></span>
-			Two<span class="two"></span>
-			Three<span class="three"></span>
-			Four<span class="four"></span>
 <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="[10, 20, 50, 100]"
+      :page-sizes="[10, 20, 50]"
       :page-size="10"
       layout="total, sizes, prev, pager, next"
-      :total="110">
+      :total="total">
 </el-pagination>
 </p>
         </div>
-        <!--编辑用户签约协议页面begin-->
+		<!--图片预览页面模态框-->
+    <el-dialog title="图片预览" :visible.sync="dialogImgVisible">
+       <img  :src="dialogImgUrl"  />
+    </el-dialog>
+    <!--编辑用户签约协议页面begin-->
 		<el-dialog title="签约协议" :visible.sync="dialogFormVisible">
 		<el-row class="edit_content">
 				<el-row class="li">
@@ -102,7 +104,7 @@
 				    <span>真实姓名：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="name" placeholder="用户真实姓名" :disabled='true' ></el-input>
+					   <el-input v-bind:value="modalbody.user.detailInformation.username" placeholder="用户真实姓名" disabled ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -110,23 +112,49 @@
 				    <span>手机号码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="phone" placeholder="用户手机号码" :disabled='true' ></el-input>
+					   <el-input v-bind:value="modalbody.user.phone" placeholder="用户手机号码" disabled ></el-input>
           </el-col>
 				</el-row>	
+				<el-row class="li" v-if="modalbody.filetype == 'img'?false:true">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6"  class="li_left">
+				    <span>三方合作协议：</span>
+				  </el-col>
+				  <el-col :span="16"  class="li_right">
+				    	<a class="preview" :href="'http://192.168.0.111/'+modalbody.file1" target="_blank"><i class="el-icon-document"></i>点击查看三方合作协议</a>
+          </el-col>
+				</el-row>
+				<template v-else>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6"  class="li_left">
 				    <span>三方合作协议：</span>
 				  </el-col>
 				  <el-col :span="16"  class="li_right">
-				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>您已签约三方合作协议</a>
+				    	<a class="preview" href="javascript:void(0)" @click="ViewImg(modalbody.file1)"><i class="el-icon-picture"></i>协议第一页</a>
           </el-col>
 				</el-row>
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6"  class="li_left">
+				    <span></span>
+				  </el-col>
+				  <el-col :span="16"  class="li_right">
+				    	<a class="preview" href="javascript:void(0)" @click="ViewImg(modalbody.file2)"><i class="el-icon-picture"></i>协议第二页</a>
+          </el-col>
+				</el-row>
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="6" :lg="6"  class="li_left">
+				    <span></span>
+				  </el-col>
+				  <el-col :span="16"  class="li_right">
+				    	<a class="preview" href="javascript:void(0)" @click="ViewImg(modalbody.file3)"><i class="el-icon-picture"></i>协议第三页</a>
+          </el-col>
+				</el-row>
+				</template>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
 				    <span>合作协议是否通过：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch7"  on-text="已通过"  off-text="未通过" :width='80'></el-switch>
+					<el-switch  v-model="modalbody.isPass" off-value="0" on-value="1"  on-text="已通过"  off-text="未通过" :width='80'></el-switch>
           </el-col>
 				</el-row>	 
 				<el-row class="li">
@@ -135,7 +163,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right platform select100">
 					    <template>
-								<el-select v-model="value1" placeholder="请选择">
+								<el-select v-model="modalbody.platform" placeholder="请选择" disabled>
 									<el-option
 									v-for="item in options1"
 									:key="item.value1"
@@ -151,7 +179,7 @@
 				    <span>MT4账号：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入MT4账号" disabled></el-input>
+					   <el-input v-bind:value="modalbody.mt4Account" placeholder="请输入MT4账号" disabled></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -159,25 +187,15 @@
 				    <span>MT4密码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="password" placeholder="请输入MT4密码" disabled></el-input>
+					   <el-input v-bind:value="modalbody.mt4Password" placeholder="请输入MT4密码" disabled></el-input>
           </el-col>
 				</el-row>	
-
-
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
-				    <span>是否发送信息：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right radio35">
-					   <el-switch  v-model="switch6"  on-text="发送"  off-text="不发送" :width='80'></el-switch>
-          </el-col>
-				</el-row>
-				<el-row class="li textarea_box" v-show="switch6" >
+				<el-row class="li textarea_box">
 				  <el-col  :xs="7" :sm="6" :md="6" :lg="6" class="li_left">
 				    <span>反馈信息：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right textarea_div" >
-					  <el-input type="textarea" v-model="value2"></el-input>
+					  <el-input type="textarea" v-model="modalbody.handleResultDescription"></el-input>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -185,12 +203,12 @@
 				    <span>是否处理：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-				   	<el-switch  v-model="switch4"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
+				   	<el-switch  v-model="modalbody.handleStatus" off-value="0" on-value="1"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
           </el-col>
 				</el-row>
 		</el-row>
 		<div slot="footer" class="dialog-footer">
-		  <el-button type="primary" @click="dialogFormVisible = false">提交修改</el-button>
+		  <el-button type="primary" @click="modify()"  :disabled="modalbody.handleStatus == '0'?true:false">提交修改</el-button>
 			<!--<el-button type="success" @click="stop">停止挂机</el-button>-->
 			<el-button type="danger" @click="delete_setting">删除</el-button>
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -203,6 +221,7 @@
 	</div>	
 </template>
 <script>
+ import moment from 'moment'
  export default {
     name: 'Four',
     data() {
@@ -213,10 +232,10 @@
 		input1: '',
 		// 使用的平台select
 		options1: [{
-          value1: '1',
+          value1: 'GQCapital-Live',
           label1: 'GQCapital-Live'
         }],
-    value1: '1',
+    value1: 'GQCapital-Live',
 		// MT4账号
 		input2: '',
 		// MT4密码
@@ -256,17 +275,9 @@
 		// 协议是否通过
 		switch7:false,
 		switch8:false,
-		// 管理关联MT4账号
-		//  添加MT4账号
-		// numbers:[
-		// 	{value:''}
-		// ],
-		// 管理MT4账号操作
-		// 关联MT4账号是否可编辑
-		// whether:true,
 		// 搜索框
 		input6: '',
-    select: '0',
+    select: 'all',
 		// 表格数据
 		tableData: [{
 			id:'1',
@@ -279,92 +290,272 @@
 			user:'未通过',
 			state:'1',
 			state_text:'已处理'
-		}, {
-			id:'2',
-			date: '2016-05-02',
-			name:'tfd',
-			phone:'15212345678',
-			platform: 'GQCapital-Live',
-			account:'12124',
-			debit:'已通过',
-			user:'未通过',
-			state:'2',
-			state_text:'未处理'
-		}, {
-			id:'3',
-			date: '2016-05-02',
-			name:'err',
-			phone:'15212345678',
-			platform: 'GQCapital-Live',
-			account:'123',
-			debit:'已通过',
-			user:'未通过',
-			state:'3',
-			state_text:'已处理'
-		}, {
-			id:'4',
-			date: '2016-05-02',
-			name:'fss',
-			phone:'15212345678',
-			platform: 'GQCapital-Live',
-			account:'4567',
-			debit:'已通过',
-			user:'未通过',
-			state:'4',
-			state_text:'未处理'
 		}],
 		dialogFormVisible: false,
 		// 表格分页
-		currentPage:4
+		currentPage:1,
+		// 后台获取数据
+		total:2,
+		tablebody:[],
+		// 查询需要提交的数据
+		search:{
+			page:1,
+			size:10,
+      type:'all',
+			condition:'1993'
+		},
+		// 编辑的合作协议id
+		rowid:1,
+		// 编辑账户信息模态框数据
+		modalbody:{
+			id:1,
+			file1:"15151515.pdf",
+			file2:"232323.gif",
+			file3:"15151.jpg",
+			filetype:"pdf",		
+			handleStatus:"0",
+			handleResultDescription:null,
+			isPass:"0",
+			platform:"GQCapital-Live",
+			mt4Account:"45654",
+			mt4Password:"123",
+			lastModifiedTime:1511404528000,
+      user:{
+				id:4,
+				phone:"15179820718",
+				detailInformation:{
+					id:4,
+					username:"安迪"
+				}
+			}
+		},
+		// 图片预览模态框
+		dialogImgVisible:false,
+		dialogImgUrl:""
       };
     },
+		computed:{
+			
+		},
+		mounted:function(){
+			var self = this;
+			// 用户合作协议的总数
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/admin/coopContraction/count'
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.total = res.data.body;
+							}
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/admin/login');
+						});
+			// 管理用户合作协议的表格初始化
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/admin/coopContraction/list'
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.tablebody = res.data.body;
+								// 页面布局初始化
+							}
+							console.log(res.data.body);
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/admin/login');
+						});
+		},		
     methods: {
-        // 获取数据状态，类名表格
-	      tableRowClassName(row, index) {
-						if(row.state == '1'){
-							return 'one-row';
-						}else if(row.state == '2'){
-							return 'two-row';
-						}else if(row.state == '3'){
-							return 'three-row';
-						}else if(row.state == '4'){
-							return 'four-row';
-						}
-        },
-        // 表格编辑按钮
-        handleEdit(index, row) {
-					 var self = this;
-           console.log(index, row);
-					 self.dialogFormVisible = true;
-        },
-		// 删除交易配置
-	    delete_setting() {
-        this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '信息已永久删除!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
-    },
-	  filterTag(value, row) {
-        return row.state_text === value;
-    },
-	  // 分页
-	  handleSizeChange(val) {
+				// 表格编辑按钮
+				handleEdit(index, row) {
+						var self = this;
+						self.rowid = row.user.id;
+						self.$http({
+									method: 'get',
+									url: '/turingcloud/admin/coopContraction/detail/'+row.user.id
+							}).then(function(res){
+									if(res.data.success == true){
+										console.log(res.data.body);
+										self.modalbody = res.data.body;
+										// 返回数据放进交易配置编辑模态框
+
+									}else if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}
+							}).catch(function(err){
+									alert("AJAX失败");
+							});
+					  self.dialogFormVisible = true;
+				},
+				// 交易配置提交修改
+				modify(){
+					var self = this;
+					self.$http({
+									method: 'put',
+									url: '/turingcloud/admin/coopContraction/'+self.rowid+'?isPass='+self.modalbody.isPass+'&handleStatus='+self.modalbody.handleStatus+'&handleResultDescription='+self.modalbody.handleResultDescription,
+							    }).then(function(res){
+									if(res.data.success == true){
+													self.$message({
+														message: '提交修改成功',
+														type: 'success',
+														onClose:function(){
+																// 提交修改成功关闭模态框
+																self.dialogFormVisible = false;
+														}
+													});
+									}else if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}
+							}).catch(function(err){
+									console.log("AJAX失败");
+									self.$router.push('/system/admin');
+							});
+				},
+				// 点击预览图片
+				ViewImg(name){
+					var self = this;
+					// dialogImgVisible
+          self.dialogImgUrl = 'http://192.168.0.111/'+name;
+					self.dialogImgVisible = true;
+				},
+				// 删除交易配置
+				delete_setting() {
+						this.$confirm('此操作将永久删除该签约协议, 是否继续?', '提示', {
+							confirmButtonText: '确定',
+							cancelButtonText: '取消',
+							type: 'warning'
+						}).then(() => {
+							this.$message({
+								type: 'success',
+								message: '信息已永久删除!'
+							});
+						}).catch(() => {
+							this.$message({
+								type: 'info',
+								message: '已取消删除'
+							});          
+						});
+				},
+				// 日期格式化
+				dateFormat:function(row, column) {  
+					var date = row[column.property];  
+					if (date == undefined) {  
+							return "";  
+					}  
+					return moment(date).format("YYYY-MM-DD");  
+				},  
+				// 搜索
+				searchButton(){
+					var self = this;
+					if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+						return false;
+					}else{
+						self.search.page = 1;
+						self.search.type = self.select;
+						self.search.condition = self.input6;
+						self.$http({
+									method: 'get',
+									url: '/turingcloud/admin/coopContraction/list?type='+self.search.type+'&condition='+self.search.condition
+							}).then(function(res){
+								if(res.data.success == false){
+									self.$message.error(res.data.message);
+								}else if(res.data.success == true){
+									self.tablebody = res.data.body;
+									self.handleCurrentChange(1);
+									// 页面布局初始化
+								}
+								console.log(res.data);
+							}).catch(function(err){
+									console.log("AJAX失败");
+									self.$router.push('/system/admin/login');
+							});
+					}
+				},
+				// 分页
+			handleSizeChange(val) {
+        var self = this;
+				self.search.size = val;
         console.log(`每页 ${val} 条`);
+				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+					self.search.page = 1;
+					self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/coopContraction/list?size='+self.search.size
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										self.handleCurrentChange(1);
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}else{
+						self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/coopContraction/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										self.handleCurrentChange(1);
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}  
       },
       handleCurrentChange(val) {
+        var self = this;
+				self.search.page = val;
         console.log(`当前页: ${val}`);
-    }
+				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+					self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/coopContraction/list?size='+self.search.size+'&page='+(self.search.page-1)
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}else{
+						self.$http({
+										method: 'get',
+										url: '/turingcloud/admin/coopContraction/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
+								}).then(function(res){
+									if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}else if(res.data.success == true){
+										self.tablebody = res.data.body;
+										// 页面布局初始化
+									}
+									console.log(res.data);
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin/login');
+								});
+				}  
+			}
     }
 }
 </script>
@@ -453,7 +644,7 @@
 	line-height:35px;
 	text-align:left;
 }
-.el-icon-document{
+.el-icon-document,.el-icon-picture{
 	display:inline-block;
 	color:#fff;
 	height:100%;
@@ -465,6 +656,7 @@
 	float:left;
 	margin-right:10px;
 }
+
 .edit_content .li div{
 	height:35px;
 }

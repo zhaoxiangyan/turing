@@ -121,7 +121,11 @@
 </el-pagination>
 </p>
         </div>
-        <!--编辑交易配置页面begin-->
+		<!--图片预览页面模态框-->
+    <el-dialog title="图片预览" :visible.sync="dialogImgVisible">
+       <img  :src="dialogImgUrl"  />
+    </el-dialog>				
+    <!--编辑交易配置页面begin-->
 		<el-dialog title="交易配置" :visible.sync="dialogFormVisible">
 		<el-row class="edit_content">
 			    <!--<el-row class="li">
@@ -137,7 +141,7 @@
 				    <span>真实姓名：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="name" placeholder="用户真实姓名" :disabled='true' ></el-input>
+					   <el-input :value="modalbody.user.detailInformation.username" placeholder="用户真实姓名" disabled ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -145,23 +149,41 @@
 				    <span>手机号码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="phone" placeholder="用户手机号码" :disabled='true' ></el-input>
+					   <el-input :value="modalbody.user.phone" placeholder="用户手机号码" disabled ></el-input>
           </el-col>
 				</el-row>	
-				<el-row class="li">
+				<el-row class="li" v-if="modalbody.contract.filetype == 'pdf'" >
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>委托扣款协议：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-				     	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>用户委托扣款协议</a>
+				     	<a class="preview" :href="'http://192.168.0.111/'+modalbody.contract.file1" target="_blank" ><i class="el-icon-document"></i>用户委托扣款协议</a>
           </el-col>
 				</el-row>
+				<template v-else>
+				<el-row class="li" >
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>委托扣款协议：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+				     	<a class="preview" href="javascript:void(0)"  @click="ViewImg(modalbody.contract.file1)"><i class="el-icon-picture"></i>协议第一页</a>
+          </el-col>
+				</el-row>
+				<el-row class="li" >
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span></span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+				     	<a class="preview" href="javascript:void(0)" @click="ViewImg(modalbody.contract.file1)"><i class="el-icon-picture"></i>协议第二页</a>
+          </el-col>
+				</el-row>
+				</template>
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>扣款协议是否通过：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-				    	<el-switch  v-model="switch8"  on-text="已通过"  off-text="未通过" :width='80'></el-switch>
+				    	<el-switch  v-model="modalbody.contract.isPass"  on-value="1" off-value="0" on-text="已通过"  off-text="未通过" :width='80'></el-switch>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -170,7 +192,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right platform select100">
 					    <template>
-								<el-select v-model="value1" placeholder="请选择" disabled>
+								<el-select v-model="modalbody.platform" placeholder="请选择" disabled>
 									<el-option
 									v-for="item in options1"
 									:key="item.value1"
@@ -186,7 +208,7 @@
 				    <span>MT4账号：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入MT4账号" :disabled="true"></el-input>
+					   <el-input :value="modalbody.mt4Account" placeholder="请输入MT4账号" disabled></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -194,7 +216,7 @@
 				    <span>MT4密码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input type="text" v-model="password" placeholder="请输入MT4密码"  :disabled="true" ></el-input>
+					   <el-input type="text" :value="modalbody.mt4Password" placeholder="请输入MT4密码"  disabled ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -202,15 +224,15 @@
 				    <span>修改MT4密码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-				    	<el-switch on-text="修改" off-text="不修改" v-model="switch1" :width="80" disabled></el-switch>
+				    	<el-switch on-text="修改" off-text="不修改" v-model="modalbody.isChangePassword" off-value="0" on-value="1" :width="80" disabled></el-switch>
           </el-col>
 				</el-row>
-				<el-row class="li" v-show="switch1">
+				<el-row class="li" v-show="modalbody.isChangePassword == '0'?false:true">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>新的MT4密码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input type="text" v-model="password1" placeholder="请输入新的MT4密码" :disabled="true" ></el-input>
+					   <el-input type="text" :value="modalbody.newPassword" placeholder="请输入新的MT4密码" disabled ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -218,7 +240,7 @@
 				    <span>账户投资资金：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input1" placeholder="请输入投资金额（单位：美元）"  :disabled="true"></el-input>
+					   <el-input :value="modalbody.capital" placeholder="请输入投资金额（单位：美元）"  disabled></el-input>
           </el-col>
 				</el-row>	
 			    <el-row class="li">
@@ -227,7 +249,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right select100">
 					    <template>
-								<el-select v-model="value3" placeholder="请选择" disabled>
+								<el-select v-model="modalbody.mode" placeholder="请选择" disabled>
 									<el-option
 									v-for="item in options3"
 									:key="item.value3"
@@ -243,7 +265,7 @@
 				    <span>同意挂机费用：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch2"  on-text="同意"  off-text="不同意" :width='80' disabled></el-switch>
+					<el-switch  v-model="modalbody.agreeHangUpCosts" on-value="true" off-value="false"   on-text="同意"  off-text="不同意" :width='80' disabled></el-switch>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -254,31 +276,31 @@
 				     <!--	<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' disabled ></el-switch>-->
 						  <el-radio class="radio" v-model="switch3" label="0" disabled>35%</el-radio>
               <el-radio class="radio" v-model="switch3" label="1" disabled>自定义</el-radio>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比"  disabled></el-input>
+					  	<el-input class="custom" v-model="input5" placeholder="自定义回撤百分比"  disabled><template slot="append">%</template></el-input>
           </el-col>
 				</el-row>
-				<el-row class="li" v-show="!switch5">
+				<el-row class="li" v-show="modalbody.isHangUp == '1'?true:false">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>停止挂机模式：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch5"  on-text="运行"  off-text="停止" :width='80' disabled></el-switch>
+					<el-switch  v-model="modalbody.isHangUp" on-value="0" off-value="1" on-text="运行"  off-text="停止" :width='80' disabled></el-switch>
           </el-col>
 				</el-row>
-				<el-row class="li">
+				<!--<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>是否发送信息：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
 					<el-switch  v-model="switch6"  on-text="发送"  off-text="不发送" :width='80'></el-switch>
           </el-col>
-				</el-row>
-				<el-row class="li textarea_box" v-show="switch6" >
+				</el-row>-->
+				<el-row class="li textarea_box" >
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>反馈信息：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right textarea_div" >
-					  <el-input type="textarea" v-model="value2"></el-input>
+					  <el-input type="textarea" v-model="modalbody.handleResultDescription"></el-input>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -286,7 +308,7 @@
 				    <span>审核状态：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-            <el-switch  v-model="switch7"  on-text="审核通过"  off-text="审核不通过" :width='100'></el-switch>
+            <el-switch  v-model="modalbody.isPass" on-value="1" off-value="0"  on-text="审核通过"  off-text="审核不通过" :width='100'></el-switch>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -294,12 +316,12 @@
 				    <span>是否处理：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch4"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
+					<el-switch  v-model="modalbody.handleStatus" on-value="1" off-value="0"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
           </el-col>
 				</el-row>
 		</el-row>
 		<div slot="footer" class="dialog-footer">
-		  <el-button type="primary" @click="dialogFormVisible = false">提交修改</el-button>
+		  <el-button type="primary" @click="modify()" :disabled="modalbody.handleStatus == '0'?true:false">提交修改</el-button>
 			<!--<el-button type="success" @click="stop">停止挂机</el-button>-->
 			<el-button type="danger" @click="delete_setting">删除</el-button>
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -355,11 +377,11 @@
 		switch2:true,
 		//建议回撤
 		switch3:'0',
-		input5: '45%',
+		input5: '',
 		// 管理员是否处理
 		switch4:false,
 		// 停止挂机模式
-		switch5:false,
+		switch5:true,
 		// 是否发送消息
 		switch6:false,
 		// 反馈信息
@@ -395,7 +417,52 @@
 			size:10,
       type:'all',
 			condition:'1993'
-		}
+		},
+		// 编辑的交易配置id
+		rowid:1,
+		userid:4,
+		// 编辑交易配置模态框数据
+		modalbody:{
+			id:2,
+			platform:"GQCapital-Live",
+			mt4Account:"1417",
+			mt4Password:"123",
+			isChangePassword:"0",
+			newPassword:null,
+			capital:2500,
+			mode:"2",
+			agreeHangUpCosts:"true",
+			retreatRate:28,
+			createTime:1511749247000,
+			lastModifiedTime:1511749247000,
+			handleStatus:"0",
+			handleResultDescription:null,
+			isHangUp:"0",
+			isPass:"0",
+      user:{
+				id:4,
+				phone:"15179820718",
+				detailInformation:{
+					username:"谭慧玲"
+				}
+			},
+			contract:{
+				id:2,
+				contractType:"扣款协议",
+				file1:"1111111111111111.gif",
+				file2:"2222222222222222.gif",
+				file3:null,
+				filetype:"img",
+				handleStatus:"0",
+				handleResultDescription:null,
+				isPass:"0"
+			}
+		},
+		// 图片预览模态框
+		dialogImgVisible:false,
+		dialogImgUrl:"",
+		// 建议回撤初始化
+		retreatRate:12
       };
     },
 		mounted:function(){
@@ -431,13 +498,78 @@
 								self.$router.push('/system/admin/login');
 						});
 		},
+		watch:{
+			retreatRate:function(){
+				  var self = this;
+          if(self.retreatRate == 35){
+						self.switch3 = "0";
+					}else{
+						self.switch3 = "1";
+						self.input5 = self.retreatRate;
+					}
+			 }
+		},
     methods: {
         // 表格编辑按钮
         handleEdit(index, row) {
-					 var self = this;
-           console.log(index, row);
-					 self.dialogFormVisible = true;
+						var self = this;
+						self.rowid = row.id;
+						self.userid = row.user.id;
+						self.$http({
+									method: 'get',
+									url: '/turingcloud/admin/transaction/detail/'+row.id
+							}).then(function(res){
+									if(res.data.success == true){
+										console.log(res.data.body);
+										self.modalbody = res.data.body;
+										// 返回数据放进交易配置编辑模态框
+										self.retreatRate = res.data.body.retreatRate;
+										// 建议回撤初始化
+									}else if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}
+							}).catch(function(err){
+									alert("AJAX失败");
+							});
+					  self.dialogFormVisible = true;
         },
+				// 交易配置提交修改
+				modify(){
+					var self = this;
+					self.$http({
+									method: 'put',
+									url: '/turingcloud/admin/transaction/'+self.userid+'/'+self.rowid,
+									data:{
+										cIsPass:self.modalbody.contract.isPass,
+										HandleStatus:self.modalbody.handleStatus,
+										isPass:self.modalbody.isPass,
+										HandleResultDescription:self.modalbody.handleResultDescription
+									}
+							}).then(function(res){
+									if(res.data.success == true){
+													self.$message({
+														message: '提交修改成功',
+														type: 'success',
+														onClose:function(){
+																// 提交修改成功关闭模态框
+																self.dialogFormVisible = false;
+														}
+													});
+									}else if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}
+							}).catch(function(err){
+									console.log("AJAX失败");
+									self.$router.push('/system/admin');
+							});
+				},
+				// 点击预览图片
+				ViewImg(name){
+					var self = this;
+					// dialogImgVisible
+          self.dialogImgUrl = 'http://192.168.0.111/'+name;
+					self.dialogImgVisible = true;
+				},				
 				// 删除交易配置
 				delete_setting() {
         this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
@@ -685,7 +817,7 @@
 	line-height:35px;
 	text-align:left;
 }
-.el-icon-document{
+.el-icon-document,.el-icon-picture{
 	display:inline-block;
 	color:#fff;
 	height:100%;
@@ -763,6 +895,10 @@
 	padding:0 20px;
 	margin:20px 0;
 	width:auto;
+}
+.el-input-group.custom{
+	padding:0;
+	margin:0;
 }
 /*账户状态单选框颜色*/
 .el-radio.danger{

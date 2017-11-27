@@ -83,7 +83,11 @@
 </el-pagination>
 </p>
         </div>
-        <!--管理用户个人信息编辑页面begin-->
+		<!--图片预览页面模态框-->
+    <el-dialog title="图片预览" :visible.sync="dialogImgVisible">
+       <img  class="modal_img" :src="dialogImgUrl"  />
+    </el-dialog>
+    <!--管理用户个人信息编辑页面begin-->
 		<el-dialog title="个人信息" :visible.sync="dialogFormVisible">
 		<el-row class="edit_content">
 				<el-row class="li">
@@ -91,7 +95,7 @@
 				    <span>真实姓名：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="name" placeholder="用户真实姓名" ></el-input>
+					   <el-input v-bind:value="modalbody.user.detailInformation.username" placeholder="用户真实姓名" disabled></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -99,23 +103,23 @@
 				    <span>手机号码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="phone" placeholder="用户手机号码" ></el-input>
+					   <el-input v-bind:value="modalbody.user.phone" placeholder="用户手机号码" disabled></el-input>
           </el-col>
 				</el-row>	
-				<el-row class="li">
+		<!--		<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>性别：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right  radio35">
 					   <el-switch on-text="男" off-text="女" off-color="#ff4949" v-model="sex" :width="80" ></el-switch>
           </el-col>
-				</el-row>	
+				</el-row>	-->
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>身份证号码：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="card" placeholder="用户身份证号码"  ></el-input>
+					   <el-input v-bind:value="modalbody.user.detailInformation.idcard" placeholder="用户身份证号码"  disabled></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -123,7 +127,7 @@
 				    <span>身份证正面：</span>
 				  </el-col>
 				  <el-col :span="16"  class="li_right">
-				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>身份证正面照</a>
+				    	<a class="preview" href="javascript:void(0)" @click="ViewImg(modalbody.user.detailInformation.pic1)"><i class="el-icon-picture"></i>身份证正面照</a>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -131,7 +135,7 @@
 				    <span>身份证反面：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-				     	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>身份证反面照</a>
+				     	<a class="preview" href="javascript:void(0)" @click="ViewImg(modalbody.user.detailInformation.pic2)"><i class="el-icon-picture"></i>身份证反面照</a>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -139,7 +143,7 @@
 				    <span>手持身份证正面：</span>
 				  </el-col>
 				  <el-col :span="16"  class="li_right">
-				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>手持身份证正面照</a>
+				    	<a class="preview" href="javascript:void(0)" @click="ViewImg(modalbody.user.detailInformation.pic3)"><i class="el-icon-picture"></i>手持身份证正面照</a>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -147,7 +151,7 @@
 				    <span>邮箱：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="email" placeholder="请输入邮箱" ></el-input>
+					   <el-input v-bind:value="modalbody.user.email" placeholder="请输入邮箱" disabled ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -155,7 +159,7 @@
 				    <span>居住地址：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input type="text" v-model="address" placeholder="如：广东深圳"  ></el-input>
+					   <el-input type="text" v-bind:value="modalbody.user.detailInformation.addr" placeholder="如：广东深圳" disabled ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -163,23 +167,23 @@
 				    <span>用户审核：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="examine"  on-text="通过"  off-text="不通过" :width='80'></el-switch>
+					<el-switch  v-model="modalbody.user.detailInformation.isPass"  on-value="1" off-value="0" on-text="通过"  off-text="不通过" :width='80'></el-switch>
           </el-col>
 				</el-row>
-				<el-row class="li">
+				<!--<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>是否发送信息：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
 					<el-switch  v-model="switch6"  on-text="发送"  off-text="不发送" :width='80'></el-switch>
           </el-col>
-				</el-row>
-				<el-row class="li textarea_box" v-show="switch6" >
+				</el-row>-->
+				<el-row class="li textarea_box" >
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>反馈信息：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right textarea_div" >
-					  <el-input type="textarea" v-model="value2"></el-input>
+					  <el-input type="textarea" v-model="modalbody.user.detailInformation.handleResultDescription"></el-input>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -187,12 +191,12 @@
 				    <span>是否处理：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="switch4"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
+					<el-switch  v-model="modalbody.user.detailInformation.handleStatus" on-value="1" off-value="0"  on-text="已处理"  off-text="未处理" :width='80'></el-switch>
           </el-col>
 				</el-row>
 		</el-row>
 		<div slot="footer" class="dialog-footer">
-		  <el-button type="primary" @click="dialogFormVisible = false">提交修改</el-button>
+		  <el-button type="primary" @click="modify()" :disabled="modalbody.user.detailInformation.handleStatus == '0'?true:false">提交修改</el-button>
 			<!--<el-button type="success" @click="stop">停止挂机</el-button>-->
 			<el-button type="danger" @click="delete_setting">删除</el-button>
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -262,7 +266,33 @@
 			size:10,
       type:'all',
 			condition:'1993'
-		}
+		},
+		// 编辑的个人信息id
+		rowid:1,
+		// 编辑个人信息模态框数据
+		modalbody:{
+			lastLoginTime:null,
+      user:{
+				id:3,
+				email:"ling@vmailx.com",
+				phone:"17744570973",
+				detailInformation:{
+					id:5,
+					idcard:"36073119930929762X",
+					pic1:"145555555555.jpeg",
+					pic2:"111111111111111.jpeg",
+					pic3:"111111111111.png",
+					addr:null,
+					username:"发送",
+					isPass:"0",
+					handleStatus:"0",
+					handleResultDescription:null
+				}
+			}
+		},
+		// 图片预览模态框
+		dialogImgVisible:false,
+		dialogImgUrl:""
       };
     },
 		mounted:function(){
@@ -299,24 +329,58 @@
 						});
 		},		
     methods: {
-        // 获取数据状态，类名表格
-	      tableRowClassName(row, index) {
-						if(row.state == '1'){
-							return 'one-row';
-						}else if(row.state == '2'){
-							return 'two-row';
-						}else if(row.state == '3'){
-							return 'three-row';
-						}else if(row.state == '4'){
-							return 'four-row';
-						}
-        },
         // 表格编辑按钮
         handleEdit(index, row) {
-					 var self = this;
-           console.log(index, row);
-					 self.dialogFormVisible = true;
+						var self = this;
+						self.rowid = row.user.id;
+						self.$http({
+									method: 'get',
+									url: '/turingcloud/admin/user/detail/'+row.user.id
+							}).then(function(res){
+									if(res.data.success == true){
+										console.log(res.data.body);
+										self.modalbody = res.data.body;
+										// 返回数据放进个人信息编辑模态框
+
+									}else if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}
+							}).catch(function(err){
+									alert("AJAX失败");
+							});
+					  self.dialogFormVisible = true;
         },
+				// 交易配置提交修改
+				modify(){
+					var self = this;
+					self.$http({
+									method: 'put',
+									url: '/turingcloud/admin/user/'+self.rowid+'?isPass='+self.modalbody.user.detailInformation.isPass+'&handleStatus='+self.modalbody.user.detailInformation.handleStatus+'&handleResultDescription='+self.modalbody.user.detailInformation.handleResultDescription,
+							    }).then(function(res){
+									if(res.data.success == true){
+													self.$message({
+														message: '提交修改成功',
+														type: 'success',
+														onClose:function(){
+																// 提交修改成功关闭模态框
+																self.dialogFormVisible = false;
+														}
+													});
+									}else if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}
+							}).catch(function(err){
+									console.log("AJAX失败");
+									self.$router.push('/system/admin');
+							});
+				},				
+				// 点击预览图片
+				ViewImg(name){
+					var self = this;
+					// dialogImgVisible
+          self.dialogImgUrl = 'http://192.168.0.111/'+name;
+					self.dialogImgVisible = true;
+				},				
 				// 删除交易配置
 				delete_setting() {
         this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
@@ -538,7 +602,7 @@
 	line-height:35px;
 	text-align:left;
 }
-.el-icon-document{
+.el-icon-picture{
 	display:inline-block;
 	color:#fff;
 	height:100%;
@@ -629,5 +693,8 @@
 	padding:3px 0; 
 	box-sizing:border-box;
 }
-
+/*图片预览模态框*/
+.modal_img{
+	max-width:100%;
+}
 </style>
