@@ -27,8 +27,8 @@
       name: 'header',  
       data () {
         return {
-          name: 'linxin',
-          src: '../../static/img/boy_default.png'
+          name: 'Admin',
+          src: '../static/img/boy_default.png'
           // collapsed:false
         }
       },
@@ -79,7 +79,7 @@
           var self = this;
           if(command == '/system/admin'){
              self.$http({
-              method: 'post',
+              method: 'get',
               url: '/turingcloud/user/logout'
               }).then(function(res){
                   self.$router.push('/system/admin');

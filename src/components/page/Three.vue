@@ -40,7 +40,7 @@
   <p>确定修改居住地址吗？</p>
   <div style="text-align: right; margin: 0">
     <el-button size="mini" type="text" @click="visible2 = false">取消</el-button>
-    <el-button type="primary" size="mini" @click="visible2 = false">确定</el-button>
+    <el-button type="primary" size="mini" @click="modifyAddr()">确定</el-button>
   </div>
 </el-popover>                           
 <el-input v-model="body.addr" placeholder="如：广东深圳">
@@ -311,7 +311,6 @@
                   method: 'post',
                   url: '/turingcloud/'+self.userid+'/midifyEmail?email='+self.form.newemail
                   }).then(function(res){
-                    console.log(res.data);
                     if(res.data.success == false){
                       self.$message({
                         message: res.data.message,
@@ -320,13 +319,17 @@
                     }else if(res.data.success == true){
                       self.$message({
                         message: '邮箱修改成功',
-                        type: 'success'
+                        type: 'success',
+                        showClose: true,
+                        onClose:function(){
+                            // 提交修改成功关闭模态框
+                            self.$router.go(0);
+                        }
                       });
                     }
-                    // if(res.data.success == true){
-                    // }
                   }).catch(function(err){
                       console.log("AJAX失败");
+                      self.$router.push('/system/');
                   }); 
       },
       // 发送旧手机验证码倒计时
@@ -408,7 +411,7 @@
       modifyPhone(){
         var self = this;
         var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
-        if(self.form1.newphone === ''||phoneReg.test(self.form1.newphone)){
+        if(self.form1.newphone === ''||!phoneReg.test(self.form1.newphone)){
           self.$message({
                 message: '请输入有效的新手机号码',
                 type: 'warning'
@@ -422,13 +425,19 @@
                       if(res.data.success == true){
                         self.$message({
                           message: '手机号码修改成功',
-                          type: 'success'
+                          type: 'success',
+                          showClose: true,
+                          onClose:function(){
+                              // 提交修改成功关闭模态框
+                              self.$router.go(0);
+                          }
                         });
                       }else if(res.data.success == false){
                         self.$message.error(res.data.message);
                       }
                     }).catch(function(err){
                         console.log("AJAX失败");
+                        self.$router.push('/system/');
                     }); 
         }
       },
@@ -462,15 +471,46 @@
                       if(res.data.success == true){
                         self.$message({
                           message: '登录密码修改成功',
-                          type: 'success'
+                          type: 'success',
+                          showClose: true,
+                          onClose:function(){
+                              // 提交修改成功关闭模态框
+                              self.$router.go(0);
+                          }
                         });
                       }else if(res.data.success == false){
                         self.$message.error(res.data.message);
                       }
                     }).catch(function(err){
                         console.log("AJAX失败");
+                        self.$router.push('/system/');
                     }); 
         }
+      },
+      // 确定修改居住地址
+      modifyAddr(){
+        var self = this;
+        self.$http({
+                    method: 'put',
+                    url: '/turingcloud/userInfor/'+self.userid+'/addr?addr='+self.body.addr
+                    }).then(function(res){
+                      if(res.data.success == true){
+                        self.$message({
+                          message: '居住地址修改成功',
+                          type: 'success',
+                          showClose: true,
+                          onClose:function(){
+                              // 提交修改成功关闭模态框
+                              self.$router.go(0);
+                          }
+                        });
+                      }else if(res.data.success == false){
+                        self.$message.error(res.data.message);
+                      }
+                    }).catch(function(err){
+                        console.log("AJAX失败");
+                        self.$router.push('/system/');
+                    }); 
       }
     }
 }
@@ -482,7 +522,7 @@
 	height:auto;
 	background:#fff;
 	border-bottom:1px solid #d2d6de;
-    border-left:1px solid #e7ebf0;
+  border-left:1px solid #e7ebf0;
 	border-right:1px solid #e7ebf0;
 	border-radius:4px;
 }

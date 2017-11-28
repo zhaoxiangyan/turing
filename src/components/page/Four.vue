@@ -450,7 +450,7 @@
 		<div slot="footer" class="dialog-footer">
 		  <el-button      v-if="uploadStatus() == '1'||uploadStatus() == '2'" type="primary" @click="modify12(rowid)">提交修改</el-button>
 			<el-button v-else-if="uploadStatus() == '3'||uploadStatus() == '4'" type="primary" @click="modify34(rowid)">提交修改</el-button>
-			<el-button type="danger" @click="stop">停止挂机</el-button>
+			<el-button type="danger" @click="stop()"  :disabled="modalbody.isHangUp == '1'?true:false" >停止挂机</el-button>
 			<!--看后期开发需求是否需要删除账户信息功能-->
 			<!--<el-button type="danger" @click="delete_setting">删除</el-button>--> 
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -600,11 +600,12 @@
 												self.$message.error(res.data.message);
 										}
 								}).catch(function(err){
-										alert("AJAX失败");
+									 console.log("AJAX失败");
+									 self.$router.push('/system/');
 								});
 			}
 			// 编辑页面建议回撤初始化
- 			self.monitorRetracement();
+ 			// self.monitorRetracement();
 			//  协议上传显示状态初始化
 			self.uploadStatus();
 		},
@@ -755,7 +756,6 @@
 				// 表格编辑按钮
         handleEdit(index, row) {
 					 var self = this;
-					//  alert(row.id);
 					self.rowid = row.id;
 					self.$http({
 								method: 'get',
@@ -776,7 +776,8 @@
 									 self.$message.error(res.data.message);
 								}
 						}).catch(function(err){
-								alert("AJAX失败");
+								console.log("AJAX失败");
+								self.$router.push('/system/');
 						});
 					 self.dialogFormVisible = true;
         },
@@ -784,8 +785,8 @@
 				monitorRetracement(){
 					 var self = this;
            if(self.modalbody.retreatRate ==35 ){
-						 self.switch3 = "0";
-						 self.input5 = "";
+						//  self.input5 = "";
+						 self.switch3 = "0"; 
 					 }else{
 						 self.switch3 = "1";
 						 self.input5 = self.modalbody.retreatRate;
@@ -859,12 +860,14 @@
                                     type: 'success',
 																		onClose:function(){
 																				// 提交修改成功关闭模态框
-					                              self.dialogFormVisible = false;
+					                              // self.dialogFormVisible = false;
+																				self.$router.go(0);
 																		}
                             });
                         }
                     }).catch(function(err){
-                       alert("AJAX失败");
+                       console.log("AJAX失败");
+											 self.$router.push('/system/');
                     });
 						 } 
 				},
@@ -921,12 +924,14 @@
                                     type: 'success',
 																		onClose:function(){
 																				// 提交修改成功关闭模态框
-					                              self.dialogFormVisible = false;
+					                              // self.dialogFormVisible = false;
+																				self.$router.go(0);
 																		}
                             });
                         }
                     }).catch(function(err){
-                       alert("AJAX失败");
+                       console.log("AJAX失败");
+											 self.$router.push('/system/');
                     });
 						 }
 				},
@@ -952,17 +957,33 @@
 				stop(){
 					var self = this;
 					// self.$message.error('停止挂机');
-						this.$confirm('此操作将停止该MT4账号的挂机, 是否继续?', '提示', {
+						self.$confirm('此操作将停止该MT4账号的挂机, 是否继续?', '提示', {
 							confirmButtonText: '确定',
 							cancelButtonText: '取消',
 							type: 'warning'
 						}).then(() => {
-							this.$message({
-								type: 'success',
-								message: '等待后台停止挂机模式!'
-							});
+							self.$http({
+												method: 'put',
+												url: '/turingcloud/trnsaction/'+self.userid+'/stopHangup/'+self.rowid
+										}).then(function(res){
+												if(res.data.success == true){
+															self.$message({
+																type: 'success',
+																message: '等待后台停止挂机模式!',
+																onClose:function(){
+																		// 删除成功关闭模态框
+																		self.$router.go(0);
+																}
+															});
+												}else if(res.data.success == false){
+													self.$message.error(res.data.message);
+												}
+										}).catch(function(err){
+												console.log("AJAX失败");
+												self.$router.push('/system/admin');
+										});
 						}).catch(() => {
-							this.$message({
+							self.$message({
 								type: 'info',
 								message: '已取消提交'
 							});          

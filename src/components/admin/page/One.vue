@@ -392,12 +392,12 @@
 							});
 					  self.dialogFormVisible = true;
 				},
-				// 交易配置提交修改
+				// 签约协议提交修改
 				modify(){
 					var self = this;
 					self.$http({
 									method: 'put',
-									url: '/turingcloud/admin/coopContraction/'+self.rowid+'?isPass='+self.modalbody.isPass+'&handleStatus='+self.modalbody.handleStatus+'&handleResultDescription='+self.modalbody.handleResultDescription,
+									url: '/turingcloud/admin/coopContraction/'+self.rowid+'?isPass='+self.modalbody.isPass+'&hadleStatus='+self.modalbody.handleStatus+'&handleResultDescription='+self.modalbody.handleResultDescription,
 							    }).then(function(res){
 									if(res.data.success == true){
 													self.$message({
@@ -405,7 +405,8 @@
 														type: 'success',
 														onClose:function(){
 																// 提交修改成功关闭模态框
-																self.dialogFormVisible = false;
+																// self.dialogFormVisible = false;
+																self.$router.go(0);
 														}
 													});
 									}else if(res.data.success == false){
@@ -425,17 +426,35 @@
 				},
 				// 删除交易配置
 				delete_setting() {
-						this.$confirm('此操作将永久删除该签约协议, 是否继续?', '提示', {
+					  var self = this;
+						self.$confirm('此操作将永久删除该签约协议, 是否继续?', '提示', {
 							confirmButtonText: '确定',
 							cancelButtonText: '取消',
 							type: 'warning'
 						}).then(() => {
-							this.$message({
-								type: 'success',
-								message: '信息已永久删除!'
-							});
+							self.$http({
+												method: 'delete',
+												url: '/turingcloud/admin/coopContraction/'+self.rowid
+										}).then(function(res){
+												if(res.data.success == true){
+															self.$message({
+																type: 'success',
+																message: '信息已永久删除!',
+																onClose:function(){
+																		// 删除成功关闭模态框
+																		// self.dialogFormVisible = false;
+																		self.$router.go(0);
+																}
+															});
+												}else if(res.data.success == false){
+													self.$message.error(res.data.message);
+												}
+										}).catch(function(err){
+												console.log("AJAX失败");
+												self.$router.push('/system/admin');
+										});
 						}).catch(() => {
-							this.$message({
+							self.$message({
 								type: 'info',
 								message: '已取消删除'
 							});          

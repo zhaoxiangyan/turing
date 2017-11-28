@@ -198,7 +198,7 @@
 		<div slot="footer" class="dialog-footer">
 		  <el-button type="primary" @click="modify()" :disabled="modalbody.user.detailInformation.handleStatus == '0'?true:false">提交修改</el-button>
 			<!--<el-button type="success" @click="stop">停止挂机</el-button>-->
-			<el-button type="danger" @click="delete_setting">删除</el-button>
+			<!--<el-button type="danger" @click="delete_setting">删除</el-button>-->
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
     </div>
 		</el-dialog>
@@ -211,7 +211,7 @@
 <script>
  import moment from 'moment'
  export default {
-    name: 'Four',
+    name: 'Two',
     data() {
       return {
 		name:'赵先生',
@@ -350,12 +350,12 @@
 							});
 					  self.dialogFormVisible = true;
         },
-				// 交易配置提交修改
+				// 个人信息提交修改
 				modify(){
 					var self = this;
 					self.$http({
 									method: 'put',
-									url: '/turingcloud/admin/user/'+self.rowid+'?isPass='+self.modalbody.user.detailInformation.isPass+'&handleStatus='+self.modalbody.user.detailInformation.handleStatus+'&handleResultDescription='+self.modalbody.user.detailInformation.handleResultDescription,
+									url: '/turingcloud/admin/user/'+self.rowid+'?isPass='+self.modalbody.user.detailInformation.isPass+'&hadleStatus='+self.modalbody.user.detailInformation.handleStatus+'&handleResultDescription='+self.modalbody.user.detailInformation.handleResultDescription,
 							    }).then(function(res){
 									if(res.data.success == true){
 													self.$message({
@@ -363,7 +363,8 @@
 														type: 'success',
 														onClose:function(){
 																// 提交修改成功关闭模态框
-																self.dialogFormVisible = false;
+																// self.dialogFormVisible = false;
+																self.$router.go(0);
 														}
 													});
 									}else if(res.data.success == false){
@@ -383,21 +384,38 @@
 				},				
 				// 删除交易配置
 				delete_setting() {
-        this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '信息已永久删除!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
-        });
+					var self = this;
+					self.$confirm('此操作将永久禁止该用户登录, 是否继续?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+						self.$http({
+										method: 'delete',
+										url: '/turingcloud/admin/user/'+self.rowid
+								}).then(function(res){
+										if(res.data.success == true){
+													self.$message({
+														type: 'success',
+														message: '该用户永久禁止登录!',
+														onClose:function(){
+																// 删除成功关闭模态框
+																self.dialogFormVisible = false;
+														}
+													});
+										}else if(res.data.success == false){
+											self.$message.error(res.data.message);
+										}
+								}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/admin');
+								});
+					}).catch(() => {
+						self.$message({
+							type: 'info',
+							message: '已取消删除'
+						});          
+					});
       },
 			// 日期格式化
 			dateFormat:function(row, column) {  

@@ -13,7 +13,7 @@
                    <span class="el-dropdown-link">{{name}} <img  v-bind:src=src ></span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item command="/system/three">我的信息</el-dropdown-item>
-                      <el-dropdown-item command="/system/two">设置</el-dropdown-item>
+                      <el-dropdown-item command="/system/two">交易配置</el-dropdown-item>
                       <el-dropdown-item divided command="/system/">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                  </el-dropdown>  
@@ -28,7 +28,10 @@
       data () {
         return {
           name: 'linxin',
-          src: '../static/img/boy_default.png'
+          src: 'static/img/boy_default.png',
+          sex:'0',
+          userid:'',
+          idcard:''
           // collapsed:false
         }
       },
@@ -40,33 +43,39 @@
       },
       mounted:function(){
         // 线上代码begin
-        // 登录拦截
-        // var self = this;
-        // self.$http({
-        //         method: 'get',
-        //         url: '/turingcloud/login/isLogin',
-        //         }).then(function(res){
-        //            if(res.data.result == true){
-        //              var storage = window.sessionStorage; 
-        //                  storage["userId"] = res.data.userId; 
-        //                    // 返回用户信息
-        //                     self.$http({
-        //                             method: 'get',
-        //                             url: '/turingcloud/user/'
-        //                             }).then(function(res){
-        //                                 self.name = res.data.username;
-        //                                 if(res.data.sex == "女"){
-        //                                   self.src = '../static/img/girl_default.png';
-        //                                 }
-        //                             }).catch(function(err){
-        //                                 console.log("AJAX失败");
-        //                             }); 
-        //            }else{
-        //              self.$router.push('/system/');
-        //            }
-        //         }).catch(function(err){
-        //             console.log("AJAX失败");
-        //         }); 
+        var self = this;
+        if(localStorage["userid"]){
+          self.userid = localStorage.getItem("userid");
+        }else{
+          self.$router.push('/system/');
+        }
+        self.$http({
+          method: 'get',
+          url: '/turingcloud/user/'+self.userid,
+          }).then(function(res){
+            if(res.data.success == true){
+              self.idcard = res.data.body.idcard;
+              self.name = res.data.body.username;
+              if(self.idcard.length == 18){
+                if(self.idcard.substring(16,17)%2 == 0){
+                  self.src = 'static/img/girl_default.png';
+                }else{
+                  return false;
+                };
+              }else if(self.idcard.length == 15){
+                if(self.idcard.substring(14,15) == 0){
+                  self.src = 'static/img/girl_default.png';
+                }else{
+                  return false;
+                }
+              };
+            }else{
+                self.$router.push('/system/');
+            }
+          }).catch(function(err){
+              console.log("AJAX失败");
+              self.$router.push('/system/');
+          }); 
         //  线上代码end  
       },
       methods: {
@@ -86,7 +95,8 @@
               }).then(function(res){
                   self.$router.push('/system/');
               }).catch(function(err){
-                  alert("AJAX失败");
+                  console.log("AJAX失败");
+                  self.$router.push('/system/');
               }); 
           }else{
             self.$router.push(command);

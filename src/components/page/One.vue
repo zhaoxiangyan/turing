@@ -529,7 +529,8 @@
 							}
 							console.log(res.data);
 						}).catch(function(err){
-								alert("AJAX失败");
+							  console.log("ajax失败");
+								self.$router.push('/system/');
 						});
     },
     methods: {
@@ -668,18 +669,18 @@
 												if(self.user_file == false){
 															self.$message.error('上传PDF文件出错');
 															return false;
-													}else{
+												}else{
 											     	 httpform.append('multipartFile1',document.getElementById("user_file").files[0]);
-													}
+												}
 										}else{
-                         if(self.user_file1 == false || self.user_file2 == false || self.user_file3 == false){
+                        if(self.user_file1 == false || self.user_file2 == false || self.user_file3 == false){
 															self.$message.error('上传图片文件出错');
 															return false;
-													}else{
+												}else{
                               httpform.append('multipartFile1',document.getElementById("user_file1").files[0]);
 															httpform.append('multipartFile2',document.getElementById("user_file2").files[0]);
 															httpform.append('multipartFile3',document.getElementById("user_file3").files[0]);
-													}
+												}
 										}
                     httpform.append('fileType',self.switch1);
                     httpform.append('platform',self.value1);
@@ -700,7 +701,8 @@
                             });
                         }
                     }).catch(function(err){
-                       alert("AJAX失败");
+                       console.log("AJAX失败");
+											 self.$router.push('/system/');
                     });
 						 }		 
 		},
@@ -737,6 +739,7 @@
 															data:httpform
 													}).then(function(res){
 															if(res.data.success == false){
+																// alert('提交修改失败');
 																	self.$message.error(res.data.message);
 															}else{
 																	self.$message({
@@ -746,7 +749,8 @@
 																	});
 															}
 													}).catch(function(err){
-														alert("AJAX失败");
+														 console.log("AJAX失败");
+														 self.$router.push('/system/');
 													});
 						 }		 
 		},

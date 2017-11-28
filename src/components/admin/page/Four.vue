@@ -66,11 +66,11 @@
 			width="95">
 <template slot-scope="scope">
       <el-tag v-if="scope.row.isHangUp === '0'"
-          type="danger"
-          close-transition>否</el-tag>
-      <el-tag v-else-if="scope.row.isHangUp === '1'"
           type="success"
           close-transition>是</el-tag>
+      <el-tag v-else-if="scope.row.isHangUp === '1'"
+          type="danger"
+          close-transition>否</el-tag>
 </template>  
     </el-table-column>
 		<el-table-column
@@ -541,9 +541,9 @@
 									url: '/turingcloud/admin/transaction/'+self.userid+'/'+self.rowid,
 									data:{
 										cIsPass:self.modalbody.contract.isPass,
-										HandleStatus:self.modalbody.handleStatus,
+										handleStatus:self.modalbody.handleStatus,
 										isPass:self.modalbody.isPass,
-										HandleResultDescription:self.modalbody.handleResultDescription
+										handleResultDescription:self.modalbody.handleResultDescription
 									}
 							}).then(function(res){
 									if(res.data.success == true){
@@ -552,7 +552,8 @@
 														type: 'success',
 														onClose:function(){
 																// 提交修改成功关闭模态框
-																self.dialogFormVisible = false;
+																// self.dialogFormVisible = false;
+																self.$router.go(0);
 														}
 													});
 									}else if(res.data.success == false){
@@ -585,10 +586,11 @@
 												if(res.data.success == true){
 															self.$message({
 																type: 'success',
-																message: '信息已永久删除!',
+																message: '该交易配置已永久删除!',
 																onClose:function(){
 																		// 删除成功关闭模态框
-																		self.dialogFormVisible = false;
+																		// self.dialogFormVisible = false;
+																		self.$router.go(0);
 																}
 															});
 												}else if(res.data.success == false){
