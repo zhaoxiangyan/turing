@@ -12,8 +12,8 @@
                   <el-dropdown trigger="hover" @command="handleCommand">
                    <span class="el-dropdown-link">{{name}} <img  v-bind:src=src ></span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item command="/system/three">我的信息</el-dropdown-item>
-                      <el-dropdown-item command="/system/two">交易配置</el-dropdown-item>
+                      <el-dropdown-item command="/system/information">我的信息</el-dropdown-item>
+                      <el-dropdown-item command="/system/transaction">交易配置</el-dropdown-item>
                       <el-dropdown-item divided command="/system/">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                  </el-dropdown>  

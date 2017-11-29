@@ -117,7 +117,7 @@
                         }
                         self.updatesession();
                     }).catch(function(err){
-                       alert("AJAX失败");
+                       console.log("AJAX失败");
                     }); 
             }else if(sessionStorage.getItem("msmCode")){
                 self.phone = sessionStorage.getItem("phone2");
@@ -134,7 +134,7 @@
                         }
                         self.updatesession();
                     }).catch(function(err){
-                       alert("AJAX失败");
+                       console.log("AJAX失败");
                     }); 
             }else {
                self.updatesession();
@@ -336,7 +336,7 @@
                             });
                         }
                     }).catch(function(err){
-                       alert("AJAX失败");
+                       console.log("AJAX失败");
                     });
                 }
             }

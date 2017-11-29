@@ -1,5 +1,5 @@
 <template>
-	<div class="one">
+	<div class="cooperation">
 	<div v-title>签约合作协议</div>
 	    <div class="page_title">
 		    <span>签约合作协议<i>*您如果想和我们合作，请先下载协议，打印后签名，再扫描上传已签约的协议，再提交审核</i></span>
@@ -446,6 +446,7 @@
 </template>
 <script>
  export default {
+	  name: 'Cooperation',
     data() {
       return {
     //   协议上传方式选择
@@ -739,7 +740,6 @@
 															data:httpform
 													}).then(function(res){
 															if(res.data.success == false){
-																// alert('提交修改失败');
 																	self.$message.error(res.data.message);
 															}else{
 																	self.$message({
@@ -769,7 +769,7 @@
 }
 </script>
 <style scoped>
-.one{
+.cooperation{
 	/*position:relative;*/
 	min-height:100%;
 	height:auto;

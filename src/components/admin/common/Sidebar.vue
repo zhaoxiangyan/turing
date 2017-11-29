@@ -45,18 +45,18 @@
                     {
                         menu:"管理用户信息",
                         iconclassname:"el-icon-setting",
-                        url:"two"
+                        url:"information"
                     },
                     {
                         menu:"管理用户合作协议",
                         iconclassname:"el-icon-edit",
-                        url:"one"
-                    },
-                    {
-                        menu:"个人信息",
-                        iconclassname:"el-icon-document",
-                        url:"three"
+                        url:"cooperation"
                     }]
+                    // {
+                    //     menu:"个人信息",
+                    //     iconclassname:"el-icon-document",
+                    //     url:"three"
+                    // }
 
            }
       },

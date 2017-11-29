@@ -72,25 +72,6 @@
                      self.error.phone1 = true;
                 }
             }
-            // img_code:function(){
-            //     var self = this;
-            //     if(self.img_code.length!=4){
-            //        self.error.img_code1 = true;
-            //     }else{
-            //     this.$http({
-            //             method: 'post',
-            //             url: '/turingcloud/captcha/validate?captcha='+self.img_code,
-            //         }).then(function(res){
-            //            if(res.data.rcode == '0'){
-            //                self.error.img_code1 = false;
-            //            }else{
-            //                self.error.img_code1 = true;
-            //            }
-            //         }).catch(function(err){
-            //            alert("AJAX失败");
-            //         });  
-            //     }
-            // }
         },
         methods: {
             // 发送验证码倒计时
@@ -188,8 +169,6 @@
                     }).catch(function(err){
                          console.log(err);
                     });
-                    // self.$router.push('/add')
-                    // alert('注册成功');
                 }
             }
         }

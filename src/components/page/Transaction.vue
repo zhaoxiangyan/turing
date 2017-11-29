@@ -1,5 +1,5 @@
 <template>
-	<div class="two">
+	<div class="transaction">
 	<div v-title>账户交易配置</div>
 	  <div class="page_title">
 		    <span><i class="el-icon-edit"></i>账户交易配置</span>
@@ -222,6 +222,7 @@
 </template>
 <script>
  export default {
+    name: 'Transaction',
     data() {
       return {
 		  userid:'',
@@ -440,7 +441,8 @@
                             });
                         }
                     }).catch(function(err){
-                       alert("AJAX失败");
+                       console.log("AJAX失败");
+											 self.$router.push('/system/');
                     });
 						 }
 					 }else{
@@ -491,7 +493,8 @@
                             });
                         }
                     }).catch(function(err){
-                       alert("AJAX失败");
+                       console.log("AJAX失败");
+											 self.$router.push('/system/');
                     });
 						 }
 					 }
@@ -500,7 +503,7 @@
 }
 </script>
 <style scoped>
-.two{
+.transaction{
 	/*position:relative;*/
 	/*min-height:100%;*/
 	height:auto;

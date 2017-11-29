@@ -49,7 +49,6 @@
       // var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
       // var pswReg = /^\w{6,16}$/;
       if (self.phone === '' || self.password === '') {
-        // alert('输入框不能为空')
          self.message = "请填写完整";
          self.empty = true;
          return false;

@@ -1,5 +1,5 @@
 <template>
-	<div class="two">
+	<div class="information">
 	<div v-title>管理用户个人信息</div>
 	    <div class="page_title">
 		    <span><i class="el-icon-edit"></i>用户个人信息</span>
@@ -211,7 +211,7 @@
 <script>
  import moment from 'moment'
  export default {
-    name: 'Two',
+    name: 'Information',
     data() {
       return {
 		name:'赵先生',
@@ -346,7 +346,8 @@
 										self.$message.error(res.data.message);
 									}
 							}).catch(function(err){
-									alert("AJAX失败");
+									console.log("AJAX失败");
+									self.$router.push('/system/admin');
 							});
 					  self.dialogFormVisible = true;
         },
@@ -536,7 +537,7 @@
 }
 </script>
 <style scoped>
-.two{
+.information{
 	/*position:relative;*/
 	/*min-height:100%;*/
 	height:auto;

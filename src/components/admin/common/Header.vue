@@ -12,8 +12,8 @@
                   <el-dropdown trigger="hover" @command="handleCommand">
                    <span class="el-dropdown-link">{{name}} <img  v-bind:src=src ></span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item command="/system/admin/three">我的信息</el-dropdown-item>
-                      <el-dropdown-item command="/system/admin/two">设置</el-dropdown-item>
+                      <el-dropdown-item command="/system/admin/information">用户信息</el-dropdown-item>
+                      <el-dropdown-item command="/system/admin/cooperation">合作协议</el-dropdown-item>
                       <el-dropdown-item divided command="/system/admin">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                  </el-dropdown>  
@@ -80,11 +80,12 @@
           if(command == '/system/admin'){
              self.$http({
               method: 'get',
-              url: '/turingcloud/user/logout'
+              url: '/turingcloud/logout'
               }).then(function(res){
                   self.$router.push('/system/admin');
               }).catch(function(err){
-                  alert("AJAX失败");
+                  console.log('ajax失败');
+                  self.$router.push('/system/admin');
               }); 
           }else{
             self.$router.push(command);

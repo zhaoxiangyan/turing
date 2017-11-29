@@ -45,17 +45,17 @@
                     {
                         menu:"账户交易配置",
                         iconclassname:"el-icon-setting",
-                        url:"two"
+                        url:"transaction"
                     },
                     {
                         menu:"个人信息",
                         iconclassname:"el-icon-document",
-                        url:"three"
+                        url:"information"
                     },
                     {
                         menu:"合作协议",
                         iconclassname:"el-icon-edit",
-                        url:"one"
+                        url:"cooperation"
                     }]
 
            }

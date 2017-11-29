@@ -1,5 +1,5 @@
 <template>
-	<div class="three" v-show="all">
+	<div class="information" v-show="all">
 	<div v-title>个人信息</div>
 	    <div class="page_title">
 		    <span>个人信息</span>
@@ -155,9 +155,8 @@
 	</div>	
 </template>
 <script>
-// import VDistpicker from 'v-distpicker'
-// Vue.component('v-distpicker',VDistpicker)
  export default {
+    name: 'Information',
     data() {
       return {
         userid:'',
@@ -516,7 +515,7 @@
 }
 </script>
 <style scoped>
-.three{
+.information{
 	/*position:relative;*/
 	/*min-height:100%;*/
 	height:auto;

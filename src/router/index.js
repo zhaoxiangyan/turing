@@ -47,23 +47,19 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: resolve => require(['../components/page/Four.vue'], resolve)
+          component: resolve => require(['../components/page/Account.vue'], resolve)
         },
         {
-          path: '/system/one',
-          component: resolve => require(['../components/page/One.vue'], resolve)
+          path: '/system/cooperation',
+          component: resolve => require(['../components/page/Cooperation.vue'], resolve)
         },
         {
-          path: '/system/two',
-          component: resolve => require(['../components/page/Two.vue'], resolve)
+          path: '/system/transaction',
+          component: resolve => require(['../components/page/Transaction.vue'], resolve)
         },
         {
-          path: '/system/three',
-          component: resolve => require(['../components/page/Three.vue'], resolve)
-        },
-        {
-          path: '/system/four',
-          component: resolve => require(['../components/page/Four.vue'], resolve)
+          path: '/system/information',
+          component: resolve => require(['../components/page/Information.vue'], resolve)
         }
       ]
     },
@@ -82,24 +78,20 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: resolve => require(['../components/admin/page/Four.vue'], resolve)
+          component: resolve => require(['../components/admin/page/Account.vue'], resolve)
         },
         {
-          path: '/system/admin/one',
-          component: resolve => require(['../components/admin/page/One.vue'], resolve)
+          path: '/system/admin/cooperation',
+          component: resolve => require(['../components/admin/page/Cooperation.vue'], resolve)
         },
         {
-          path: '/system/admin/two',
-          component: resolve => require(['../components/admin/page/Two.vue'], resolve)
-        },
-        {
-          path: '/system/admin/three',
-          component: resolve => require(['../components/admin/page/Three.vue'], resolve)
-        },
-        {
-          path: '/system/admin/four',
-          component: resolve => require(['../components/admin/page/Four.vue'], resolve)
+          path: '/system/admin/information',
+          component: resolve => require(['../components/admin/page/Information.vue'], resolve)
         }
+        // {
+        //   path: '/system/admin/three',
+        //   component: resolve => require(['../components/admin/page/Three.vue'], resolve)
+        // }
       ]
     }
   ]

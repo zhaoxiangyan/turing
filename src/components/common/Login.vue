@@ -119,7 +119,6 @@
       var pswReg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/;
       // 8-16位字母和数字的组合
       if (self.phone1 === '' || self.password === '') {
-        // alert('输入框不能为空')
          self.message1 = "请填写完整";
          self.empty1 = true;
          return false;
@@ -228,7 +227,6 @@
       // self.empty2 = false;
       var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
       if (self.phone2 === '' || self.code === '') {
-        // alert('输入框不能为空')
          self.message2 = "请填写完整";
          self.empty2 = true;
          return false;

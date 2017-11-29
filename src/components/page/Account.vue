@@ -1,5 +1,5 @@
 <template>
-	<div class="Four">
+	<div class="account">
 	<div v-title>我的账户信息</div>
 	    <div class="page_title">
 		    <span><i class="el-icon-edit"></i>我的账户信息</span>
@@ -95,7 +95,7 @@
     </el-table-column>
   </el-table>
 </template>  
-<p class="state_tips"><a href="/system/two" type="primary"><i class="el-icon-plus"></i>添加账户</a></p>
+<p class="state_tips"><a href="/system/transaction" type="primary"><i class="el-icon-plus"></i>添加账户</a></p>
         </div>
 
 <!--图片预览页面模态框-->
@@ -465,7 +465,7 @@
 <script>
  import moment from 'moment'
  export default {
-    name: 'Four',
+    name: 'Account',
     data() {
       return {
 			userid:'',
@@ -993,7 +993,7 @@
 }
 </script>
 <style scoped>
-.Four{
+.account{
 	/*position:relative;*/
 	/*min-height:100%;*/
 	height:auto;
