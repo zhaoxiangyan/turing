@@ -35,7 +35,7 @@
                 method: 'get',
                 url: '/turingcloud/isLogin',
                 }).then(function(res){
-                    console.log(res.data);
+                    // console.log(res.data);
                    if(res.data == true){
                        self.all = true;
                    }else{

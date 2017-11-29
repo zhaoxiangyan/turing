@@ -63,7 +63,7 @@
       computed: {
         onRoutes () {
           return this.$route.path.replace('/', '');
-          console.log(this.$route.path.replace('/', ''))
+        //   console.log(this.$route.path.replace('/', ''))
         },
         // 使用对象展开运算符将getters混入computed对象中
         ...mapGetters([

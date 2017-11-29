@@ -225,7 +225,7 @@
                     self.file_name1 = file.name;
                     //读取文件过程方法
                     reader.onload = function (e) {
-                        console.log("成功读取....");
+                        // console.log("成功读取....");
                         var img = document.getElementById("img1");
                         img.style.display = 'inline-block';
                         img.src = e.target.result;
@@ -248,7 +248,7 @@
                     self.file_name2 = file.name;
                     //读取文件过程方法
                     reader.onload = function (e) {
-                        console.log("成功读取....");
+                        // console.log("成功读取....");
                         var img = document.getElementById("img2");
                         img.style.display = 'inline-block';
                         img.src = e.target.result;
@@ -271,7 +271,7 @@
                     self.file_name3 = file.name;
                     //读取文件过程方法
                     reader.onload = function (e) {
-                        console.log("成功读取....");
+                        // console.log("成功读取....");
                         var img = document.getElementById("img3");
                         img.style.display = 'inline-block';
                         img.src = e.target.result;

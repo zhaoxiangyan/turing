@@ -17,7 +17,7 @@
    	  	 		<input type="password" name="password"  v-model="password" placeholder="请输入密码" id="password" >
    	  	 	</div>
           <div class="re clearfix">
-            <!--<label for="keepPwd"><input type="checkbox" id="keepPwd" v-model="repassword">记住密码</label>-->
+            <label for="keepPwd"><input type="checkbox" id="keepPwd" v-model="repassword">记住登录状态</label>
             <a href="/system/findpassword">忘记密码？</a>
           </div>
    	  	 	<div class="login_div">
@@ -61,8 +61,10 @@
       // 密码验证码登录切换
       switch: true,
       // 密码登录
-      phone1: '15179820718',
-      password: 'yan151798',
+      // phone1: '15179820718',
+      // password: 'yan151798',
+      phone1: '',
+      password: '',
       repassword: false,
       empty1:false,
       message1:'',
@@ -145,6 +147,7 @@
         var formdata1 = new FormData();
             formdata1.append('username',self.phone1);
             formdata1.append('password',self.password);
+            formdata1.append('remember-me',self.repassword);
         self.$http({
               method: 'post',
               url: '/turingcloud/login',

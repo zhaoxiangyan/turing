@@ -340,7 +340,7 @@
 						self.debit = file.name;
 						//读取文件过程方法
 						reader.onload = function (e) {
-							console.log("成功读取....");
+							// console.log("成功读取....");
 							self.debit_file = true;
 						}
 						reader.readAsDataURL(file)
@@ -360,7 +360,7 @@
 						self.debit1 = file.name;
 						//读取文件过程方法
 						reader.onload = function (e) {
-							console.log("成功读取....");
+							// console.log("成功读取....");
 							self.debit_file1 = true;
 							var img = document.getElementById("debit_img1");
 													img.style.display = 'inline-block';
@@ -382,7 +382,7 @@
 						self.debit2 = file.name;
 						//读取文件过程方法
 						reader.onload = function (e) {
-							console.log("成功读取....");
+							// console.log("成功读取....");
 							self.debit_file2 = true;
 							var img = document.getElementById("debit_img2");
 													img.style.display = 'inline-block';

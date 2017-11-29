@@ -528,7 +528,7 @@
 								// 页面布局初始化
                 self.uploadStatus();
 							}
-							console.log(res.data);
+							// console.log(res.data);
 						}).catch(function(err){
 							  console.log("ajax失败");
 								self.$router.push('/system/');
@@ -580,7 +580,7 @@
 				self.user = file.name;
 				//读取文件过程方法
 				reader.onload = function (e) {
-					console.log("成功读取....");
+					// console.log("成功读取....");
 					self.user_file = true;
 				}
 				reader.readAsDataURL(file)
@@ -600,7 +600,7 @@
 				self.user1 = file.name;
 				//读取文件过程方法
 				reader.onload = function (e) {
-					console.log("成功读取....");
+					// console.log("成功读取....");
 					self.user_file1 = true;
 					var img = document.getElementById("user_img1");
 											img.style.display = 'inline-block';
@@ -622,7 +622,7 @@
 				self.user2 = file.name;
 				//读取文件过程方法
 				reader.onload = function (e) {
-					console.log("成功读取....");
+					// console.log("成功读取....");
 					self.user_file2 = true;
 					var img = document.getElementById("user_img2");
 											img.style.display = 'inline-block';
@@ -644,7 +644,7 @@
 				self.user3 = file.name;
 				//读取文件过程方法
 				reader.onload = function (e) {
-					console.log("成功读取....");
+					// console.log("成功读取....");
 					self.user_file3 = true;
 					var img = document.getElementById("user_img3");
 											img.style.display = 'inline-block';

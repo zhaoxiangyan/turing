@@ -364,7 +364,7 @@
                 self.tablebody = res.data.body;
 								// 页面布局初始化
 							}
-							console.log(res.data.body);
+							// console.log(res.data.body);
 						}).catch(function(err){
 								console.log("AJAX失败");
 								self.$router.push('/system/admin/login');
@@ -380,7 +380,7 @@
 									url: '/turingcloud/admin/coopContraction/detail/'+row.user.id
 							}).then(function(res){
 									if(res.data.success == true){
-										console.log(res.data.body);
+										// console.log(res.data.body);
 										self.modalbody = res.data.body;
 										// 返回数据放进交易配置编辑模态框
 
@@ -489,7 +489,7 @@
 									self.handleCurrentChange(1);
 									// 页面布局初始化
 								}
-								console.log(res.data);
+								// console.log(res.data);
 							}).catch(function(err){
 									console.log("AJAX失败");
 									self.$router.push('/system/admin/login');
@@ -500,7 +500,7 @@
 			handleSizeChange(val) {
         var self = this;
 				self.search.size = val;
-        console.log(`每页 ${val} 条`);
+        // console.log(`每页 ${val} 条`);
 				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
 					self.search.page = 1;
 					self.$http({
@@ -514,7 +514,7 @@
 										self.handleCurrentChange(1);
 										// 页面布局初始化
 									}
-									console.log(res.data);
+									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
 										self.$router.push('/system/admin/login');
@@ -531,7 +531,7 @@
 										self.handleCurrentChange(1);
 										// 页面布局初始化
 									}
-									console.log(res.data);
+									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
 										self.$router.push('/system/admin/login');
@@ -541,7 +541,7 @@
       handleCurrentChange(val) {
         var self = this;
 				self.search.page = val;
-        console.log(`当前页: ${val}`);
+        // console.log(`当前页: ${val}`);
 				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
 					self.$http({
 										method: 'get',
@@ -553,7 +553,7 @@
 										self.tablebody = res.data.body;
 										// 页面布局初始化
 									}
-									console.log(res.data);
+									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
 										self.$router.push('/system/admin/login');
@@ -569,7 +569,7 @@
 										self.tablebody = res.data.body;
 										// 页面布局初始化
 									}
-									console.log(res.data);
+									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
 										self.$router.push('/system/admin/login');

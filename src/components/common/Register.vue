@@ -147,7 +147,6 @@
                         method: 'post',
                         url: '/turingcloud/register?phone='+self.phone+'&msmCode='+self.code+'&password='+self.password
                     }).then(function(res){
-                        // console.log(res);
                          if(res.data.success == true){
                                 var storage = window.sessionStorage; 
                                 storage.setItem("userid",res.data.body.id);

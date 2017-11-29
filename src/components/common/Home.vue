@@ -40,7 +40,6 @@
                 method: 'get',
                 url: '/turingcloud/isLogin',
                 }).then(function(res){
-                    console.log(res.data);
                    if(res.data == true){
                        self.all = true;
                    }else{
@@ -48,6 +47,7 @@
                    }
                 }).catch(function(err){
                     console.log("AJAX失败");
+                    self.$router.push('/system/');
                 }); 
       }
     }

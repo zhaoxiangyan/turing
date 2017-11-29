@@ -664,7 +664,7 @@
 							self.debit = file.name;
 							//读取文件过程方法
 							reader.onload = function (e) {
-								console.log("成功读取....");
+								// console.log("成功读取....");
 								self.debit_file = true;
 							}
 							reader.readAsDataURL(file)
@@ -684,7 +684,7 @@
 							self.debit1 = file.name;
 							//读取文件过程方法
 							reader.onload = function (e) {
-								console.log("成功读取....");
+								// console.log("成功读取....");
 								self.debit_file1 = true;
 								var img = document.getElementById("debit_img1");
 														img.style.display = 'inline-block';
@@ -706,7 +706,7 @@
 							self.debit2 = file.name;
 							//读取文件过程方法
 							reader.onload = function (e) {
-								console.log("成功读取....");
+								// console.log("成功读取....");
 								self.debit_file2 = true;
 								var img = document.getElementById("debit_img2");
 														img.style.display = 'inline-block';
@@ -762,7 +762,7 @@
 								url: '/turingcloud/trnsaction/'+self.userid+'/'+row.id
 						}).then(function(res){
 								if(res.data.success == true){
-									 console.log(res.data.body);
+									//  console.log(res.data.body);
 									 self.modalbody = res.data.body;
 									 // 返回数据放进交易配置编辑模态框
 									 // 编辑页面建议回撤初始化		
@@ -796,7 +796,7 @@
 				},
 				// 编辑页面协议上传初始化监听
 				uploadStatus(){
-					 console.log('运行');
+					//  console.log('运行');
            var self = this;
 					 if(self.contractisPass == "1" && self.contractfiletype == "pdf"){
 						 return "1";
