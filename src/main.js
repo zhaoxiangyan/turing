@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
@@ -17,12 +18,12 @@ Vue.prototype.$http = axios
 // Vue.use(Index)
 
 // 全局自定义指令改变路由title
-Vue.directive('title', {
-  inserted: function (el, binding) {
-    document.title = el.innerText
-    el.remove()
-  }
-})
+// Vue.directive('title', {
+//   inserted: function (el, binding) {
+//     document.title = el.innerText
+//     // el.remove()
+//   }
+// })
 // 全局自定义指令改变路由title
 
 new Vue({

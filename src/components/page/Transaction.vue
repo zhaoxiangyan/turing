@@ -1,6 +1,5 @@
 <template>
 	<div class="transaction">
-	<div v-title>账户交易配置</div>
 	  <div class="page_title">
 		    <span><i class="el-icon-edit"></i>账户交易配置</span>
 		    <el-breadcrumb separator="/">
@@ -171,7 +170,7 @@
 				    <span>账户投资资金：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input1" placeholder="请输入投资金额（单位：美元）"></el-input>
+					   <el-input v-model="input1" placeholder="请输入投资金额（美元）"></el-input>
           </el-col>
 				</el-row>	
 			    <el-row class="li">
@@ -278,6 +277,7 @@
       };
     },
 		mounted:function(){
+			document.title = "账户交易配置";
       var self = this;
       if(localStorage["userid"]){
         self.userid = localStorage.getItem("userid");

@@ -1,6 +1,5 @@
 <template>
     <div class="add">
-      <div v-title>填写个人资料</div>
         <div class="box" v-show="all">
             <div id="add_title">
                 <span>填写个人资料</span>
@@ -101,6 +100,7 @@
             }
         },
         mounted: function() {
+            document.title = "填写个人资料";
             var self = this;
             if(sessionStorage.getItem("password")){
                 self.phone = sessionStorage.getItem("phone1");

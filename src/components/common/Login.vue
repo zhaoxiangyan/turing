@@ -1,6 +1,6 @@
 <template>
    <div class="login">
-      <div v-title>登录</div>
+      <!--<div v-title>登录</div>-->
    	  <div class="title">图灵智能交易系统</div>
    	  <div class="login-form">
          <ul class="switch">
@@ -79,6 +79,7 @@
   },
   mounted() {
     // this.getUser();
+    document.title = "登录";
   },
   watch:{
     phone2:function(){

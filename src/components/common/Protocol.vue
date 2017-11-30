@@ -85,6 +85,9 @@
       name: 'Protocol',
       computed: {
        
+      },
+      mounted:function(){
+              document.title = "用户许可协议";
       }
     }
 </script>

@@ -13,6 +13,7 @@
       };
     },
     mounted() {
+        document.title = "404";
         this.countDown(); 
     },
     methods: {

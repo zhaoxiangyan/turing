@@ -1,13 +1,12 @@
 <template>
 	<div class="account">
-	<div v-title>我的账户信息</div>
 	    <div class="page_title">
 		    <span><i class="el-icon-edit"></i>我的账户信息</span>
 		    <el-breadcrumb separator="/">
 				<el-breadcrumb-item :to="{path:'/home'}">首页</el-breadcrumb-item>
 				<el-breadcrumb-item>我的账户信息</el-breadcrumb-item>
 	    	</el-breadcrumb>
-		</div>	
+	  	</div>	
         <div class="page_content">
 <template>
   <el-table
@@ -30,7 +29,7 @@
     </el-table-column>
 		<el-table-column
       prop="capital"
-      label="投资资金（：美元）"
+      label="投资资金（美元）"
 			width="170">
     </el-table-column>
 		<el-table-column
@@ -101,7 +100,7 @@
 <!--图片预览页面模态框-->
 <el-dialog title="图片预览" :visible.sync="dialogImgVisible">
 
-<img  :src="dialogImgUrl"  />
+<img class="modal_img" :src="dialogImgUrl"  />
 </el-dialog>
         <!--编辑交易配置页面begin-->
 		<el-dialog title="交易配置" :visible.sync="dialogFormVisible">
@@ -413,7 +412,7 @@
 				    <span>账户投资资金：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="modalbody.capital" placeholder="请输入投资金额（单位：美元）"></el-input>
+					   <el-input v-model="modalbody.capital" placeholder="请输入投资金额（美元）"></el-input>
           </el-col>
 				</el-row>	
 			    <el-row class="li">
@@ -578,6 +577,7 @@
 			
 		},
 		mounted:function(){
+			document.title = "我的账户信息";
 			var self = this;
       if(localStorage["userid"]){
         self.userid = localStorage.getItem("userid");
@@ -1216,5 +1216,8 @@
 	  vertical-align: bottom;
     max-width: 100%;
 }
-
+/*图片模态框*/
+.modal_img{
+	max-width:100%;
+}
 </style>

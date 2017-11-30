@@ -93,6 +93,25 @@ export default new Router({
         //   component: resolve => require(['../components/admin/page/Three.vue'], resolve)
         // }
       ]
+    },
+    // 超级管理员页面路由
+    {
+      path: '/system/superadmin/',
+      redirect: '/system/superadmin/login'
+    },
+    {
+      path: '/system/superadmin/login',
+      component: resolve => require(['../components/superadmin/common/Login.vue'], resolve)
+    },
+    {
+      path: '/system/superadmin/home',
+      component: resolve => require(['../components/superadmin/common/Home.vue'], resolve),
+      children: [
+        {
+          path: '/',
+          component: resolve => require(['../components/superadmin/page/Manage.vue'], resolve)
+        }
+      ]
     }
   ]
 })

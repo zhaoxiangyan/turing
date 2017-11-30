@@ -1,6 +1,5 @@
 <template>
 	<div class="cooperation">
-	<div v-title>签约合作协议</div>
 	    <div class="page_title">
 		    <span>签约合作协议<i>*您如果想和我们合作，请先下载协议，打印后签名，再扫描上传已签约的协议，再提交审核</i></span>
 		    <el-breadcrumb separator="/">
@@ -509,6 +508,7 @@
       };
     },
 		mounted:function(){
+			document.title = "签约合作协议";
       var self = this;
       if(localStorage["userid"]){
         self.userid = localStorage.getItem("userid");

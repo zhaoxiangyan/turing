@@ -1,6 +1,5 @@
 <template>
     <div class="find">
-      <div v-title>找回密码</div>
         <div class="box">
             <div id="find_title">
                 <span>找回密码</span>
@@ -55,6 +54,9 @@
                 http_mess:false,
                 http_message:''
             }
+        },
+        mounted:function(){
+                document.title = "找回密码";
         },
         watch:{
             // 手机号码

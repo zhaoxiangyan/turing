@@ -3,7 +3,7 @@
    	  <div class="title">图灵智能交易管理系统</div>
    	  <div class="login-form">
          <ul class="switch">
-           <li  class="active">管理员登录</li>
+           <li  class="active">超级管理员登录</li>
          </ul>
    	  	 <form class="password_form" >
    	  	 	<div class="required phone1_div">
@@ -31,15 +31,15 @@
   data () {
     return {
       // 密码登录
-      phone: '18270826010',
-      password: 'tanhui123',
+      phone: '',
+      password: '',
       // repassword: false,
       empty:false,
       message:'请填写完整',
     }
   },
   mounted:function(){
-    document.title = "管理员登录";
+    document.title = "超级管理员登录";
   },
   watch:{
 

@@ -1,6 +1,5 @@
 <template>
     <div class="register">
-      <div v-title>注册</div>
         <div class="box">
             <div id="register_title">
                 <span>注册</span>
@@ -61,6 +60,9 @@
                 http_mess:false,
                 http_message:''
             }
+        },
+        mounted:function(){
+                document.title = "注册";
         },
         watch:{
             phone:function(){

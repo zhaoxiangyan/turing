@@ -1,6 +1,5 @@
 <template>
 	<div class="information" v-show="all">
-	<div v-title>个人信息</div>
 	    <div class="page_title">
 		    <span>个人信息</span>
 		    <el-breadcrumb separator="/">
@@ -117,10 +116,10 @@
     <el-form-item label="旧的手机号码：" :label-width="formLabelWidth1">
       <el-input v-bind:value="body.phone" placeholder="请输入旧的手机号码" :disabled="true" ></el-input>
     </el-form-item>
-    <el-form-item label="短信验证码：" :label-width="formLabelWidth1">
+    <!--<el-form-item label="短信验证码：" :label-width="formLabelWidth1">
       <el-input class="code_box"  v-model="form1.oldcode" placeholder="请输入短信验证码"></el-input>
       <el-button  type="text" @click="sendoldCode()" :disabled="form1.sendoldstatus">{{form1.sendoldtext}}</el-button>
-    </el-form-item>
+    </el-form-item>-->
     <el-form-item label="新的手机号码：" :label-width="formLabelWidth1">
       <el-input v-model="form1.newphone" placeholder="请输入新的手机号码" ></el-input>    
     </el-form-item>
@@ -208,7 +207,7 @@
     computed:{
        modifyphone_button:function(){
           var self = this;
-          if(self.form1.oldcode === ''||self.form1.newphone === ''||self.form1.newcode === ''){
+          if(self.form1.newphone === ''||self.form1.newcode === ''){
             return false;
           }else{
             return true;
@@ -224,6 +223,7 @@
        }
     },
     mounted:function(){
+      document.title = "个人信息";
       var self = this;
       if(localStorage["userid"]){
         self.userid = localStorage.getItem("userid");
@@ -421,7 +421,7 @@
         }else{
            self.$http({
                     method: 'post',
-                    url: '/turingcloud/phone/'+self.userid+'/modifiedPhone?newPhone='+self.form1.newphone+'&newMsm='+self.form1.newcode+'&oldPhone='+self.body.phone+'&oldMsm='+self.form1.oldcode
+                    url: '/turingcloud/phone/'+self.userid+'/modifiedPhone?newPhone='+self.form1.newphone+'&newMsm='+self.form1.newcode,
                     }).then(function(res){
                       if(res.data.success == true){
                         self.$message({
