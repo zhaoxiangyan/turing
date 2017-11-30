@@ -12,9 +12,8 @@
                   <el-dropdown trigger="hover" @command="handleCommand">
                    <span class="el-dropdown-link">{{name}} <img  v-bind:src=src ></span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item command="/system/admin/information">用户信息</el-dropdown-item>
-                      <el-dropdown-item command="/system/admin/cooperation">合作协议</el-dropdown-item>
-                      <el-dropdown-item divided command="/system/admin">退出登录</el-dropdown-item>
+                      <el-dropdown-item command="/system/superadmin/home">管理员信息</el-dropdown-item>
+                      <el-dropdown-item divided command="/system/superadmin">退出登录</el-dropdown-item>
                     </el-dropdown-menu>
                  </el-dropdown>  
             </div>
@@ -27,8 +26,8 @@
       name: 'header',  
       data () {
         return {
-          name: 'Admin',
-          src: '../static/img/boy_default.png'
+          name: '超级管理员',
+          src: '../../../../static/img/boy_default.png'
           // collapsed:false
         }
       },
@@ -53,10 +52,10 @@
               method: 'get',
               url: '/turingcloud/logout'
               }).then(function(res){
-                  self.$router.push('/system/admin');
+                  self.$router.push('/system/superadmin');
               }).catch(function(err){
                   console.log('ajax失败');
-                  self.$router.push('/system/admin');
+                  self.$router.push('/system/superadmin');
               }); 
           }else{
             self.$router.push(command);

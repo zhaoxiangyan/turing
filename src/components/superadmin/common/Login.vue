@@ -8,7 +8,7 @@
    	  	 <form class="password_form" >
    	  	 	<div class="required phone1_div">
             <img src="../../../assets/img/login_01.png">
-   	  	 		<input type="text" name="phone1"  v-model="phone" placeholder="请输入手机号" id="phone1">
+   	  	 		<input type="text" name="phone1"  v-model="phone" placeholder="请输入账号" id="phone1">
    	  	 	</div>
    	  	 	<div class="required password_div">
             <img src="../../../assets/img/login_02.png">
@@ -54,14 +54,6 @@
          self.message = "请填写完整";
          self.empty = true;
          return false;
-      // }else if(!phoneReg.test(self.phone)){
-      //      self.message = "请输入正确的手机号码";
-      //      self.empty = true;
-      //      return false;
-      // }else if(!pswReg.test(self.password)){
-      //      self.message = '请输入格式正确的密码（6-16位字母、数字和下划线）';
-      //      self.empty = true;
-      //      return false;
       }else {
          // 此处加入后台AJAX验证
           var formdata = new FormData();
@@ -73,16 +65,16 @@
                 data:formdata
           }).then(function(res){
               var storage = window.localStorage; 
-              if(storage["adminid"]){
-                storage.setItem("adminid",res.data.principal.id);
+              if(storage["superadminid"]){
+                storage.setItem("superadminid",res.data.principal.id);
               }else{
-                storage.setItem("adminid",res.data.principal.id);
+                storage.setItem("superadminid",res.data.principal.id);
               }
               self.$message({
                 message: '登录成功',
                 type: 'success',
                 onClose:function(){
-                    self.$router.push('/system/admin/home');
+                    self.$router.push('/system/superadmin/home');
                 }
               });
           }).catch(function(err){

@@ -3,7 +3,7 @@
 	  <div class="page_title">
 		    <span><i class="el-icon-edit"></i>账户交易配置</span>
 		    <el-breadcrumb separator="/">
-				<el-breadcrumb-item :to="{path:'/home'}">首页</el-breadcrumb-item>
+				<el-breadcrumb-item :to="{path:'/system/home'}">首页</el-breadcrumb-item>
 				<el-breadcrumb-item>账户交易配置</el-breadcrumb-item>
 	    	</el-breadcrumb>
 		</div>	

@@ -17,7 +17,7 @@
     export default {
       data () {
         return {
-          all:false
+          all:true
         }
       },
       components: {
@@ -30,21 +30,22 @@
         ]) 
       },
       mounted: function(){
-            var self = this;
-             self.$http({
-                method: 'get',
-                url: '/turingcloud/isLogin',
-                }).then(function(res){
-                    // console.log(res.data);
-                   if(res.data == true){
-                       self.all = true;
-                   }else{
-                     self.$router.push('/system/admin/');
-                   }
-                }).catch(function(err){
-                    console.log("AJAX失败");
-                    self.$router.push('/system/admin/');
-                }); 
+            // var self = this;
+            // 登录拦截begin
+            //  self.$http({
+            //     method: 'get',
+            //     url: '/turingcloud/isLogin',
+            //     }).then(function(res){
+            //        if(res.data == true){
+            //            self.all = true;
+            //        }else{
+            //          self.$router.push('/system/superadmin/');
+            //        }
+            //     }).catch(function(err){
+            //         console.log("AJAX失败");
+            //         self.$router.push('/system/superadmin/');
+            //     }); 
+            // 登录拦截end
       }
     }
 </script>

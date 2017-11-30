@@ -38,25 +38,10 @@
            return {
               Item: [
                     {
-                        menu:"管理用户交易信息",
+                        menu:"管理员",
                         iconclassname:"el-icon-date",
                         url:"home"
-                    },
-                    {
-                        menu:"管理用户信息",
-                        iconclassname:"el-icon-setting",
-                        url:"information"
-                    },
-                    {
-                        menu:"管理用户合作协议",
-                        iconclassname:"el-icon-edit",
-                        url:"cooperation"
                     }]
-                    // {
-                    //     menu:"个人信息",
-                    //     iconclassname:"el-icon-document",
-                    //     url:"three"
-                    // }
 
            }
       },
