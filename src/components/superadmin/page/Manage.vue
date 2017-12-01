@@ -11,76 +11,45 @@
 <!--个人信息表格table-->
 <template>
   <el-table
-    :data="tableData"
+    :data="tableList"
     style="width: 100%">
     <el-table-column
-      prop="time"
+      prop="lastLoginTime"
 			:formatter="dateFormat"
       label="最后登录时间">
     </el-table-column>
 		<el-table-column
-		  prop="name"
-			label="姓名">
-		</el-table-column>
-    <el-table-column
-		  prop="username"
+		  prop="user.detailInformation.username"
 			label="用户名">
 		</el-table-column>
+    <el-table-column
+		  prop="user.phone"
+			label="登录账号">
+		</el-table-column>
+	<!--	<el-table-column
+		  prop="password"
+			label="登录密码">
+		</el-table-column>-->
     <el-table-column
       label="操作"
       width="100">
       <template slot-scope="scope">
-       <el-button type="text" size="small"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+       <el-button type="text" size="small"  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
 </template>
 <p class="state_tips"><a href="javascript:void(0)" @click="dialogFormVisible1 = true" type="primary"><i class="el-icon-plus"></i>添加管理员</a></p>
         </div>
-    <!--管理管理员信息编辑页面begin-->
-		<el-dialog title="管理员信息" :visible.sync="dialogFormVisible">
-		<el-row class="edit_content">
-				<el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>姓名：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input v-model="modaldata.name" placeholder="请输入姓名" ></el-input>
-          </el-col>
-				</el-row>	
-        <el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>登录账号：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input v-model="modaldata.username" placeholder="请输入登录账号" ></el-input>
-          </el-col>
-				</el-row>	
-        <el-row class="li">
-				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>登录密码：</span>
-				  </el-col>
-				  <el-col :span="16" class="li_right">
-					   <el-input v-model="modaldata.password" placeholder="请输入登录密码" ></el-input>
-          </el-col>
-				</el-row>	
-		</el-row>
-		<div slot="footer" class="dialog-footer">
-		  <el-button type="primary" @click="modify()" >提交修改</el-button>
-			<el-button type="danger" @click="delete_setting()">删除</el-button>
-			<el-button @click="dialogFormVisible = false">取 消</el-button>
-    </div>
-		</el-dialog>
-    <!--编辑管理员信息页面end-->
     <!--添加管理员begin-->
-		<el-dialog title="管理员信息" :visible.sync="dialogFormVisible1">
+		<el-dialog title="新增管理员" :visible.sync="dialogFormVisible1">
 		<el-row class="edit_content">
 				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>姓名：</span>
+				    <span>用户名：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="modaldata1.name" placeholder="请输入姓名" ></el-input>
+					   <el-input v-model="modaldata1.name" placeholder="请输入用户名" ></el-input>
           </el-col>
 				</el-row>	
         <el-row class="li">
@@ -122,121 +91,48 @@
 			id:'1',
 			time:1511404528000,
       name:'admin1',
-      username:'111111111'
+      username:'111111111',
+			password:'12312313211'
 		}, {
 			id:'2',
 			time:1515406028000,
       name:'admin2',
-      username:'2222222'
+      username:'2222222',
+			password:'212111111'
 		}],
-		dialogFormVisible: false,
-    modaldata:{
-      name:'赵相炎',
-      username:'15179820718',
-      password:'yan151798'
-    },
     dialogFormVisible1:false,
     modaldata1:{
-      name:'新增管理员',
-      username:'1200000000',
-      password:'5145454545'
+      name:'',
+      username:'',
+      password:''
     },
 		// 后台获取数据
-		tablebody:[],
-		// 编辑的个人信息id
-		rowid:1,
-		// 编辑个人信息模态框数据
-		modalbody:{
-			lastLoginTime:null,
-      user:{
-				id:3,
-				email:"ling@vmailx.com",
-				phone:"17744570973",
-				detailInformation:{
-					id:5,
-					idcard:"36073119930929762X",
-					pic1:"145555555555.jpeg",
-					pic2:"111111111111111.jpeg",
-					pic3:"111111111111.png",
-					addr:null,
-					username:"发送",
-					isPass:"0",
-					handleStatus:"0",
-					handleResultDescription:null
-				}
-			}
-		}
+		tableList:[]
       };
     },
 		mounted:function(){
 			document.title = "管理员信息";
 			var self = this;
-			// 管理用户个人信息的表格初始化
-			// self.$http({
-			// 					method: 'get',
-			// 					url: '/turingcloud/admin/user/list'
-			// 			}).then(function(res){
-			// 				if(res.data.success == false){
-			// 					self.$message.error(res.data.message);
-			// 				}else if(res.data.success == true){
-      //           self.tablebody = res.data.body;
-			// 					// 页面布局初始化
-			// 				}
-			// 			}).catch(function(err){
-			// 					console.log("AJAX失败");
-			// 					self.$router.push('/system/admin/login');
-			// 			});
+			// 管理员信息的表格初始化
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/superAdmin/list'
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+                self.tableList = res.data.body;
+								// 页面布局初始化
+							}
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/superadmin/');
+						});
 		},		
     methods: {
-        // 表格编辑按钮
-        handleEdit(index, row) {
+        // 表格删除按钮
+        handleDelete(index, row) {
 						var self = this;
-						// self.rowid = row.user.id;
-						// self.$http({
-						// 			method: 'get',
-						// 			url: '/turingcloud/admin/user/detail/'+row.user.id
-						// 	}).then(function(res){
-						// 			if(res.data.success == true){
-						// 				// console.log(res.data.body);
-						// 				self.modalbody = res.data.body;
-						// 				// 返回数据放进个人信息编辑模态框
-						// 			}else if(res.data.success == false){
-						// 				self.$message.error(res.data.message);
-						// 			}
-						// 	}).catch(function(err){
-						// 			console.log("AJAX失败");
-						// 			self.$router.push('/system/admin');
-						// 	});
-					  self.dialogFormVisible = true;
-        },
-				// 个人信息提交修改
-				modify(){
-					var self = this;
-					self.$http({
-									method: 'put',
-									url: '/turingcloud/admin/user/'+self.rowid+'?isPass='+self.modalbody.user.detailInformation.isPass+'&hadleStatus='+self.modalbody.user.detailInformation.handleStatus+'&handleResultDescription='+self.modalbody.user.detailInformation.handleResultDescription,
-							    }).then(function(res){
-									if(res.data.success == true){
-													self.$message({
-														message: '提交修改成功',
-														type: 'success',
-														onClose:function(){
-																// 提交修改成功关闭模态框
-																// self.dialogFormVisible = false;
-																self.$router.go(0);
-														}
-													});
-									}else if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}
-							}).catch(function(err){
-									console.log("AJAX失败");
-									self.$router.push('/system/admin');
-							});
-				},							
-				// 删除交易配置
-				delete_setting() {
-					var self = this;
 					self.$confirm('此操作将永久删除该管理员账号, 是否继续?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
@@ -244,23 +140,19 @@
 					}).then(() => {
 						self.$http({
 										method: 'delete',
-										url: '/turingcloud/admin/user/'+self.rowid
+										url: '/turingcloud/superAdmin/delete/'+row.id
 								}).then(function(res){
-										if(res.data.success == true){
-													self.$message({
+									  self.$message({
 														type: 'success',
 														message: '该管理员账号永久删除!',
 														onClose:function(){
-																// 删除成功关闭模态框
-																self.dialogFormVisible = false;
+																// 删除成功刷新
+															 self.$router.go(0);
 														}
 													});
-										}else if(res.data.success == false){
-											self.$message.error(res.data.message);
-										}
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin');
+										self.$router.push('/system/superadmin');
 								});
 					}).catch(() => {
 						self.$message({
@@ -268,14 +160,55 @@
 							message: '已取消删除'
 						});          
 					});
-      },
+        },						
 			// 日期格式化
 			dateFormat:function(row, column) {  
 				var date = row[column.property];  
 				if (date == undefined) {  
 						return "";  
 				}  
-				return moment(date).format("YYYY-MM-DD");  
+				return moment(date).format("YYYY-MM-DD HH:mm:ss");  
+			},
+			// 新增管理员
+			add(){
+				var self = this;
+				if(self.modaldata1.name == ''){
+					self.$message({
+          message: '用户名不能为空',
+          type: 'warning'
+          });
+				}else if(self.modaldata1.username == ''){
+					self.$message({
+          message: '登录账号不能为空',
+          type: 'warning'
+          });
+				}else if(self.modaldata1.password == ''){
+					self.$message({
+          message: '登录密码不能为空',
+          type: 'warning'
+          });
+				}else{
+					self.$http({
+										method: 'post',
+										url: '/turingcloud/superAdmin/addAdmin?username='+self.modaldata1.name+'&phone='+self.modaldata1.username+'&password='+self.modaldata1.password,
+									}).then(function(res){
+									if(res.data.success == true){
+										self.$message({
+											message: '添加管理员成功',
+											type: 'success',
+											onClose:function(){
+													// 提交修改成功关闭模态框
+													self.$router.go(0);
+											}
+										});
+									}else if(res.data.success == false){
+										self.$message.error(res.data.message);
+									}
+						    	}).catch(function(err){
+										console.log("AJAX失败");
+										self.$router.push('/system/superadmin');
+						    	});
+				}
 			}
     }
 }

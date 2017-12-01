@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper" v-show="all">
+    <div class="wrapper" v-show="all" >
         <v-head></v-head>
         <v-sidebar></v-sidebar>
         <div class="content" v-bind:class="[ getcollapsed ? '' : 'min-left']">
@@ -17,7 +17,7 @@
     export default {
       data () {
         return {
-          all:true
+          all:false
         }
       },
       components: {
@@ -30,21 +30,21 @@
         ]) 
       },
       mounted: function(){
-            // var self = this;
+            var self = this;
             // 登录拦截begin
-            //  self.$http({
-            //     method: 'get',
-            //     url: '/turingcloud/isLogin',
-            //     }).then(function(res){
-            //        if(res.data == true){
-            //            self.all = true;
-            //        }else{
-            //          self.$router.push('/system/superadmin/');
-            //        }
-            //     }).catch(function(err){
-            //         console.log("AJAX失败");
-            //         self.$router.push('/system/superadmin/');
-            //     }); 
+             self.$http({
+                method: 'get',
+                url: '/turingcloud/isLogin',
+                }).then(function(res){
+                   if(res.data == true){
+                       self.all = true;
+                   }else{
+                     self.$router.push('/system/superadmin/');
+                   }
+                }).catch(function(err){
+                    console.log("AJAX失败");
+                    self.$router.push('/system/superadmin/');
+                }); 
             // 登录拦截end
       }
     }

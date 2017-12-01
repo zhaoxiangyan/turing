@@ -31,8 +31,8 @@
   data () {
     return {
       // 密码登录
-      phone: '',
-      password: '',
+      phone: '18270826010',
+      password: 'tanhui123',
       // repassword: false,
       empty:false,
       message:'请填写完整',

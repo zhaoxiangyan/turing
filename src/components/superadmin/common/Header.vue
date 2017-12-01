@@ -27,7 +27,7 @@
       data () {
         return {
           name: '超级管理员',
-          src: '../../../../static/img/boy_default.png'
+          src: '../static/img/boy_default.png'
           // collapsed:false
         }
       },
@@ -47,7 +47,7 @@
         ]),
         handleCommand(command) {
           var self = this;
-          if(command == '/system/admin'){
+          if(command == '/system/superadmin'){
              self.$http({
               method: 'get',
               url: '/turingcloud/logout'
