@@ -140,7 +140,7 @@
 					}).then(() => {
 						self.$http({
 										method: 'delete',
-										url: '/turingcloud/superAdmin/delete/'+row.id
+										url: '/turingcloud/superAdmin/delete/'+row.user.id
 								}).then(function(res){
 									  self.$message({
 														type: 'success',

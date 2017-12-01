@@ -379,7 +379,7 @@
 				ViewImg(name){
 					var self = this;
 					// dialogImgVisible
-          self.dialogImgUrl = 'http://192.168.0.111/'+name;
+          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+name;
 					self.dialogImgVisible = true;
 				},				
 				// 删除交易配置

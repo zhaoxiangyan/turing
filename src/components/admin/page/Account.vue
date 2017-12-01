@@ -162,7 +162,7 @@
 				    <span>委托扣款协议：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-				     	<a class="preview" :href="'http://192.168.0.111/'+modalbody.contract.file1" target="_blank" ><i class="el-icon-document"></i>用户委托扣款协议</a>
+				     	<a class="preview" :href="'http://turing-cloud.cn/file/'+modalbody.contract.file1" target="_blank" ><i class="el-icon-document"></i>用户委托扣款协议</a>
           </el-col>
 				</el-row>
 				<template v-else>
@@ -179,7 +179,7 @@
 				    <span></span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-				     	<a class="preview" href="javascript:void(0)" @click="ViewImg(modalbody.contract.file1)"><i class="el-icon-picture"></i>协议第二页</a>
+				     	<a class="preview" href="javascript:void(0)" @click="ViewImg(modalbody.contract.file2)"><i class="el-icon-picture"></i>协议第二页</a>
           </el-col>
 				</el-row>
 				</template>
@@ -575,7 +575,7 @@
 				ViewImg(name){
 					var self = this;
 					// dialogImgVisible
-          self.dialogImgUrl = 'http://192.168.0.111/'+name;
+          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+name;
 					self.dialogImgVisible = true;
 				},				
 				// 删除交易配置
