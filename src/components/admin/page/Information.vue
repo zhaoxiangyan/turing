@@ -197,13 +197,13 @@
 		<div slot="footer" class="dialog-footer">
 		  <el-button type="primary" @click="modify()" :disabled="modalbody.user.detailInformation.handleStatus == '0'?true:false">提交修改</el-button>
 			<!--<el-button type="success" @click="stop">停止挂机</el-button>-->
-			<!--<el-button type="danger" @click="delete_setting">删除</el-button>-->
+			<el-button type="danger" @click="delete_setting()">删除</el-button>
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
     </div>
 		</el-dialog>
         <!--编辑交易配置页面end-->
 		<div class="page_footer">
-		   <span>交易有风险，入市须谨慎！</span>
+		   <span>风险警告：外汇和差价合约交易以及任何金融资产进行的交易都涉及高风险，都有损失部分和全部投资资金的可能性，未必适合每一位投资者。在决定参与交易之前，您应该审慎考虑您的投资目标、经验等级、财政状况及风险承受能力。您需要承担相关保证金的支付和交易带来的损失，如果没有足够资金承担损失，请不要贸然进行投资交易。图灵不会为市场风险导致的损失承担任何责任，请确保您已经阅读并完全理解图灵的政策披露描述。</span>
 		</div>
 	</div>	
 </template>
@@ -298,19 +298,19 @@
 			document.title = "管理用户个人信息";
 			var self = this;
 			// 用户个人信息的总数
-			self.$http({
-								method: 'get',
-								url: '/turingcloud/admin/user/count'
-						}).then(function(res){
-							if(res.data.success == false){
-								self.$message.error(res.data.message);
-							}else if(res.data.success == true){
-                self.total = res.data.body;
-							}
-						}).catch(function(err){
-								console.log("AJAX失败");
-								self.$router.push('/system/admin/login');
-						});
+			// self.$http({
+			// 					method: 'get',
+			// 					url: '/turingcloud/admin/user/count'
+			// 			}).then(function(res){
+			// 				if(res.data.success == false){
+			// 					self.$message.error(res.data.message);
+			// 				}else if(res.data.success == true){
+      //           self.total = res.data.body;
+			// 				}
+			// 			}).catch(function(err){
+			// 					console.log("AJAX失败");
+			// 					self.$router.push('/system/admin/login');
+			// 			});
 			// 管理用户个人信息的表格初始化
 			self.$http({
 								method: 'get',
@@ -319,6 +319,7 @@
 							if(res.data.success == false){
 								self.$message.error(res.data.message);
 							}else if(res.data.success == true){
+								self.total = res.data.totalElements;
                 self.tablebody = res.data.body;
 								// 页面布局初始化
 							}
@@ -385,7 +386,7 @@
 				// 删除交易配置
 				delete_setting() {
 					var self = this;
-					self.$confirm('此操作将永久禁止该用户登录, 是否继续?', '提示', {
+					self.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
@@ -397,10 +398,11 @@
 										if(res.data.success == true){
 													self.$message({
 														type: 'success',
-														message: '该用户永久禁止登录!',
+														message: '该用户已永久删除!',
 														onClose:function(){
 																// 删除成功关闭模态框
-																self.dialogFormVisible = false;
+																// self.dialogFormVisible = false;
+																self.$router.go(0);
 														}
 													});
 										}else if(res.data.success == false){
@@ -441,6 +443,7 @@
 							if(res.data.success == false){
 								self.$message.error(res.data.message);
 							}else if(res.data.success == true){
+								self.total = res.data.totalElements;
                 self.tablebody = res.data.body;
 								self.handleCurrentChange(1);
 								// 页面布局初始化
@@ -466,6 +469,7 @@
 									if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}else if(res.data.success == true){
+										self.total = res.data.totalElements;
 										self.tablebody = res.data.body;
 										self.handleCurrentChange(1);
 										// 页面布局初始化
@@ -483,6 +487,7 @@
 									if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}else if(res.data.success == true){
+										self.total = res.data.totalElements;
 										self.tablebody = res.data.body;
 										self.handleCurrentChange(1);
 										// 页面布局初始化
@@ -506,6 +511,7 @@
 									if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}else if(res.data.success == true){
+										self.total = res.data.totalElements;
 										self.tablebody = res.data.body;
 										// 页面布局初始化
 									}
@@ -522,6 +528,7 @@
 									if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}else if(res.data.success == true){
+										self.total = res.data.totalElements;
 										self.tablebody = res.data.body;
 										// 页面布局初始化
 									}
@@ -672,15 +679,14 @@
 
 
 .page_footer{
-	height: 55px;
   border-top: 1px solid #f4f4f4;
   text-align: left;
-  padding: 0 10px;
+  padding: 0 10px 10px;
 }
 .page_footer span{
 	display: inline-block;
-  height: 55px;
-  line-height: 55px;
+  height: 15px;
+  line-height: 25px;
 }
 
 

@@ -15,17 +15,17 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="file/介绍经纪人三方协议.pdf" target="_blank"><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议"><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
-			<el-row class="li">
+			<!--<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span></span>
 			  </el-col>
 			  <el-col :span="16">
 			     <a class="download" href="file/介绍经纪人三方协议.zip">下载协议</a>
 			  </el-col>  
-			</el-row>
+			</el-row>-->
 			<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>协议上传方式：</span>
@@ -149,17 +149,17 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="file/介绍经纪人三方协议.pdf" target="_blank"><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议"><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
-			<el-row class="li">
+			<!--<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span></span>
 			  </el-col>
 			  <el-col :span="16">
 			     <a class="download" href="file/介绍经纪人三方协议.zip">下载协议</a>
 			  </el-col>  
-			</el-row>
+			</el-row>-->
 			<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>协议上传方式：</span>
@@ -291,17 +291,17 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="file/介绍经纪人三方协议.pdf" target="_blank"><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议" ><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
-			<el-row class="li">
+			<!--<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span></span>
 			  </el-col>
 			  <el-col :span="16">
 			     <a class="download" href="file/介绍经纪人三方协议.zip">下载协议</a>
 			  </el-col>  
-			</el-row>
+			</el-row>-->
 			<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>合作协议：</span>
@@ -656,10 +656,11 @@
 		// 提交合作协议
 		submitAgreement(){
 				 var self = this;
+				 var mt4Reg = /^\d+$/;
              if(self.value1 === ''){
 							  self.$message.error('请选择使用的平台');
-						 }else if(self.input2 === ''){
-							  self.$message.error('MT4账号不能为空');
+						 }else if(self.input2 === ''||!mt4Reg.test(self.input2)){
+							  self.$message.error('请填写规范的MT4账号');
 						 }else if(self.password === ''){
 							  self.$message.error('MT4密码不能为空');
 						 }else if(self.repassword != self.password){
@@ -710,10 +711,11 @@
 		// 修改三方合作协议
     editAgreement(){
 				 var self = this;
+				 var mt4Reg = /^\d+$/;
              if(self.databody.platform === ''){
 							  self.$message.error('请选择使用的平台');
-						 }else if(self.databody.mt4Account === ''){
-							  self.$message.error('MT4账号不能为空');
+						 }else if(self.databody.mt4Account === ''||!mt4Reg.test(self.input2)){
+							  self.$message.error('请填写规范的MT4账号');
 						 }else if(self.databody.mt4Password === ''){
 							  self.$message.error('MT4密码不能为空');
 						 }else if(self.databodyrepassword != self.databody.mt4Password){

@@ -81,16 +81,19 @@
           close-transition>是</el-tag>
 </template>  
     </el-table-column>
-    <el-table-column
+		<el-table-column
+      prop="handleResultDescription"
+      label="反馈信息">
+<template slot-scope="scope">
+			<p class="red_text">{{scope.row.handleResultDescription}}</p>
+</template>  
+    </el-table-column>
+		<el-table-column
       label="操作"
       width="100">
       <template slot-scope="scope">
        <el-button type="text" size="small"  @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
       </template>
-    </el-table-column>
-		<el-table-column
-      prop="handleResultDescription"
-      label="反馈信息">
     </el-table-column>
   </el-table>
 </template>  
@@ -110,17 +113,17 @@
 			     <span>扣款协议：</span>
 			  </el-col>
 			 <el-col  :span="16" class="li_right">
-		      <a class="preview" href="http://turing-cloud.cn/file/委托扣款三方协议.pdf" target="_blank"><i class="el-icon-document"></i>委托扣款协议</a>
+		      <a class="preview" href="http://turing-cloud.cn/file/委托扣款三方协议.pdf" download="委托扣款三方协议" ><i class="el-icon-document"></i>委托扣款协议</a>
 			 </el-col>
 			</el-row>
-			<el-row class="li">
+			<!--<el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span></span>
 			  </el-col>
 			  <el-col  :span="16" class="li_right">
 			   <a class="download" href="http://turing-cloud.cn/file/委托扣款三方协议.zip">下载协议</a>
 			  </el-col>
-			</el-row>
+			</el-row>-->
       <el-row class="li">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>协议上传方式：</span>
@@ -1201,5 +1204,9 @@
 /*图片模态框*/
 .modal_img{
 	max-width:100%;
+}
+/*反馈信息文本颜色*/
+.red_text{
+	color:red;
 }
 </style>

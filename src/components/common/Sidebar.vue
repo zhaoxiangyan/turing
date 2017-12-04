@@ -42,18 +42,18 @@
                         iconclassname:"el-icon-date",
                         url:"home"
                     },
-                    {
-                        menu:"账户交易配置",
-                        iconclassname:"el-icon-setting",
-                        url:"transaction"
-                    },
+                    // {
+                    //     menu:"账户交易配置",
+                    //     iconclassname:"el-icon-setting",
+                    //     url:"transaction"
+                    // },
                     {
                         menu:"个人信息",
                         iconclassname:"el-icon-document",
                         url:"information"
                     },
                     {
-                        menu:"合作协议",
+                        menu:"三方合作协议（经纪人）",
                         iconclassname:"el-icon-edit",
                         url:"cooperation"
                     }]
