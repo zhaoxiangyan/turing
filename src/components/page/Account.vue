@@ -90,7 +90,7 @@
     </el-table-column>
 		<el-table-column
       prop="handleResultDescription"
-      label="备注">
+      label="反馈信息">
     </el-table-column>
   </el-table>
 </template>  
@@ -935,30 +935,12 @@
                     });
 						 }
 				},
-				// 删除交易配置
-				// delete_setting() {
-				// 		this.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
-				// 			confirmButtonText: '确定',
-				// 			cancelButtonText: '取消',
-				// 			type: 'warning'
-				// 		}).then(() => {
-				// 			this.$message({
-				// 				type: 'success',
-				// 				message: '等待后台删除!'
-				// 			});
-				// 		}).catch(() => {
-				// 			this.$message({
-				// 				type: 'info',
-				// 				message: '已取消删除'
-				// 			});          
-				// 		});
-        // },
 				// 提交停止挂机
 				stop(){
 					var self = this;
 					// self.$message.error('停止挂机');
 						self.$confirm('此操作将停止该MT4账号的挂机, 是否继续?', '提示', {
-							confirmButtonText: '确定',
+							confirmButtonText: '确定',							
 							cancelButtonText: '取消',
 							type: 'warning'
 						}).then(() => {

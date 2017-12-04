@@ -11,7 +11,7 @@
                             <!--手机用户注册-->
                             <p><span class="country">中国(+0086)</span> <input type="text" id="phone" placeholder="请输入手机号码" v-model="phone"></p>
                             <div class="error_div"><span class="error" v-show="error.phone1">*请输入正确的手机号码</span></div>
-                            <p><input type="text" id="imgCode" placeholder="请输入图形验证码" v-model="img_code"> <img src="http://turing-cloud.cn/turingcloud/captcha/gen" id="veriImg" class="areaNum graph" onclick="this.src='http://turing-cloud.cn/turingcloud/captcha/gen?random='+Math.random()"></p>
+                            <p><input type="text" id="imgCode" placeholder="请输入图形验证码" v-model="img_code"> <img src="/turingcloud/captcha/gen" id="veriImg" class="areaNum graph" onclick="this.src='/turingcloud/captcha/gen?random='+Math.random()"></p>
                             <div class="error_div"><span class="error" v-show="error.img_code1">*图形验证码错误</span></div>
                             <p><input type="text" id="messageCode" placeholder="请输入短信验证码" v-model="code"> <input type="submit" v-model="sendMessage" :disabled='disabled' id="send" @click="sendCaptcha"></p>
                             <div class="error_div"><span class="error" v-show="error.code1">*短信验证码错误</span></div>

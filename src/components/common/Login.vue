@@ -155,11 +155,7 @@
               data:formdata1
          }).then(function(res){
             var storage = window.localStorage; 
-            if(storage["userid"]){
-              storage.setItem("userid",res.data.principal.id);
-            }else{
-              storage.setItem("userid",res.data.principal.id);
-            }
+            storage.setItem("userid",res.data.principal.id);
             self.$message({
               message: '登录成功',
               type: 'success',

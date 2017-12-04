@@ -394,14 +394,15 @@
 				// 提交交易配置			
 				submitSetting(){
 					 var self = this;
+					 var mt4Reg = /^\d+$/;
            if(self.switch0 == true){
             // 上传pdf文件方式
 						 if(self.debit_file == false){
                  self.$message.error('上传PDF文件出错');
 						 }else if(self.value1 === ''){
 							  self.$message.error('请选择使用的平台');
-						 }else if(self.input2 === ''){
-							  self.$message.error('MT4账号不能为空');
+						 }else if(self.input2 === ''||!mt4Reg.test(self.input2)){
+							  self.$message.error('请填写规范的MT4账号');
 						 }else if(self.password === ''){
 							  self.$message.error('MT4密码不能为空');
 						 }else if(self.repassword != self.password){
@@ -451,8 +452,8 @@
                  self.$message.error('上传图片文件出错');
 						 }else if(self.value1 === ''){
 							  self.$message.error('请选择使用的平台');
-						 }else if(self.input2 === ''){
-							  self.$message.error('MT4账号不能为空');
+						 }else if(self.input2 === ''||!mt4Reg.test(self.input2)){
+							  self.$message.error('请填写规范的MT4账号');
 						 }else if(self.password === ''){
 							  self.$message.error('MT4密码不能为空');
 						 }else if(self.repassword != self.password){

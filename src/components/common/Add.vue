@@ -9,8 +9,6 @@
                     <div>
                         <div class="add_personal">
                             <!--用户个人信息填写--> 
-                            <!--<form action="http://192.168.0.133/turingcloud/fillInfor" method="post" enctype="multipart/form-data" accept-charset="utf-8" onsubmit="document.charset='utf-8';">-->
-                           <!--<form @submit.prevent="confirm" enctype="multipart/form-data">-->
                            <form  @submit.prevent="confirm">
                             <p><span class="input_title">姓名：</span> <input class="input_content" type="text" id="name" placeholder="请输入真实姓名" v-model="name" name="username"></p>
                             <div><span class="error" v-show="error.name1">*请输入正确的姓名</span></div>
@@ -111,9 +109,9 @@
                     }).then(function(res){
                         // console.log(res);
                         var storage = window.sessionStorage; 
-                        storage["userid"] = res.data.body.id;
+                        storage.setItem("userid",res.data.body.id);
                         if(res.data.body.detailInformation != null){
-                                   storage["detailInforId"] = res.data.body.detailInformation.id;
+                                   storage.setItem("detailInforId",res.data.body.detailInformation.id);
                         }
                         self.updatesession();
                     }).catch(function(err){
@@ -128,9 +126,9 @@
                     }).then(function(res){
                         // console.log(res);
                         var storage = window.sessionStorage; 
-                        storage["userid"] = res.data.body.id;
+                        storage.setItem("userid",res.data.body.id);
                         if(res.data.body.detailInformation != null){
-                                   storage["detailInforId"] = res.data.body.detailInformation.id;
+                                   storage.setItem("detailInforId",res.data.body.detailInformation.id);
                         }
                         self.updatesession();
                     }).catch(function(err){
@@ -188,7 +186,7 @@
         methods: {
             updatesession(){ 
             var self = this;
-            if(!sessionStorage.getItem("userid")){
+            if(!sessionStorage["userid"]){
                 self.$router.push('/system/register');
             }else{
                 self.all = true;
@@ -285,7 +283,8 @@
                 var self = this;
                 // var nameReg = /^([\u4E00-\u9FA5]{2,}+|[a-zA-Z]+)$/;
                 var nameReg = /^[\u4e00-\u9fa5]{2,4}$/;
-                var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                // var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                var emailReg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                 var cardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
                 if(self.name === '' || !nameReg.test(self.name)){
                      self.error.name1 = true;
