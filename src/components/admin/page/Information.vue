@@ -67,7 +67,7 @@
 </template>
 <!--个人信息状态指示色-->
 <p class="state_tips">
-<el-button type="primary" size="small" @click="csv_download()">导出CSV</el-button>
+<el-button type="primary" size="small" @click="csv_download()">导出Excel</el-button>
 <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"

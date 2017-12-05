@@ -698,7 +698,7 @@
                         }else{
                             self.$message({
                                     showClose: true,
-                                    message: "提交成功",
+                                    message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
                                     type: 'success'
                             });
                         }
@@ -746,7 +746,7 @@
 															}else{
 																	self.$message({
 																					showClose: true,
-																					message: "提交修改成功",
+																					message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
 																					type: 'success'
 																	});
 															}
