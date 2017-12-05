@@ -19,45 +19,41 @@
 </el-input>
 <!--个人信息表格table-->
 <template>
-  <el-table
-    :data="tablebody"
+  <el-table ref="table"
+    :data="tablebody0"
     style="width: 100%">
     <el-table-column
-      prop="lastLoginTime"
-			:formatter="dateFormat"
+      prop="date"
       label="最后登录时间">
     </el-table-column>
 		<el-table-column
-		  prop="user.detailInformation.username"
+		  prop="username"
 			label="真实姓名">
 		</el-table-column>
 		<el-table-column
-		  prop="user.phone"
+		  prop="phone"
 			label="手机号码">
 		</el-table-column>
     <el-table-column
-      prop="user.email"
+      prop="email"
       label="邮箱">
     </el-table-column>
     <el-table-column
-      prop="user.detailInformation.idcard"
+      prop="idcard"
       label="身份证号码">
     </el-table-column>		
 		<el-table-column
-      prop="user.detailInformation.addr"
+      prop="address"
       label="居住地址">
     </el-table-column>
 		<el-table-column
-      prop="user.detailInformation.handleStatus"
+      prop="handle"
       label="是否处理"
 			width="95">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.user.detailInformation.handleStatus === '0'"
-          type="primary"
-          close-transition>未处理</el-tag>
-      <el-tag v-else-if="scope.row.user.detailInformation.handleStatus === '1'"
-          type="success"
-          close-transition>已处理</el-tag>
+      <el-tag
+          :type="scope.row.handle === '未处理' ? 'primary' : 'success'"
+          close-transition>{{scope.row.handle}}</el-tag>
 </template>
     </el-table-column>
     <el-table-column
@@ -71,6 +67,7 @@
 </template>
 <!--个人信息状态指示色-->
 <p class="state_tips">
+<el-button type="primary" size="small" @click="csv_download()">导出CSV</el-button>
 <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -209,6 +206,7 @@
 </template>
 <script>
  import moment from 'moment'
+ import CsvExport from '../../../../src/utils/CsvExport.js'
  export default {
     name: 'Information',
     data() {
@@ -259,6 +257,8 @@
 		// 后台获取数据
 		total:2,
 		tablebody:[],
+		// 过滤之后的json数据
+		tablebody0:[],
 		// 查询需要提交的数据
 		search:{
 			page:1,
@@ -297,20 +297,6 @@
 		mounted:function(){
 			document.title = "管理用户个人信息";
 			var self = this;
-			// 用户个人信息的总数
-			// self.$http({
-			// 					method: 'get',
-			// 					url: '/turingcloud/admin/user/count'
-			// 			}).then(function(res){
-			// 				if(res.data.success == false){
-			// 					self.$message.error(res.data.message);
-			// 				}else if(res.data.success == true){
-      //           self.total = res.data.body;
-			// 				}
-			// 			}).catch(function(err){
-			// 					console.log("AJAX失败");
-			// 					self.$router.push('/system/admin/login');
-			// 			});
 			// 管理用户个人信息的表格初始化
 			self.$http({
 								method: 'get',
@@ -328,15 +314,43 @@
 								console.log("AJAX失败");
 								self.$router.push('/system/admin/login');
 						});
+		},
+		watch:{
+			tablebody:function(){
+				 var self = this;
+				 self.tablebody0.splice(0,self.tablebody0.length);
+				 for(var i = 0;i<self.tablebody.length;i++){
+					 var date_value = moment(self.tablebody[i].lastLoginTime).format("YYYY-MM-DD");  
+					 var handle_value = (function(){
+                   if(self.tablebody[i].user.detailInformation.handleStatus == "1"){
+											return "已处理";
+										}else if(self.tablebody[i].user.detailInformation.handleStatus == "0"){
+											return "未处理";
+										}else{
+											return " ";
+										}
+					 })(handle_value);
+					 self.tablebody0.push({
+						 "userid":self.tablebody[i].user.id,
+						 "date":date_value,
+						 "username":self.tablebody[i].user.detailInformation.username,
+						 "phone":self.tablebody[i].user.phone,
+					   "email":self.tablebody[i].user.email,
+						 "idcard":self.tablebody[i].user.detailInformation.idcard,
+						 "address":self.tablebody[i].user.detailInformation.addr,
+						 "handle":handle_value
+					 });
+				 }
+			 }
 		},		
     methods: {
         // 表格编辑按钮
         handleEdit(index, row) {
 						var self = this;
-						self.rowid = row.user.id;
+						self.rowid = row.userid;
 						self.$http({
 									method: 'get',
-									url: '/turingcloud/admin/user/detail/'+row.user.id
+									url: '/turingcloud/admin/user/detail/'+row.userid
 							}).then(function(res){
 									if(res.data.success == true){
 										// console.log(res.data.body);
@@ -538,6 +552,13 @@
 										self.$router.push('/system/admin/login');
 								});
 				}  
+      },
+			// 导出CSV
+			csv_download() {
+            let columns = this.$refs.table.$children.filter(t => t.prop != null)
+            const fields = columns.map(t => t.prop)
+            const fieldNames =  columns.map(t => t.label)
+            CsvExport(this.tablebody0, fields, fieldNames, '用户个人信息')
       }
     }
 }

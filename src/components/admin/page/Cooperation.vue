@@ -20,20 +20,19 @@
 </el-input>
 <!--交易信息表格table-->
 <template>
-  <el-table
-    :data="tablebody"
+  <el-table ref="table"
+    :data="tablebody0" 
     style="width: 100%">
     <el-table-column
-      prop="lastModifiedTime"
-			:formatter="dateFormat"
+      prop="date"
       label="日期">
     </el-table-column>
 	<el-table-column
-		prop="user.detailInformation.username"
+		prop="username"
 		label="用户姓名">
 	</el-table-column>
 	<el-table-column
-		prop="user.phone"
+		prop="phone"
 		label="手机号码">
 	</el-table-column>
 	<el-table-column
@@ -41,32 +40,26 @@
 		label="使用的平台">
 	</el-table-column>
     <el-table-column
-      prop="mt4Account"
+      prop="mt4account"
       label="MT4账号">
     </el-table-column>	
 		<el-table-column
-      prop="isPass"
+      prop="pass"
       label="三方合作协议"
 			width="190">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.isPass === '0'"
-          type="danger"
-          close-transition>未通过</el-tag>
-      <el-tag v-else-if="scope.row.isPass === '1'"
-          type="success"
-          close-transition>已通过</el-tag>
+      <el-tag
+          :type="scope.row.pass === '未通过' ? 'danger' : 'success'"
+          close-transition>{{scope.row.pass}}</el-tag>
 </template>		
     </el-table-column>
 		<el-table-column
-      prop="handleStatus"
+      prop="handle"
       label="是否处理">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.handleStatus === '0'"
-          type="primary"
-          close-transition>未处理</el-tag>
-      <el-tag v-else-if="scope.row.handleStatus === '1'"
-          type="success"
-          close-transition>已处理</el-tag>
+      <el-tag
+          :type="scope.row.handle === '未处理' ? 'primary' : 'success'"
+          close-transition>{{scope.row.handle}}</el-tag>
 </template>
     </el-table-column>
     <el-table-column
@@ -80,6 +73,7 @@
 </template>
 <!--交易信息状态指示色-->
 <p class="state_tips">
+<el-button type="primary" size="small" @click="csv_download()">导出CSV</el-button>
 <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -221,6 +215,7 @@
 </template>
 <script>
  import moment from 'moment'
+ import CsvExport from '../../../../src/utils/CsvExport.js'
  export default {
     name: 'Cooperation',
     data() {
@@ -296,6 +291,8 @@
 		// 后台获取数据
 		total:2,
 		tablebody:[],
+		// 过滤后的json数据
+		tablebody0:[],
 		// 查询需要提交的数据
 		search:{
 			page:1,
@@ -339,20 +336,6 @@
 		mounted:function(){
 			document.title = "管理用户签约协议";
 			var self = this;
-			// 用户合作协议的总数
-			// self.$http({
-			// 					method: 'get',
-			// 					url: '/turingcloud/admin/coopContraction/count'
-			// 			}).then(function(res){
-			// 				if(res.data.success == false){
-			// 					self.$message.error(res.data.message);
-			// 				}else if(res.data.success == true){
-      //           self.total = res.data.body;
-			// 				}
-			// 			}).catch(function(err){
-			// 					console.log("AJAX失败");
-			// 					self.$router.push('/system/admin/login');
-			// 			});
 			// 管理用户合作协议的表格初始化
 			self.$http({
 								method: 'get',
@@ -370,21 +353,57 @@
 								console.log("AJAX失败");
 								self.$router.push('/system/admin/login');
 						});
+		},	
+		watch:{
+			tablebody:function(){
+				 var self = this;
+				 self.tablebody0.splice(0,self.tablebody0.length);
+				 for(var i = 0;i<self.tablebody.length;i++){
+					 var date_value = moment(self.tablebody[i].lastModifiedTime).format("YYYY-MM-DD");  
+					 var pass_value = (function(){
+                   if(self.tablebody[i].isPass == "1"){
+											return "已通过";
+										}else if(self.tablebody[i].isPass == "0"){
+											return "未通过";
+										}else{
+											return " ";
+										}
+					 })(pass_value);
+					 var handle_value = (function(){
+                   if(self.tablebody[i].handleStatus == "1"){
+											return "已处理";
+										}else if(self.tablebody[i].handleStatus == "0"){
+											return "未处理";
+										}else{
+											return " ";
+										}
+					 })(handle_value);
+					 self.tablebody0.push({
+						 "userid":self.tablebody[i].user.id,
+						 "date":date_value,
+						 "username":self.tablebody[i].user.detailInformation.username,
+						 "phone":self.tablebody[i].user.phone,
+             "platform":self.tablebody[i].platform,
+						 "mt4account":self.tablebody[i].mt4Account,
+						 "pass":pass_value,
+						 "handle":handle_value
+					 });
+				 }
+			 }
 		},		
     methods: {
 				// 表格编辑按钮
 				handleEdit(index, row) {
 						var self = this;
-						self.rowid = row.user.id;
+						self.rowid = row.userid;
 						self.$http({
 									method: 'get',
-									url: '/turingcloud/admin/coopContraction/detail/'+row.user.id
+									url: '/turingcloud/admin/coopContraction/detail/'+row.userid
 							}).then(function(res){
 									if(res.data.success == true){
 										// console.log(res.data.body);
 										self.modalbody = res.data.body;
 										// 返回数据放进交易配置编辑模态框
-
 									}else if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}
@@ -581,7 +600,14 @@
 										self.$router.push('/system/admin/login');
 								});
 				}  
-			}
+			},
+			// 导出CSV
+			csv_download() {
+            let columns = this.$refs.table.$children.filter(t => t.prop != null)
+            const fields = columns.map(t => t.prop)
+            const fieldNames =  columns.map(t => t.label)
+            CsvExport(this.tablebody0, fields, fieldNames, '用户合作协议')
+      }
     }
 }
 </script>

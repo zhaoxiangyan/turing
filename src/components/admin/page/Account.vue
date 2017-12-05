@@ -21,23 +21,22 @@
 <!--交易信息表格table-->
 <template>
   <el-table ref="table"
-    :data="tablebody"
+    :data="tablebody0"
     style="width: 100%">
     <el-table-column
-      prop="lastModifiedTime"
-			:formatter="dateFormat"
+      prop="date"
       label="日期">
     </el-table-column>
 		<el-table-column
-		  prop="user.detailInformation.username"
+		  prop="username"
 			label="用户姓名">
 		</el-table-column>
 		<el-table-column
-		  prop="user.phone"
+		  prop="phone"
 			label="手机号码">
 		</el-table-column>
     <el-table-column
-      prop="mt4Account"
+      prop="mt4account"
       label="MT4账号">
     </el-table-column>
     <el-table-column
@@ -51,57 +50,43 @@
     </el-table-column>
 		<el-table-column
       prop="mode"
-			:formatter="modeFormat" 
       label="挂机模式">
     </el-table-column>
 		<el-table-column
-      prop="retreatRate"
-			:formatter="retreatRateFormat"
+      prop="retreate"
       label="最大回撤">
     </el-table-column>
     <el-table-column
-      prop="isHangUp"
+      prop="hangup"
       label="是否挂机"
 			width="95">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.isHangUp === '0'"
-          type="success"
-          close-transition>是</el-tag>
-      <el-tag v-else-if="scope.row.isHangUp === '1'"
-          type="danger"
-          close-transition>否</el-tag>
-</template>  
+			<el-tag
+          :type="scope.row.hangup === '否' ? 'danger' : 'success'"
+          close-transition>{{scope.row.hangup}}</el-tag>
+</template>
     </el-table-column>
 		<el-table-column
-      prop="isPass"
+      prop="pass"
       label="是否通过"
 			width="95">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.isPass === '0'"
-          type="danger"
-          close-transition>否</el-tag>
-      <el-tag v-else-if="scope.row.isPass === '1'"
-          type="success"
-          close-transition>是</el-tag>
-</template>  
+			<el-tag
+          :type="scope.row.pass === '否' ? 'danger' : 'success'"
+          close-transition>{{scope.row.pass}}</el-tag>
+</template>
     </el-table-column>
 		<el-table-column
-      prop="handleStatus"
+      prop="handle"
       label="是否处理"
 			width="120"
-			:filters="[{ text: '未处理', value: '0' }, { text: '已处理', value: '1' }]"
+			:filters="[{ text: '未处理', value: '未处理' }, { text: '已处理', value: '已处理' }]"
       :filter-method="filterTag"
       filter-placement="bottom-end">
 <template slot-scope="scope">
-      <!--<el-tag v-if="scope.row.handleStatus === '0'"
-          type="primary"
-          close-transition>未处理</el-tag>
-      <el-tag v-else-if="scope.row.handleStatus === '1'"
-          type="success"
-          close-transition>已处理</el-tag>-->
 					<el-tag
-          :type="scope.row.handleStatus === '0' ? 'primary' : 'success'"
-          close-transition>{{scope.row.handleStatus == '0'?'未处理':'已处理'}}</el-tag>
+          :type="scope.row.handle === '未处理' ? 'primary' : 'success'"
+          close-transition>{{scope.row.handle}}</el-tag>
 </template>  
     </el-table-column>
     <el-table-column
@@ -115,7 +100,7 @@
 </template>
 <!--交易信息状态指示色-->
 <p class="state_tips">
-<el-button @click="csv_download()">CSV</el-button>
+<el-button type="primary" size="small" @click="csv_download()">导出CSV</el-button>
 <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -418,6 +403,8 @@
 		// 后台获取数据
 		total:2,
 		tablebody:[],
+		// 过滤之后的json数据
+		tablebody0:[],
 		// 查询需要提交的数据
 		search:{
 			page:1,
@@ -487,20 +474,6 @@
 		mounted:function(){
 			document.title = "管理用户交易信息";
 			var self = this;
-			// 用户交易信息的总数
-			// self.$http({
-			// 					method: 'get',
-			// 					url: '/turingcloud/admin/transaction/count'
-			// 			}).then(function(res){
-			// 				if(res.data.success == false){
-			// 					self.$message.error(res.data.message);
-			// 				}else if(res.data.success == true){
-      //           self.total = res.data.body;
-			// 				}
-			// 			}).catch(function(err){
-			// 					console.log("AJAX失败");
-			// 					self.$router.push('/system/admin/login');
-			// 			});
 			// 管理用户交易信息的表格初始化
 			self.$http({
 								method: 'get',
@@ -528,6 +501,68 @@
 						self.switch3 = "1";
 						self.input5 = self.retreatRate;
 					}
+			 },
+			 tablebody:function(){
+				 var self = this;
+				 self.tablebody0.splice(0,self.tablebody0.length);
+				 for(var i = 0;i<self.tablebody.length;i++){
+					 var date_value = moment(self.tablebody[i].lastModifiedTime).format("YYYY-MM-DD");  
+					 var mode_value = (function(){
+                   if(self.tablebody[i].mode == "1"){
+											return "成长型";
+										}else if(self.tablebody[i].mode == "2"){
+											return "宏利先锋型";
+										}else if(self.tablebody[i].mode == "3"){
+											return "趋势策略型";
+										}else if(self.tablebody[i].mode == "4"){
+											return "综合尊享型";
+										}else{
+											return " ";
+										}
+					 })(mode_value);
+					 var hangup_value = (function(){
+                   if(self.tablebody[i].isHangUp == "1"){
+											return "否";
+										}else if(self.tablebody[i].isHangUp == "0"){
+											return "是";
+										}else{
+											return " ";
+										}
+					 })(hangup_value);
+					 var pass_value = (function(){
+                   if(self.tablebody[i].isPass == "1"){
+											return "是";
+										}else if(self.tablebody[i].isPass == "0"){
+											return "否";
+										}else{
+											return " ";
+										}
+					 })(pass_value);
+					 var handle_value = (function(){
+                   if(self.tablebody[i].handleStatus == "1"){
+											return "已处理";
+										}else if(self.tablebody[i].handleStatus == "0"){
+											return "未处理";
+										}else{
+											return " ";
+										}
+					 })(handle_value);
+					 self.tablebody0.push({
+						 "id":self.tablebody[i].id,
+						 "userid":self.tablebody[i].user.id,
+						 "date":date_value,
+						 "username":self.tablebody[i].user.detailInformation.username,
+						 "phone":self.tablebody[i].user.phone,
+						 "mt4account":self.tablebody[i].mt4Account,
+						 "platform":self.tablebody[i].platform,
+						 "capital":self.tablebody[i].capital,
+						 "mode":mode_value,
+						 "retreate":self.tablebody[i].retreatRate+'%',
+						 "hangup":hangup_value,
+						 "pass":pass_value,
+						 "handle":handle_value
+					 });
+				 }
 			 }
 		},
     methods: {
@@ -535,7 +570,7 @@
         handleEdit(index, row) {
 						var self = this;
 						self.rowid = row.id;
-						self.userid = row.user.id;
+						self.userid = row.userid;
 						self.$http({
 									method: 'get',
 									url: '/turingcloud/admin/transaction/detail/'+row.id
@@ -631,7 +666,7 @@
       },
 			// 是否处理筛选
 			filterTag(value, row) {
-        return row.handleStatus === value;
+        return row.handle === value;
       },
 			// 日期格式化
 			dateFormat:function(row, column) {  
@@ -787,7 +822,7 @@
             let columns = this.$refs.table.$children.filter(t => t.prop != null)
             const fields = columns.map(t => t.prop)
             const fieldNames =  columns.map(t => t.label)
-            CsvExport(this.tablebody, fields, fieldNames, '列表')
+            CsvExport(this.tablebody0, fields, fieldNames, '用户交易信息')
       }
     }
 }
