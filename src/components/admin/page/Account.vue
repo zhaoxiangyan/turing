@@ -9,6 +9,42 @@
 		</div>	
         <div class="page_content">
 <!--用户查询-->
+<!--新的筛选查询-->
+<!--<el-row class="screen_div">
+
+<el-select v-model="value40"  clearable placeholder="挂机模式" size="120">
+      <el-option label="成长型"   value="1"></el-option>
+      <el-option label="宏利先锋型" value="2"></el-option>
+      <el-option label="趋势策略型" value="3"></el-option>
+      <el-option label="综合尊享型" value="4"></el-option>
+</el-select>
+<el-select v-model="value41"  clearable placeholder="是否挂机" size="120">
+      <el-option label="否"   value="1"></el-option>
+      <el-option label="是" value="0"></el-option>
+</el-select>
+<el-select v-model="value42"  clearable placeholder="是否通过" size="120">
+      <el-option label="是"   value="1"></el-option>
+      <el-option label="否" value="0"></el-option>
+</el-select>
+<el-select v-model="value43"  clearable placeholder="是否处理" size="120">
+      <el-option label="已处理"   value="1"></el-option>
+      <el-option label="未处理" value="0"></el-option>
+</el-select>
+<el-select v-model="value44"  clearable placeholder="使用的平台" size="120">
+      <el-option label="GQCapital-Live"   value="GQCapital-Live"></el-option>
+</el-select>
+<el-select v-model="value45"  placeholder="请选择" size="120">
+	<el-option label="按时间升序"   value="DESC"></el-option>
+	<el-option label="按时间降序" value="ASC"></el-option>
+</el-select>
+<el-select v-model="select"  placeholder="请选择" size="120">
+	<el-option label="所有"   value="all"></el-option>
+	<el-option label="MT4账号" value="mt4Account"></el-option>
+	<el-option label="用户姓名" value="username"></el-option>
+	<el-option label="手机号码" value="phone"></el-option>
+</el-select>
+</el-row>-->
+<!--旧的搜索查询-->
 <el-input placeholder="请输入内容" v-model="input6">
     <el-select v-model="select" slot="prepend" placeholder="请选择" class="search">
 		  <el-option label="所有"   value="all"></el-option>
@@ -18,14 +54,40 @@
     </el-select>
     <el-button slot="append" icon="search" @click="searchButton()"></el-button>
 </el-input>
+<el-row class="screen_div">
+
+<el-select v-model="value40"  clearable placeholder="挂机模式" size="120">
+      <el-option label="成长型"   value="1"></el-option>
+      <el-option label="宏利先锋型" value="2"></el-option>
+      <el-option label="趋势策略型" value="3"></el-option>
+      <el-option label="综合尊享型" value="4"></el-option>
+</el-select>
+<el-select v-model="value41"  clearable placeholder="是否挂机" size="120">
+      <el-option label="否"   value="1"></el-option>
+      <el-option label="是" value="0"></el-option>
+</el-select>
+<el-select v-model="value42"  clearable placeholder="是否通过" size="120">
+      <el-option label="是"   value="1"></el-option>
+      <el-option label="否" value="0"></el-option>
+</el-select>
+<el-select v-model="value43"  clearable placeholder="是否处理" size="120">
+      <el-option label="已处理"   value="1"></el-option>
+      <el-option label="未处理" value="0"></el-option>
+</el-select>
+<el-select v-model="value44"  clearable placeholder="使用的平台" size="120">
+      <el-option label="GQCapital-Live"   value="GQCapital-Live"></el-option>
+</el-select>
+</el-row>
 <!--交易信息表格table-->
 <template>
   <el-table ref="table"
     :data="tablebody0"
-    style="width: 100%">
+    style="width: 100%"
+		@sort-change="timesort">
     <el-table-column
       prop="date"
-      label="日期">
+      label="日期"
+			sortable="custom">
     </el-table-column>
 		<el-table-column
 		  prop="username"
@@ -122,7 +184,7 @@
 			    <!--<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5"  class="li_left">
 				    <span>三方合作协议：</span>
-				  </el-col>
+				  </el-row>
 				  <el-col :span="16"  class="li_right">
 				    	<a class="preview" href="javascript:void(0)"><i class="el-icon-document"></i>您已签约三方合作协议</a>
                   </el-col>
@@ -381,6 +443,12 @@
 		// 账户状态
 		switch7:false,
 		// 搜索框
+		value40:'',
+		value41:'',
+		value42:'',
+		value43:'',
+		value44:'',
+		value45:'ASC',
 		input6: '',
     select: 'all',
 		// 表格数据
@@ -825,7 +893,18 @@
             const fields = columns.map(t => t.prop)
             const fieldNames =  columns.map(t => t.label)
             CsvExport(this.tablebody0, fields, fieldNames, '用户交易信息')
-      }
+      },
+			// 表格按时间排序
+			timesort(column,prop,order){
+				if(column.order == "descending"){
+					alert("descending");
+				}else if(column.order == "ascending"){
+					alert("ascending");
+				}else{
+					alert("null");
+				}
+				// console.log(column.order);
+			}
     }
 }
 </script>
@@ -1016,5 +1095,14 @@
 /*图片模态框*/
 .modal_img{
 	max-width:100%;
+}
+/*筛选选择器样式重置*/
+.el-input--100{
+	width:100px;
+}
+.screen_div{
+	margin:10px 0;
+	padding:0 20px;
+	text-align:left;
 }
 </style>

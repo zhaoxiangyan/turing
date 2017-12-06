@@ -130,8 +130,8 @@
 			  </el-col>
 			  <el-col    :span="16" class="li_right radio35">
                   <el-switch  v-model="modalbody.contract.filetype"  off-value="img" on-value="pdf" off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90' :disabled="modalbody.contract.isPass == '0'?false:true"></el-switch>
-									<i v-if="modalbody.contract.filetype == 'img'?false:true">*请上传pdf格式的文件，大小不要超过2M</i>
-									<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
+									<i v-if="modalbody.contract.filetype == 'img'?false:true">*请点击一下按钮，切换成图片格式上传。*请上传pdf格式的文件，大小不要超过2M</i>
+									<i v-else>*请点击一下按钮，切换成PDF格式上传。*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
 			  </el-col>			 
 			</el-row>
   		<!--上传pdf文件已通过-->

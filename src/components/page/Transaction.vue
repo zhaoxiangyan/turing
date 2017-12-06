@@ -47,8 +47,8 @@
 			  </el-col>
 			  <el-col    :span="16" class="li_right radio35">
                   <el-switch  v-model="switch0"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
-									<i v-if="switch0">*请上传pdf格式的文件，大小不要超过2M</i>
-									<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
+									<i v-if="switch0">*请点击一下按钮，切换成图片格式上传。*请上传pdf格式的文件，大小不要超过2M</i>
+									<i v-else>*请点击一下按钮，切换成PDF格式上传。*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
 			  </el-col>			 
 			</el-row>
 			<div v-if="switch0">
@@ -122,7 +122,7 @@
 				    <span>MT4账号：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
+					   <el-input v-model="input2" placeholder="请输入7位数字的MT4账号" ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -394,7 +394,8 @@
 				// 提交交易配置			
 				submitSetting(){
 					 var self = this;
-					 var mt4Reg = /^\d+$/;
+					//  var mt4Reg = /^\d+$/;
+					 var mt4Reg = /^\d{7}$/;
            if(self.switch0 == true){
             // 上传pdf文件方式
 						 if(self.debit_file == false){
@@ -402,7 +403,7 @@
 						 }else if(self.value1 === ''){
 							  self.$message.error('请选择使用的平台');
 						 }else if(self.input2 === ''||!mt4Reg.test(self.input2)){
-							  self.$message.error('请填写规范的MT4账号');
+							  self.$message.error('请填写7位数字的MT4账号');
 						 }else if(self.password === ''){
 							  self.$message.error('MT4密码不能为空');
 						 }else if(self.repassword != self.password){
@@ -453,7 +454,7 @@
 						 }else if(self.value1 === ''){
 							  self.$message.error('请选择使用的平台');
 						 }else if(self.input2 === ''||!mt4Reg.test(self.input2)){
-							  self.$message.error('请填写规范的MT4账号');
+							  self.$message.error('请填写7位数字的MT4账号');
 						 }else if(self.password === ''){
 							  self.$message.error('MT4密码不能为空');
 						 }else if(self.repassword != self.password){
