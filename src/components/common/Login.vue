@@ -154,6 +154,7 @@
               url: '/turingcloud/login',
               data:formdata1
          }).then(function(res){
+           if(res.data.principal.roles[0].id == 2){
             var storage = window.localStorage; 
             storage.setItem("userid",res.data.principal.id);
             self.$message({
@@ -163,6 +164,9 @@
                   self.$router.push('/system/home');
               }
             });
+           }else{
+             self.$message.error('用户登录出错');
+           }
          }).catch(function(err){
            var storage = window.sessionStorage; 
             storage.setItem("phone1",self.phone1);
@@ -243,6 +247,7 @@
               url: '/turingcloud/byMsm',
               data: formdata2
               }).then(function(res){
+                if(res.data.principal.roles[0].id == 2){
                 var storage = window.localStorage; 
                 if(storage["userid"]){
                   storage.setItem("userid",res.data.principal.id);
@@ -256,6 +261,9 @@
                       self.$router.push('/system/home');
                   }
                 });
+                }else{
+                  self.$message.error('用户登录出错');
+                }
          }).catch(function(err){
             var storage = window.sessionStorage; 
             storage.setItem("phone2",self.phone2);

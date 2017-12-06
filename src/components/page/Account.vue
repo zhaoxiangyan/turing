@@ -452,7 +452,8 @@
 		<div slot="footer" class="dialog-footer">
 		  <el-button      v-if="uploadStatus() == '1'||uploadStatus() == '2'" type="primary" @click="modify12(rowid)">提交修改</el-button>
 			<el-button v-else-if="uploadStatus() == '3'||uploadStatus() == '4'" type="primary" @click="modify34(rowid)">提交修改</el-button>
-			<el-button type="danger" @click="stop()"  :disabled="modalbody.isHangUp == '1'?true:false" >停止挂机</el-button>
+			<el-button type="danger" @click="stop()" v-if="modalbody.isHangUp =='0'"  >停止挂机</el-button>
+			<el-button type="success" @click="start()" v-else >开始挂机</el-button>
 			<!--看后期开发需求是否需要删除账户信息功能-->
 			<!--<el-button type="danger" @click="delete_setting">删除</el-button>--> 
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -941,22 +942,28 @@
 				// 提交停止挂机
 				stop(){
 					var self = this;
-					// self.$message.error('停止挂机');
 						self.$confirm('此操作将停止该MT4账号的挂机, 是否继续?', '提示', {
-							confirmButtonText: '确定',							
-							cancelButtonText: '取消',
+							confirmButtonText: '取消',							
+							cancelButtonText: '确定',
+							confirmButtonClass: 'quxiao',
+							cancelButtonClass: 'queding',
 							type: 'warning'
 						}).then(() => {
+							self.$message({
+								type: 'info',
+								message: '已取消提交'
+							});  
+						}).catch(() => {
 							self.$http({
 												method: 'put',
-												url: '/turingcloud/trnsaction/'+self.userid+'/stopHangup/'+self.rowid
+												url: '/turingcloud/trnsaction/'+self.userid+'/changeHangupStatus/'+self.rowid
 										}).then(function(res){
 												if(res.data.success == true){
 															self.$message({
 																type: 'success',
 																message: '您提交的信息客服会在24小时内进行审核，请您耐心等待！',
 																onClose:function(){
-																		// 删除成功关闭模态框
+																		// 提交成功关闭模态框
 																		self.$router.go(0);
 																}
 															});
@@ -966,14 +973,46 @@
 										}).catch(function(err){
 												console.log("AJAX失败");
 												self.$router.push('/system/admin');
-										});
-						}).catch(() => {
+										});        
+						});
+				},
+				// 提交开始挂机
+				start(){
+					var self = this;
+						self.$confirm('此操作将开始运行该MT4账号的挂机, 是否继续?', '提示', {
+							confirmButtonText: '取消',							
+							cancelButtonText: '确定',
+							confirmButtonClass: 'quxiao',
+							cancelButtonClass: 'queding',
+							type: 'warning'
+						}).then(() => {
 							self.$message({
 								type: 'info',
 								message: '已取消提交'
-							});          
+							});  
+						}).catch(() => {
+							self.$http({
+												method: 'put',
+												url: '/turingcloud/trnsaction/'+self.userid+'/changeHangupStatus/'+self.rowid
+										}).then(function(res){
+												if(res.data.success == true){
+															self.$message({
+																type: 'success',
+																message: '您提交的信息客服会在24小时内进行审核，请您耐心等待！',
+																onClose:function(){
+																		// 提交成功关闭模态框
+																		self.$router.go(0);
+																}
+															});
+												}else if(res.data.success == false){
+													self.$message.error(res.data.message);
+												}
+										}).catch(function(err){
+												console.log("AJAX失败");
+												self.$router.push('/system/admin');
+										});        
 						});
-				}
+				},
     }
 }
 </script>
@@ -1209,4 +1248,5 @@
 .red_text{
 	color:red;
 }
+
 </style>

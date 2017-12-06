@@ -64,6 +64,7 @@
                 url: '/turingcloud/login',
                 data:formdata
           }).then(function(res){
+            if(res.data.principal.roles[0].id == 3){
               var storage = window.localStorage; 
               if(storage["superadminid"]){
                 storage.setItem("superadminid",res.data.principal.id);
@@ -77,6 +78,9 @@
                     self.$router.push('/system/superadmin/home');
                 }
               });
+            }else{
+              self.$message.error('请使用超级管理员账号登录');
+            }
           }).catch(function(err){
               // 手机号密码错误统一500错误，需要改接口
               self.message = err.response.data.message;

@@ -632,11 +632,18 @@
 				delete_setting() {
             var self = this;
 						self.$confirm('此操作将永久删除该交易配置, 是否继续?', '提示', {
-							confirmButtonText: '确定',
-							cancelButtonText: '取消',
+							confirmButtonText: '取消',
+							cancelButtonText: '确定',
+							confirmButtonClass: 'quxiao',
+							cancelButtonClass: 'queding',
 							type: 'warning'
 						}).then(() => {
-								self.$http({
+								self.$message({
+									type: 'info',
+									message: '已取消删除'
+						  	});      
+						}).catch(() => {
+							self.$http({
 												method: 'delete',
 												url: '/turingcloud/admin/transaction/'+self.userid+'/'+self.rowid
 										}).then(function(res){
@@ -656,12 +663,7 @@
 										}).catch(function(err){
 												console.log("AJAX失败");
 												self.$router.push('/system/admin');
-										});
-						}).catch(() => {
-							self.$message({
-								type: 'info',
-								message: '已取消删除'
-							});          
+										});    
 						});
       },
 			// 是否处理筛选

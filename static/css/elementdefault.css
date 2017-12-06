@@ -74,3 +74,24 @@
 .el-table .four-row{
     background:#f7dada;
 }
+
+/*对话框取消确定按钮重置*/
+.el-button--primary.quxiao{
+    background: #fff;
+    border: 1px solid #bfcbd9;
+    color: #1f2d3d;
+  }
+  .el-button--primary.quxiao:focus,.el-button--primary.quxiao:hover{
+      color: #20a0ff;
+    border-color: #20a0ff;
+  }
+  .el-button.queding{
+      color: #fff;
+    background-color: #20a0ff;
+    border-color: #20a0ff;
+  }
+  .el-button.queding:hover{
+      background: #4db3ff;
+    border-color: #4db3ff;
+    color: #fff;
+  }

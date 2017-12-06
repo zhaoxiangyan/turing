@@ -125,7 +125,7 @@
 					<el-input v-model="input2" placeholder="请输入MT4账号" ></el-input>
 				</el-col>
 			</el-row>	
-			<el-row class="li">
+			<!--<el-row class="li">
 				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 					<span>MT4密码：</span>
 				</el-col>
@@ -140,7 +140,7 @@
 				<el-col :span="16" class="li_right">
 					<el-input type="password" v-model="repassword" placeholder="请再次输入MT4密码" ></el-input>
 				</el-col>
-			</el-row>	
+			</el-row>	-->
 		</div>
 		<!--已上传未通过-->	
 		<div class="uploadstatus2" v-else-if="uploadStatus() == '2'">
@@ -259,7 +259,7 @@
 					<el-input v-model="databody.mt4Account" placeholder="请输入MT4账号" ></el-input>
 				</el-col>
 			</el-row>	
-			<el-row class="li">
+			<!--<el-row class="li">
 				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 					<span>MT4密码：</span>
 				</el-col>
@@ -274,7 +274,7 @@
 				<el-col :span="16" class="li_right">
 					<el-input type="password" v-model="databodyrepassword" placeholder="请再次输入MT4密码" ></el-input>
 				</el-col>
-			</el-row>	
+			</el-row>	-->
 			<el-row class="li">
 				<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 					<span>*反馈信息：</span>
@@ -661,10 +661,10 @@
 							  self.$message.error('请选择使用的平台');
 						 }else if(self.input2 === ''||!mt4Reg.test(self.input2)){
 							  self.$message.error('请填写规范的MT4账号');
-						 }else if(self.password === ''){
-							  self.$message.error('MT4密码不能为空');
-						 }else if(self.repassword != self.password){
-							  self.$message.error('两次密码不一致');
+						//  }else if(self.password === ''){
+						// 	  self.$message.error('MT4密码不能为空');
+						//  }else if(self.repassword != self.password){
+						// 	  self.$message.error('两次密码不一致');
 						 }else{
 							      var httpform = new FormData();
 										if(self.switch1 == true){
@@ -687,7 +687,7 @@
                     httpform.append('fileType',self.switch1);
                     httpform.append('platform',self.value1);
                     httpform.append('mt4Account',self.input2);
-										httpform.append('mt4Password',self.password);
+										// httpform.append('mt4Password',self.password);
                     self.$http({
                         method: 'post',
                         url: '/turingcloud/coopContract/'+self.userid,
@@ -716,10 +716,10 @@
 							  self.$message.error('请选择使用的平台');
 						 }else if(self.databody.mt4Account === ''||!mt4Reg.test(self.input2)){
 							  self.$message.error('请填写规范的MT4账号');
-						 }else if(self.databody.mt4Password === ''){
-							  self.$message.error('MT4密码不能为空');
-						 }else if(self.databodyrepassword != self.databody.mt4Password){
-							  self.$message.error('两次密码不一致');
+						//  }else if(self.databody.mt4Password === ''){
+						// 	  self.$message.error('MT4密码不能为空');
+						//  }else if(self.databodyrepassword != self.databody.mt4Password){
+						// 	  self.$message.error('两次密码不一致');
 						 }else{
 							      var httpform = new FormData();
 										if(self.databody.filetype == "img" && self.user_file1 == true && self.user_file2 == true && self.user_file3 == true){
@@ -735,7 +735,7 @@
 										}
 													httpform.append('platform',self.databody.platform);
 													httpform.append('mt4Account',self.databody.mt4Account);
-													httpform.append('mt4Password',self.databody.mt4Password);
+													// httpform.append('mt4Password',self.databody.mt4Password);
 													self.$http({
 															method: 'post',
 															url: '/turingcloud/coopContract/'+self.userid,

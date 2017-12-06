@@ -397,14 +397,21 @@
           self.dialogImgUrl = 'http://turing-cloud.cn/file/'+name;
 					self.dialogImgVisible = true;
 				},				
-				// 删除交易配置
+				// 删除用户个人信息
 				delete_setting() {
 					var self = this;
 					self.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-						confirmButtonText: '确定',
-						cancelButtonText: '取消',
+						confirmButtonText: '取消',
+						cancelButtonText: '确定',
+						confirmButtonClass: 'quxiao',
+						cancelButtonClass: 'queding',
 						type: 'warning'
 					}).then(() => {
+							self.$message({
+								type: 'info',
+								message: '已取消删除'
+					  	});
+					}).catch(() => {
 						self.$http({
 										method: 'delete',
 										url: '/turingcloud/admin/user/'+self.rowid
@@ -425,12 +432,7 @@
 								}).catch(function(err){
 										console.log("AJAX失败");
 										self.$router.push('/system/admin');
-								});
-					}).catch(() => {
-						self.$message({
-							type: 'info',
-							message: '已取消删除'
-						});          
+								});      
 					});
       },
 			// 日期格式化
