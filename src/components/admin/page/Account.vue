@@ -9,73 +9,38 @@
 		</div>	
         <div class="page_content">
 <!--用户查询-->
-<!--新的筛选查询-->
-<!--<el-row class="screen_div">
-
-<el-select v-model="value40"  clearable placeholder="挂机模式" size="120">
-      <el-option label="成长型"   value="1"></el-option>
-      <el-option label="宏利先锋型" value="2"></el-option>
-      <el-option label="趋势策略型" value="3"></el-option>
-      <el-option label="综合尊享型" value="4"></el-option>
-</el-select>
-<el-select v-model="value41"  clearable placeholder="是否挂机" size="120">
-      <el-option label="否"   value="1"></el-option>
-      <el-option label="是" value="0"></el-option>
-</el-select>
-<el-select v-model="value42"  clearable placeholder="是否通过" size="120">
-      <el-option label="是"   value="1"></el-option>
-      <el-option label="否" value="0"></el-option>
-</el-select>
-<el-select v-model="value43"  clearable placeholder="是否处理" size="120">
-      <el-option label="已处理"   value="1"></el-option>
-      <el-option label="未处理" value="0"></el-option>
-</el-select>
-<el-select v-model="value44"  clearable placeholder="使用的平台" size="120">
-      <el-option label="GQCapital-Live"   value="GQCapital-Live"></el-option>
-</el-select>
-<el-select v-model="value45"  placeholder="请选择" size="120">
-	<el-option label="按时间升序"   value="DESC"></el-option>
-	<el-option label="按时间降序" value="ASC"></el-option>
-</el-select>
-<el-select v-model="select"  placeholder="请选择" size="120">
-	<el-option label="所有"   value="all"></el-option>
-	<el-option label="MT4账号" value="mt4Account"></el-option>
-	<el-option label="用户姓名" value="username"></el-option>
-	<el-option label="手机号码" value="phone"></el-option>
-</el-select>
-</el-row>-->
 <!--旧的搜索查询-->
 <el-input placeholder="请输入内容" v-model="input6">
     <el-select v-model="select" slot="prepend" placeholder="请选择" class="search">
-		  <el-option label="所有"   value="all"></el-option>
+		  <!--<el-option label="所有"   value="all"></el-option>-->
       <el-option label="MT4账号" value="mt4Account"></el-option>
       <el-option label="用户姓名" value="username"></el-option>
       <el-option label="手机号码" value="phone"></el-option>
     </el-select>
     <el-button slot="append" icon="search" @click="searchButton()"></el-button>
 </el-input>
+<!--新的筛选查询-->
 <el-row class="screen_div">
-
-<el-select v-model="value40"  clearable placeholder="挂机模式" size="120">
+<el-select v-model="value44"  clearable placeholder="使用的平台" size="120" @change="screen" @clear="screen">
+      <el-option label="GQCapital-Live"   value="GQCapital-Live"></el-option>
+</el-select>
+<el-select v-model="value40"  clearable placeholder="挂机模式" size="120" @change="screen" @clear="screen" >
       <el-option label="成长型"   value="1"></el-option>
       <el-option label="宏利先锋型" value="2"></el-option>
       <el-option label="趋势策略型" value="3"></el-option>
       <el-option label="综合尊享型" value="4"></el-option>
 </el-select>
-<el-select v-model="value41"  clearable placeholder="是否挂机" size="120">
+<el-select v-model="value41"  clearable placeholder="是否挂机" size="120" @change="screen" @clear="screen">
       <el-option label="否"   value="1"></el-option>
       <el-option label="是" value="0"></el-option>
 </el-select>
-<el-select v-model="value42"  clearable placeholder="是否通过" size="120">
+<el-select v-show="value43 == '1'" v-model="value42"  clearable placeholder="是否通过" size="120" @change="screen" @clear="screen">
       <el-option label="是"   value="1"></el-option>
       <el-option label="否" value="0"></el-option>
 </el-select>
-<el-select v-model="value43"  clearable placeholder="是否处理" size="120">
+<el-select v-model="value43"  clearable placeholder="是否处理" size="120" @change="screen" @clear="screen">
       <el-option label="已处理"   value="1"></el-option>
       <el-option label="未处理" value="0"></el-option>
-</el-select>
-<el-select v-model="value44"  clearable placeholder="使用的平台" size="120">
-      <el-option label="GQCapital-Live"   value="GQCapital-Live"></el-option>
 </el-select>
 </el-row>
 <!--交易信息表格table-->
@@ -141,10 +106,7 @@
 		<el-table-column
       prop="handle"
       label="是否处理"
-			width="120"
-			:filters="[{ text: '未处理', value: '未处理' }, { text: '已处理', value: '已处理' }]"
-      :filter-method="filterTag"
-      filter-placement="bottom-end">
+			width="120">
 <template slot-scope="scope">
 					<el-tag
           :type="scope.row.handle === '未处理' ? 'primary' : 'success'"
@@ -450,7 +412,7 @@
 		value44:'',
 		value45:'ASC',
 		input6: '',
-    select: 'all',
+    select: 'mt4Account',
 		// 表格数据
 		tableData: [{
 			id:'1',
@@ -524,7 +486,9 @@
 		dialogImgVisible:false,
 		dialogImgUrl:"",
 		// 建议回撤初始化
-		retreatRate:12
+		retreatRate:12,
+		// 排序
+		direction:""
       };
     },
 		// computed:function(){
@@ -543,22 +507,34 @@
 			document.title = "管理用户交易信息";
 			var self = this;
 			// 管理用户交易信息的表格初始化
-			self.$http({
-								method: 'get',
-								url: '/turingcloud/admin/transaction/list'
-						}).then(function(res){
-							if(res.data.success == false){
-								self.$message.error(res.data.message);
-							}else if(res.data.success == true){
-								self.total = res.data.totalElements;
-                self.tablebody = res.data.body;
-								// 页面布局初始化
-							}
-							// console.log(res.data);
-						}).catch(function(err){
-								console.log("AJAX失败");
-								self.$router.push('/system/admin/login');
-						});
+			self.handleCurrentChange(1);
+			// self.$http({
+			// 					method: 'get',
+			// 					url: '/turingcloud/admin/transaction/list',
+			// 					params:{
+			// 						mode:self.value40,
+			// 						isHangUp:self.value41,
+			// 						handleStatus:self.value43,
+			// 						isPass:self.value42,
+			// 						platform:self.value44,
+			// 						phone:self.input6,
+			// 						direction:self.direction,
+			// 						page:0,
+			// 						size:self.search.size
+			// 					}
+			// 			}).then(function(res){
+			// 				if(res.data.success == false){
+			// 					self.$message.error(res.data.message);
+			// 				}else if(res.data.success == true){
+			// 					self.total = res.data.totalElements;
+      //           self.tablebody = res.data.body;
+			// 					// 页面布局初始化
+			// 				}
+			// 				// console.log(res.data);
+			// 			}).catch(function(err){
+			// 					console.log("AJAX失败");
+			// 					self.$router.push('/system/admin/login');
+			// 			});
 		},
 		watch:{
 			retreatRate:function(){
@@ -782,26 +758,7 @@
 				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
 					return false;
 				}else{
-					self.search.page = 1;
-					self.search.type = self.select;
-					self.search.condition = self.input6;
-					self.$http({
-								method: 'get',
-								url: '/turingcloud/admin/transaction/list?type='+self.search.type+'&condition='+self.search.condition
-						}).then(function(res){
-							if(res.data.success == false){
-								self.$message.error(res.data.message);
-							}else if(res.data.success == true){
-								self.total = res.data.totalElements;
-                self.tablebody = res.data.body;
-								self.handleCurrentChange(1);
-								// 页面布局初始化
-							}
-							// console.log(res.data);
-						}).catch(function(err){
-								console.log("AJAX失败");
-								self.$router.push('/system/admin/login');
-						});
+					self.handleCurrentChange(1);					
 				}
 			},
 			// 分页
@@ -809,84 +766,77 @@
 				var self = this;
 				self.search.size = val;
         // console.log(`每页 ${val} 条`);
-				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
-					self.search.page = 1;
-					self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/transaction/list?size='+self.search.size
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										self.handleCurrentChange(1);
-										// 页面布局初始化
-									}
-									// console.log(res.data);
-								}).catch(function(err){
-										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
-								});
-				}else{
-						self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/transaction/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										self.handleCurrentChange(1);
-										// 页面布局初始化
-									}
-									// console.log(res.data);
-								}).catch(function(err){
-										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
-								});
-				}  
+				self.handleCurrentChange(1); 
       },
       handleCurrentChange(val) {
 				var self = this;
 				self.search.page = val;
-        // console.log(`当前页: ${val}`);
-				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+					self.search.type = self.select;
+					self.search.condition = self.input6;
 					self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/transaction/list?size='+self.search.size+'&page='+(self.search.page-1)
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										// 页面布局初始化
-									}
-									// console.log(res.data);
-								}).catch(function(err){
-										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
-								});
-				}else{
-						self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/transaction/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										// 页面布局初始化
-									}
-									// console.log(res.data);
-								}).catch(function(err){
-										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
-								});
-				}  
+								method: 'get',
+								url: '/turingcloud/admin/transaction/list?mode='+self.value40+'&isHangUp='+self.value41+'&handleStatus='+self.value43+'&isPass='+self.value42+'&platform='+self.value44+'&'+self.select+'='+self.input6+'&direction='+self.direction+'&page='+(self.search.page-1)+'&size='+self.search.size
+								// url: '/turingcloud/admin/transaction/list',
+								// data:{
+								// 	mode:self.value40,
+								// 	isHangUp:self.value41,
+								// 	handleStatus:self.value43,
+								// 	isPass:self.value42,
+								// 	platform:self.value44,
+								// 	all:self.input6,
+								// 	direction:self.direction,
+								// 	page:(self.search.page-1),
+								// 	size:self.search.size
+								// }
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+								self.total = res.data.totalElements;
+                self.tablebody = res.data.body;
+								// 页面布局初始化
+							}
+							// console.log(res.data);
+						}).catch(function(err){
+								console.log("AJAX失败");
+								self.$router.push('/system/admin/login');
+						});
+        // console.log(`当前页: ${val}`);
+				// if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
+				// 	self.$http({
+				// 						method: 'get',
+				// 						url: '/turingcloud/admin/transaction/newlist?size='+self.search.size+'&page='+(self.search.page-1)
+				// 				}).then(function(res){
+				// 					if(res.data.success == false){
+				// 						self.$message.error(res.data.message);
+				// 					}else if(res.data.success == true){
+				// 						self.total = res.data.totalElements;
+				// 						self.tablebody = res.data.body;
+				// 						// 页面布局初始化
+				// 					}
+				// 					// console.log(res.data);
+				// 				}).catch(function(err){
+				// 						console.log("AJAX失败");
+				// 						self.$router.push('/system/admin/login');
+				// 				});
+				// }else{
+				// 		self.$http({
+				// 						method: 'get',
+				// 						url: '/turingcloud/admin/transaction/newlist?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
+				// 				}).then(function(res){
+				// 					if(res.data.success == false){
+				// 						self.$message.error(res.data.message);
+				// 					}else if(res.data.success == true){
+				// 						self.total = res.data.totalElements;
+				// 						self.tablebody = res.data.body;
+				// 						// 页面布局初始化
+				// 					}
+				// 					// console.log(res.data);
+				// 				}).catch(function(err){
+				// 						console.log("AJAX失败");
+				// 						self.$router.push('/system/admin/login');
+				// 				});
+				// }  
       },
 			csv_download() {
             let columns = this.$refs.table.$children.filter(t => t.prop != null)
@@ -896,14 +846,19 @@
       },
 			// 表格按时间排序
 			timesort(column,prop,order){
+				var self = this;
 				if(column.order == "descending"){
-					alert("descending");
+					self.direction = "DESC";
 				}else if(column.order == "ascending"){
-					alert("ascending");
+					self.direction = "ASC";
 				}else{
-					alert("null");
+					self.direction = "";
 				}
-				// console.log(column.order);
+				self.handleCurrentChange(1);
+			},
+			// 查询条件筛选
+			screen(){
+				 this.handleCurrentChange(1);
 			}
     }
 }

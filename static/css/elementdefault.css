@@ -96,7 +96,7 @@
     color: #fff;
   }
   /*筛选选择器样式重置*/
-.el-input--120{
+.el-input.el-input--120{
 	width:120px;
 }
 .el-input--150{

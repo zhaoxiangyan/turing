@@ -47,12 +47,21 @@
 			  </el-col>
 			  <el-col    :span="16" class="li_right radio35">
                   <el-switch  v-model="switch0"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
-									<i v-if="switch0">*请点击一下按钮，切换成图片格式上传。*请上传pdf格式的文件，大小不要超过2M</i>
-									<i v-else>*请点击一下按钮，切换成PDF格式上传。*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
+									<i v-if="switch0">*请点击一下按钮，切换成图片格式上传。</i>
+									<i v-else>*请点击一下按钮，切换成PDF格式上传。</i>
+			  </el-col>			 
+			</el-row>
+			<el-row class="li">
+			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+			     <span></span>
+			  </el-col>
+			  <el-col    :span="16" class="li_right radio35">
+									<i v-if="switch0">*请上传pdf格式的文件，大小不要超过2M</i>
+									<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
 			  </el-col>			 
 			</el-row>
 			<div v-if="switch0">
-			<el-row class="li">
+			<el-row class="li margintop0">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>上传PDF文件：</span>
 			  </el-col>
@@ -63,7 +72,7 @@
 			</el-row>
 			</div>
 			<div v-else>
-			<el-row class="li" >
+			<el-row class="li margintop0" >
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span>协议第一页：</span>
 			  </el-col>
@@ -122,7 +131,7 @@
 				    <span>MT4账号：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input2" placeholder="请输入7位数字的MT4账号" ></el-input>
+					   <el-input v-model="input2"  type="number" placeholder="请输入7位数字的MT4账号" ></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -549,6 +558,9 @@
 	/*padding:0 30px;*/
 	/*height:35px;*/
 	text-align:left;
+}
+.page_content .li.margintop0{
+	margin-top:0px;
 }
 .page_content .li a.preview{
 	box-sizing:border-box;
