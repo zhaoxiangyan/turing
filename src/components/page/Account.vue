@@ -113,7 +113,7 @@
 			     <span>扣款协议：</span>
 			  </el-col>
 			 <el-col  :span="16" class="li_right">
-		      <a class="preview" href="http://turing-cloud.cn/file/委托扣款三方协议.pdf" download="委托扣款三方协议" ><i class="el-icon-document"></i>委托扣款协议</a>
+		      <a class="preview" href="http://turing-cloud.cn/file/委托扣款三方协议.pdf" download="委托扣款三方协议.pdf" ><i class="el-icon-document"></i>委托扣款协议</a>
 			 </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -130,17 +130,17 @@
 			  </el-col>
 			  <el-col    :span="16" class="li_right radio35">
                   <el-switch  v-model="modalbody.contract.filetype"  off-value="img" on-value="pdf" off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90' :disabled="modalbody.contract.isPass == '0'?false:true"></el-switch>
-									<i v-if="modalbody.contract.filetype == 'img'?false:true">*请点击一下按钮，切换成图片格式上传。</i>
-									<i v-else>*请点击一下按钮，切换成PDF格式上传。</i>
+									<i v-if="modalbody.contract.filetype == 'img'?false:true">（*请上传pdf格式的文件，大小不要超过2M）</i>
+									<i v-else>（*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M）</i>
 			  </el-col>			 
 			</el-row>
-			<el-row class="li">
+			<el-row class="li margintop20">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span></span>
 			  </el-col>
 			  <el-col    :span="16" class="li_right radio35">
-									<i v-if="modalbody.contract.filetype == 'img'?false:true">*请上传pdf格式的文件，大小不要超过2M</i>
-									<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
+									<i v-if="modalbody.contract.filetype == 'img'?false:true" class="red_text">*如果您需要上传图片格式，请点击一下按钮。</i>
+									<i v-else class="red_text">*如果您需要上传PDF格式，请点击一下按钮。</i>
 			  </el-col>			 
 			</el-row>
   		<!--上传pdf文件已通过-->
@@ -1096,11 +1096,14 @@
 .edit_content{
   /*padding-bottom:35px;*/
 }
-.edit_content  .li{
+.edit_content .li{
 	margin-top:35px;
 	/*padding:0 30px;*/
 	/*height:35px;*/
 	text-align:left;
+}
+.edit_content .li.margintop20{
+	margin-top:20px;
 }
 .edit_content .li.margintop0{
 	margin-top:0px;
@@ -1164,6 +1167,9 @@
 .radio35 i{
 	color:#76838f;
 	font-style:normal;
+}
+.radio35 i.red_text{
+	color:red;
 }
 .small_text .el-input{
 	float:right;

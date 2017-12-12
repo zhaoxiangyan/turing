@@ -1,7 +1,7 @@
 <template>
 	<div class="cooperation">
 	    <div class="page_title">
-		    <span>签约合作协议<i>*您如果想和我们合作，请先下载协议，打印后签名，再扫描上传已签约的协议，再提交审核</i></span>
+		    <span>签约合作协议<i>*您如果想和我们合作，请先下载协议，打印后签名，扫描上传已签约的协议，再提交审核。</i></span>
 		    <el-breadcrumb separator="/">
 				<el-breadcrumb-item :to="{path:'/system/home'}">首页</el-breadcrumb-item>
 				<el-breadcrumb-item>签约合作协议</el-breadcrumb-item>
@@ -15,7 +15,7 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议"><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -32,17 +32,17 @@
 			  </el-col>
 			  <el-col :span="16" class="li_right radio35">
                 <el-switch  v-model="switch1"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
-									<i v-if="switch1">*请点击一下按钮，切换成图片格式上传。</i>
-									<i v-else>*请点击一下按钮，切换成PDF格式上传。</i>
+									<i v-if="switch1">（*请上传pdf格式的文件，大小不要超过2M）</i>
+									<i v-else>（*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M）</i>
 			  </el-col>
 			</el-row>  
-			<el-row class="li">
+			<el-row class="li margintop20">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span></span>
 			  </el-col>
 			  <el-col :span="16" class="li_right radio35">
-									<i v-if="switch1">*请上传pdf格式的文件，大小不要超过2M</i>
-									<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
+									<i v-if="switch1" class="red_text">*如果您需要上传图片格式，请点击一下按钮。</i>
+									<i v-else class="red_text">*如果您需要上传PDF格式，请点击一下按钮。</i>
 			  </el-col>
 			</el-row>  
 		  <div v-if="switch1">	 		
@@ -158,7 +158,7 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议"><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -175,17 +175,17 @@
 			  </el-col>
 			  <el-col :span="16" class="li_right radio35">
                 <el-switch  v-model="databody.filetype"   off-value="img" on-value="pdf"  off-color="#13ce66" on-text="PDF文件"  off-text="图片文件" :width='90'></el-switch>
-								<i v-if="databody.filetype == 'img'?false:true">*请点击一下按钮，切换成图片格式上传。</i>
-								<i v-else>*请点击一下按钮，切换成PDF格式上传。</i>
+								<i v-if="databody.filetype == 'img'?false:true">（*请上传pdf格式的文件，大小不要超过2M）</i>
+								<i v-else>（*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M）</i>
 			  </el-col>
 			</el-row>  
-			<el-row class="li">
+			<el-row class="li margintop20">
 			  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 			     <span></span>
 			  </el-col>
 			  <el-col :span="16" class="li_right radio35">
-								<i v-if="databody.filetype == 'img'?false:true">*请上传pdf格式的文件，大小不要超过2M</i>
-								<i v-else>*请上传jpg/png/jpeg/gif格式的图片，大小不要超过2M</i>
+								<i v-if="databody.filetype == 'img'?false:true" class="red_text">*如果您需要上传图片格式，请点击一下按钮。</i>
+								<i v-else class="red_text">*如果您需要上传PDF格式，请点击一下按钮。</i>
 			  </el-col>
 			</el-row>  
 		  <div v-if="databody.filetype == 'img'?false:true">	 		
@@ -309,7 +309,7 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议" ><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf" ><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -832,6 +832,9 @@
 	margin-top:35px;
 	text-align:left;
 }
+.page_content .li.margintop20{
+	margin-top:20px;
+}
 .page_content .li.margintop0{
 	margin-top:0px;
 }
@@ -969,6 +972,9 @@
 .radio35 i{
 	color:#76838f;
 	font-style:normal;
+}
+.radio35 i.red_text{
+	color:red;
 }
 .select100 .el-select{
     width: 100%;
