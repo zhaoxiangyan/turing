@@ -325,14 +325,21 @@
                         if(res.data.success == false){
                             self.$message.error(res.data.message);
                         }else{
-                            self.$message({
-                                    showClose: true,
-                                    // message: res.data.message,
-                                    message:"您提交的信息客服会在24小时内进行审核，请您耐心等待！",
-                                    type: 'success',
-                                    onClose:function(){
-                                        self.$router.push('/system/login');
-                                    }
+                            // self.$message({
+                            //         showClose: true,
+                            //         message:"您提交的信息客服会在24小时内进行审核，请您耐心等待！",
+                            //         type: 'success',
+                            //         duration:'2000',
+                            //         customClass:'center_message',
+                            //         onClose:function(){
+                            //             self.$router.push('/system/login');
+                            //         }
+                            // });
+                            self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    self.$router.push('/system/login');
+                                }
                             });
                         }
                     }).catch(function(err){

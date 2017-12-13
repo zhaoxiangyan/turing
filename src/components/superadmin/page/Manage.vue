@@ -76,7 +76,7 @@
 		</el-dialog>
     <!--添加管理员end-->
 		<div class="page_footer">
-		   <span>交易有风险，入市须谨慎！</span>
+				<span>交易有风险，入市须谨慎！</span>
 		</div>
 	</div>	
 </template>
@@ -279,15 +279,15 @@
 
 
 .page_footer{
-	height: 55px;
+	height:50px;
   border-top: 1px solid #f4f4f4;
   text-align: left;
   padding: 0 10px;
 }
 .page_footer span{
 	display: inline-block;
-  height: 55px;
-  line-height: 55px;
+	height:50px;
+  line-height: 50px;
 }
 
 .page_content .state_tips{

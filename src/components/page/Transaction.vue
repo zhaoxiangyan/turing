@@ -222,8 +222,7 @@
 				</el-row>
 		</el-row>
 		<div class="page_footer clearfix">
-		   <!--<span>交易有风险，入市须谨慎！</span>-->
-			 <span>风险警告：外汇和差价合约交易以及任何金融资产进行的交易都涉及高风险，都有损失部分和全部投资资金的可能性，未必适合每一位投资者。在决定参与交易之前，您应该审慎考虑您的投资目标、经验等级、财政状况及风险承受能力。您需要承担相关保证金的支付和交易带来的损失，如果没有足够资金承担损失，请不要贸然进行投资交易。图灵不会为市场风险导致的损失承担任何责任，请确保您已经阅读并完全理解图灵的政策披露描述。</span>
+		   <span>交易有风险，入市须谨慎！</span>
 			 <el-button type="success" @click="submitSetting()" :disabled="!switch2">提交</el-button>
 		</div>
 	</div>	
@@ -635,8 +634,8 @@
 
 
 
-.page_footer{
-	/*height: 55px;*/
+.page_footer{	
+	height: 50px;
   border-top: 1px solid #f4f4f4;
   text-align: left;
   padding: 0 10px;
@@ -644,13 +643,13 @@
 .page_footer span{
 	display: inline-block;
   /*height: 55px;*/
-	font-size:15px;
-  line-height: 25px;
+	height:50px;
+  line-height: 50px;
 }
 .page_footer button{
 	float:right;
 	width:80px;
-	margin:10px 0;
+	margin:7px 0;
 }
 
 /*修改样式*/
