@@ -74,7 +74,6 @@
             }
           }).catch(function(err){
               console.log("AJAX失败");
-              self.$router.push('/system/');
           }); 
         //  线上代码end  
       },
@@ -96,7 +95,6 @@
                   self.$router.push('/system/');
               }).catch(function(err){
                   console.log("AJAX失败");
-                  self.$router.push('/system/');
               }); 
           }else{
             self.$router.push(command);

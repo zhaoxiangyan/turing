@@ -113,7 +113,7 @@
 				    <span>三方合作协议：</span>
 				  </el-col>
 				  <el-col :span="16"  class="li_right">
-				    	<a class="preview" :href="'http://turing-cloud.cn/file/'+modalbody.file1" target="_blank"><i class="el-icon-document"></i>点击查看三方合作协议</a>
+				    	<a class="preview" :href="'http://turing-cloud.cn/file/'+rowid+'/'+modalbody.file1" target="_blank"><i class="el-icon-document"></i>点击查看三方合作协议</a>
           </el-col>
 				</el-row>
 				<template v-else>
@@ -351,7 +351,6 @@
 							// console.log(res.data.body);
 						}).catch(function(err){
 								console.log("AJAX失败");
-								self.$router.push('/system/admin/login');
 						});
 		},	
 		watch:{
@@ -409,7 +408,6 @@
 									}
 							}).catch(function(err){
 									console.log("AJAX失败");
-									self.$router.push('/system/admin');
 							});
 					  self.dialogFormVisible = true;
 				},
@@ -424,6 +422,7 @@
 													self.$message({
 														message: '提交修改成功',
 														type: 'success',
+														duration: '1000',
 														onClose:function(){
 																// 提交修改成功关闭模态框
 																// self.dialogFormVisible = false;
@@ -435,14 +434,13 @@
 									}
 							}).catch(function(err){
 									console.log("AJAX失败");
-									self.$router.push('/system/admin');
 							});
 				},
 				// 点击预览图片
 				ViewImg(name){
 					var self = this;
 					// dialogImgVisible
-          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+name;
+          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+self.rowid+'/'+name;
 					self.dialogImgVisible = true;
 				},
 				// 删除用户签约协议
@@ -468,6 +466,7 @@
 															self.$message({
 																type: 'success',
 																message: '信息已永久删除!',
+																duration: '1000',
 																onClose:function(){
 																		// 删除成功关闭模态框
 																		// self.dialogFormVisible = false;
@@ -479,7 +478,6 @@
 												}
 										}).catch(function(err){
 												console.log("AJAX失败");
-												self.$router.push('/system/admin');
 										});   
 						});
 				},
@@ -515,7 +513,6 @@
 								// console.log(res.data);
 							}).catch(function(err){
 									console.log("AJAX失败");
-									self.$router.push('/system/admin/login');
 							});
 					}
 				},
@@ -541,7 +538,6 @@
 									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
 								});
 				}else{
 						self.$http({
@@ -559,7 +555,6 @@
 									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
 								});
 				}  
       },
@@ -582,7 +577,6 @@
 									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
 								});
 				}else{
 						self.$http({
@@ -599,7 +593,6 @@
 									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
 								});
 				}  
 			},

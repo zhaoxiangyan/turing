@@ -154,7 +154,6 @@
                             self.http_mess = true; 
                         }
                     }).catch(function(err){
-                        console.log(err);
                        console.log("AJAX失败");
                     });
                 }

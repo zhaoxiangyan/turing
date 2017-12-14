@@ -246,7 +246,6 @@
             }
           }).catch(function(err){
               console.log("AJAX失败");
-              self.$router.push('/system/');
           }); 
       }
     },
@@ -301,7 +300,6 @@
                       }
                     }).catch(function(err){
                         console.log("AJAX失败");
-                        self.$router.push('/system/');
                     }); 
            }
       },
@@ -329,8 +327,7 @@
                       });
                     }
                   }).catch(function(err){
-                      console.log("AJAX失败");
-                      self.$router.push('/system/');
+                      console.log("AJAX失败"); 
                   }); 
       },
       // 发送旧手机验证码倒计时
@@ -438,7 +435,6 @@
                       }
                     }).catch(function(err){
                         console.log("AJAX失败");
-                        self.$router.push('/system/');
                     }); 
         }
       },
@@ -484,7 +480,6 @@
                       }
                     }).catch(function(err){
                         console.log("AJAX失败");
-                        self.$router.push('/system/');
                     }); 
         }
       },
@@ -510,7 +505,6 @@
                       }
                     }).catch(function(err){
                         console.log("AJAX失败");
-                        self.$router.push('/system/');
                     }); 
       }
     }

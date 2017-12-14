@@ -159,6 +159,7 @@
                                     showClose: true,
                                     message: '注册成功',
                                     type: 'success',
+                                    duration: '2000',
                                     onClose:function(){
                                         self.$router.push('/system/add');
                                     }

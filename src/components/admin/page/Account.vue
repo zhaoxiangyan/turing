@@ -172,7 +172,7 @@
 				    <span>委托扣款协议：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-				     	<a class="preview" :href="'http://turing-cloud.cn/file/'+modalbody.contract.file1" target="_blank" ><i class="el-icon-document"></i>用户委托扣款协议</a>
+				     	<a class="preview" :href="'http://turing-cloud.cn/file/'+userid+'/'+modalbody.contract.file1" target="_blank" ><i class="el-icon-document"></i>用户委托扣款协议</a>
           </el-col>
 				</el-row>
 				<template v-else>
@@ -630,7 +630,6 @@
 									}
 							}).catch(function(err){
 									console.log("AJAX失败");
-									self.$router.push('/system/admin');
 							});
 					  self.dialogFormVisible = true;
         },
@@ -651,6 +650,7 @@
 													self.$message({
 														message: '提交修改成功',
 														type: 'success',
+														duration: '1000',
 														onClose:function(){
 																// 提交修改成功关闭模态框
 																// self.dialogFormVisible = false;
@@ -662,14 +662,13 @@
 									}
 							}).catch(function(err){
 									console.log("AJAX失败");
-									self.$router.push('/system/admin');
 							});
 				},
 				// 点击预览图片
 				ViewImg(name){
 					var self = this;
 					// dialogImgVisible
-          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+name;
+          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+self.userid+'/'+name;
 					self.dialogImgVisible = true;
 				},				
 				// 删除交易配置
@@ -695,6 +694,7 @@
 															self.$message({
 																type: 'success',
 																message: '该交易配置已永久删除!',
+																duration: '1000',
 																onClose:function(){
 																		// 删除成功关闭模态框
 																		// self.dialogFormVisible = false;
@@ -706,7 +706,6 @@
 												}
 										}).catch(function(err){
 												console.log("AJAX失败");
-												self.$router.push('/system/admin');
 										});    
 						});
       },
@@ -799,7 +798,6 @@
 							// console.log(res.data);
 						}).catch(function(err){
 								console.log("AJAX失败");
-								self.$router.push('/system/admin/login');
 						});
         // console.log(`当前页: ${val}`);
 				// if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){

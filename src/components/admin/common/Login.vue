@@ -82,6 +82,7 @@
               self.$message({
                 message: '登录成功',
                 type: 'success',
+                duration: '2000',
                 onClose:function(){
                     self.$router.push('/system/admin/home');
                 }

@@ -312,7 +312,6 @@
 							// console.log(res.data.body);
 						}).catch(function(err){
 								console.log("AJAX失败");
-								self.$router.push('/system/admin/login');
 						});
 		},
 		watch:{
@@ -361,7 +360,6 @@
 									}
 							}).catch(function(err){
 									console.log("AJAX失败");
-									self.$router.push('/system/admin');
 							});
 					  self.dialogFormVisible = true;
         },
@@ -376,6 +374,7 @@
 													self.$message({
 														message: '提交修改成功',
 														type: 'success',
+														duration: '1000',
 														onClose:function(){
 																// 提交修改成功关闭模态框
 																// self.dialogFormVisible = false;
@@ -387,14 +386,16 @@
 									}
 							}).catch(function(err){
 									console.log("AJAX失败");
-									self.$router.push('/system/admin');
 							});
 				},				
 				// 点击预览图片
 				ViewImg(name){
 					var self = this;
 					// dialogImgVisible
-          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+name;
+					// 线上地址
+          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+self.rowid+'/'+name;
+					// 本地测试
+					// self.dialogImgUrl = 'http://192.168.0.111/file/'+self.rowid+'/'+name;
 					self.dialogImgVisible = true;
 				},				
 				// 删除用户个人信息
@@ -420,6 +421,7 @@
 													self.$message({
 														type: 'success',
 														message: '该用户已永久删除!',
+														duration: '1000',
 														onClose:function(){
 																// 删除成功关闭模态框
 																// self.dialogFormVisible = false;
@@ -431,7 +433,6 @@
 										}
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin');
 								});      
 					});
       },
@@ -467,7 +468,6 @@
 							// console.log(res.data);
 						}).catch(function(err){
 								console.log("AJAX失败");
-								self.$router.push('/system/admin/login');
 						});
 				}
 			},
@@ -493,7 +493,6 @@
 									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
 								});
 				}else{
 						self.$http({
@@ -511,7 +510,6 @@
 									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
 								});
 				}  
       },
@@ -534,7 +532,6 @@
 									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
 								});
 				}else{
 						self.$http({
@@ -551,7 +548,6 @@
 									// console.log(res.data);
 								}).catch(function(err){
 										console.log("AJAX失败");
-										self.$router.push('/system/admin/login');
 								});
 				}  
       },

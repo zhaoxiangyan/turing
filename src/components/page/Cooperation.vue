@@ -549,7 +549,6 @@
 							// console.log(res.data);
 						}).catch(function(err){
 							  console.log("ajax失败");
-								self.$router.push('/system/');
 						});
     },
     methods: {
@@ -715,15 +714,20 @@
                         if(res.data.success == false){
                             self.$message.error(res.data.message);
                         }else{
-                            self.$message({
-                                    showClose: true,
-                                    message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
-                                    type: 'success'
+                            // self.$message({
+                            //         showClose: true,
+                            //         message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
+                            //         type: 'success'
+                            // });
+														self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+																	self.$router.go(0);
+                                }
                             });
                         }
                     }).catch(function(err){
                        console.log("AJAX失败");
-											 self.$router.push('/system/');
                     });
 						 }		 
 		},
@@ -764,15 +768,15 @@
 															if(res.data.success == false){
 																	self.$message.error(res.data.message);
 															}else{
-																	self.$message({
-																					showClose: true,
-																					message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
-																					type: 'success'
+																	self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
+																			confirmButtonText: '确定',
+																			callback: action => {
+																				self.$router.go(0);
+																			}
 																	});
 															}
 													}).catch(function(err){
 														 console.log("AJAX失败");
-														 self.$router.push('/system/');
 													});
 						 }		 
 		},

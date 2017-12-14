@@ -150,7 +150,7 @@
 			     <span>上传PDF文件：</span>
 			  </el-col>
 			  <el-col  :span="16" class="file_box li_right">
-					<a class="mask user_mask" target="_blank" :href="'http://turing-cloud.cn/file/'+modalbody.contract.file1">{{modalbody.contract.file1}}</a>
+					<a class="mask user_mask" target="_blank" :href="'http://turing-cloud.cn/file/'+userid+'/'+modalbody.contract.file1">{{modalbody.contract.file1}}</a>
 			  </el-col>  
 			</el-row>		
 			</div>
@@ -614,7 +614,6 @@
 										}
 								}).catch(function(err){
 									 console.log("AJAX失败");
-									 self.$router.push('/system/');
 								});
 			}
 			// 编辑页面建议回撤初始化
@@ -790,7 +789,6 @@
 								}
 						}).catch(function(err){
 								console.log("AJAX失败");
-								self.$router.push('/system/');
 						});
 					 self.dialogFormVisible = true;
         },
@@ -828,7 +826,7 @@
 				ViewImg(event){
 					var self = this;
 					// dialogImgVisible
-          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+event.target.innerText;
+          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+self.userid+'/'+event.target.innerText;
 					self.dialogImgVisible = true;
 				},
         // 提交修改  图片已通过  2  // 提交修改  pdf已通过   1
@@ -867,20 +865,24 @@
                         if(res.data.success == false){
                             self.$message.error(res.data.message);
                         }else{
-                            self.$message({
-                                    showClose: true,
-                                    message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
-                                    type: 'success',
-																		onClose:function(){
-																				// 提交修改成功关闭模态框
-					                              // self.dialogFormVisible = false;
-																				self.$router.go(0);
-																		}
+                            // self.$message({
+                            //         showClose: true,
+                            //         message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
+                            //         type: 'success',
+														// 				duration: '1000',
+														// 				onClose:function(){
+														// 						self.$router.go(0);
+														// 				}
+                            // });
+														self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    self.$router.go(0);
+                                }
                             });
                         }
                     }).catch(function(err){
                        console.log("AJAX失败");
-											 self.$router.push('/system/');
                     });
 						 } 
 				},
@@ -911,11 +913,11 @@
 								 }
 								//  是否提交协议
 								if(self.modalbody.contract.filetype == "img" && self.debit_file1 == true && self.debit_file2 == true){
-									 httpform.append('fileType',self.modalbody.contract.filetype);
+									 httpform.append('fileType',true);
 									 httpform.append('multipartFile1',document.getElementById("debit_file1").files[0]);
 									 httpform.append('multipartFile2',document.getElementById("debit_file2").files[0]);
 								}else if(self.modalbody.contract.filetype == "pdf" && self.debit_file == true){
-									 httpform.append('fileType',self.modalbody.contract.filetype);
+									 httpform.append('fileType',false);
 									 httpform.append('multipartFile1',document.getElementById("debit_file").files[0]);
 								}else{
 									 httpform.append('fileType',null);
@@ -931,20 +933,15 @@
                         if(res.data.success == false){
                             self.$message.error(res.data.message);
                         }else{
-                            self.$message({
-                                    showClose: true,
-                                    message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
-                                    type: 'success',
-																		onClose:function(){
-																				// 提交修改成功关闭模态框
-					                              // self.dialogFormVisible = false;
-																				self.$router.go(0);
-																		}
+                            self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    self.$router.go(0);
+                                }
                             });
                         }
                     }).catch(function(err){
                        console.log("AJAX失败");
-											 self.$router.push('/system/');
                     });
 						 }
 				},
@@ -968,20 +965,17 @@
 												url: '/turingcloud/trnsaction/'+self.userid+'/changeHangupStatus/'+self.rowid
 										}).then(function(res){
 												if(res.data.success == true){
-															self.$message({
-																type: 'success',
-																message: '您提交的信息客服会在24小时内进行审核，请您耐心等待！',
-																onClose:function(){
-																		// 提交成功关闭模态框
-																		self.$router.go(0);
-																}
-															});
+															self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    self.$router.go(0);
+                                }
+                            });
 												}else if(res.data.success == false){
 													self.$message.error(res.data.message);
 												}
 										}).catch(function(err){
 												console.log("AJAX失败");
-												self.$router.push('/system/admin');
 										});        
 						});
 				},
@@ -1005,20 +999,17 @@
 												url: '/turingcloud/trnsaction/'+self.userid+'/changeHangupStatus/'+self.rowid
 										}).then(function(res){
 												if(res.data.success == true){
-															self.$message({
-																type: 'success',
-																message: '您提交的信息客服会在24小时内进行审核，请您耐心等待！',
-																onClose:function(){
-																		// 提交成功关闭模态框
-																		self.$router.go(0);
-																}
-															});
+															self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    self.$router.go(0);
+                                }
+                              });
 												}else if(res.data.success == false){
 													self.$message.error(res.data.message);
 												}
 										}).catch(function(err){
 												console.log("AJAX失败");
-												self.$router.push('/system/admin');
 										});        
 						});
 				},

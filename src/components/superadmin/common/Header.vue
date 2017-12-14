@@ -55,7 +55,6 @@
                   self.$router.push('/system/superadmin');
               }).catch(function(err){
                   console.log('ajax失败');
-                  self.$router.push('/system/superadmin');
               }); 
           }else{
             self.$router.push(command);
