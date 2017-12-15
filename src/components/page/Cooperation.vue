@@ -738,7 +738,7 @@
 				 var mt4Reg = /^\d{7}$/;
              if(self.databody.platform === ''){
 							  self.$message.error('请选择使用的平台');
-						 }else if(self.databody.mt4Account === ''||!mt4Reg.test(self.input2)){
+						 }else if(self.databody.mt4Account === ''||!mt4Reg.test(self.databody.mt4Account)){
 							  self.$message.error('请填写7位数字的MT4账号');
 						//  }else if(self.databody.mt4Password === ''){
 						// 	  self.$message.error('MT4密码不能为空');

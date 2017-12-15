@@ -264,7 +264,8 @@
                   }
                 });
                 }else{
-                  self.$message.error('用户登录出错');
+                  self.message2 = '用户不存在';
+                  self.empty2 = true;
                 }
          }).catch(function(err){
             var storage = window.sessionStorage; 

@@ -913,11 +913,11 @@
 								 }
 								//  是否提交协议
 								if(self.modalbody.contract.filetype == "img" && self.debit_file1 == true && self.debit_file2 == true){
-									 httpform.append('fileType',true);
+									 httpform.append('fileType',false);
 									 httpform.append('multipartFile1',document.getElementById("debit_file1").files[0]);
 									 httpform.append('multipartFile2',document.getElementById("debit_file2").files[0]);
 								}else if(self.modalbody.contract.filetype == "pdf" && self.debit_file == true){
-									 httpform.append('fileType',false);
+									 httpform.append('fileType',true);
 									 httpform.append('multipartFile1',document.getElementById("debit_file").files[0]);
 								}else{
 									 httpform.append('fileType',null);
