@@ -1,4 +1,9 @@
 <template>
+  <div class="account_box">
+	<div class="news">
+			   <i>公告：</i>
+				 <p>图灵智能交易系统更新</p>
+	</div>
 	<div class="account">
 	    <div class="page_title">
 		    <span><i class="el-icon-edit"></i>我的账户信息</span>
@@ -473,6 +478,17 @@
 		   	<span>交易有风险，入市须谨慎！</span>
 		</div>
 	</div>	
+	<div class="notice">
+		<h4>喜讯</h4>
+		<ul id="scrollobj">
+			<li><i class="fa fa-volume-up" aria-hidden="true"></i>11111热烈祝贺用户4324234交易成功<span>2017-12-18</span></li>
+			<li><i class="fa fa-volume-up" aria-hidden="true"></i>2222热烈祝贺用户4324234交易成功的点点滴滴fffffffff<span>2017-12-18</span></li>
+			<li><i class="fa fa-volume-up" aria-hidden="true"></i>3333热烈祝贺用户4324234交易成功<span>2017-12-18</span></li>
+			<li><i class="fa fa-volume-up" aria-hidden="true"></i>44444热烈祝贺用户4324234交易成功ggggg<span>2017-12-18</span></li>
+			<li><i class="fa fa-volume-up" aria-hidden="true"></i>55555热烈祝贺用户4324234交易成功<span>2017-12-18</span></li>
+		</ul>
+	</div>
+	</div>
 </template>
 <script>
  import moment from 'moment'
@@ -620,6 +636,7 @@
  			// self.monitorRetracement();
 			//  协议上传显示状态初始化
 			self.uploadStatus();
+			self.carousel = setInterval(()=>{self.scroll(document.getElementById('scrollobj'))}, 180); 
 		},
 		watch:{
 			 switch3:function(){
@@ -1013,19 +1030,56 @@
 										});        
 						});
 				},
-    }
+				scroll(obj){
+						/*往上*/ 
+						var tmp = (obj.scrollTop)++; 
+						if (obj.scrollTop == tmp) { 
+						obj.innerHTML += obj.innerHTML; 
+						} 
+						if (obj.scrollTop >= obj.firstChild.offsetWidth) { 
+						obj.scrollTop = 0; 
+						} 
+			  }
+    },
+		beforeDestroy(){
+			clearInterval(this.carousel);	
+		}
 }
 </script>
 <style scoped>
+.account_box{
+	box-sizing:border-box;
+	min-height:100%;
+	position:relative;
+	padding-bottom:155px;
+}
 .account{
-	/*position:relative;*/
 	/*min-height:100%;*/
 	height:auto;
 	background:#fff;
 	border-bottom:1px solid #d2d6de;
-    border-left:1px solid #e7ebf0;
+  border-left:1px solid #e7ebf0;
 	border-right:1px solid #e7ebf0;
 	border-radius:4px;
+}
+ul,ol,li{
+	list-style:none;
+}
+.news{
+	height:25px;
+	text-align:left;
+	padding:0 10px;
+	margin-bottom:20px;
+	line-height:25px;
+	color:red;
+}
+.news i{
+	display:inline-block;
+	font-style:normal;
+	height:25px;
+}
+.news p{
+	display:inline-block;
 }
 .page_title{
 	height:40px;
@@ -1081,7 +1135,39 @@
 	height:22px;
 	border-radius:12px;
 	vertical-align:middle;
-	margin-right:30px;
+	margin-right:20px;
+}
+.account_box .notice{
+	display:inline-block;
+	position:absolute;
+	bottom:0;
+	right:0;
+	background:#fff;
+	padding:10px;
+	margin-top:30px;
+	border-radius:5px;
+}
+.account_box .notice h4{
+	text-align:center;
+	color:red;
+	margin-bottom:10px;
+}
+.account_box .notice ul{
+	height:84px;
+	overflow:hidden;
+}
+.account_box .notice ul li{
+	height:21px;
+	line-height:21px;
+	text-align:left;
+}
+.account_box .notice ul li i{
+	margin-right:5px;
+}
+.account_box .notice ul li span{
+	float:right;
+  margin-left:50px;
+	line-height:21px;
 }
 /*编辑交易配置页面begin*/
 .edit_content{

@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-default/index.css'
 import Vuex from 'vuex'
 import store from './vuex/store'
 import axios from 'axios'
+import 'font-awesome/css/font-awesome.css'
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 Vue.use(ElementUI)

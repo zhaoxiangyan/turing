@@ -56,6 +56,16 @@
                         menu:"三方合作协议（经纪人）",
                         iconclassname:"el-icon-edit",
                         url:"cooperation"
+                    },
+                    {
+                        menu:"公告",
+                        iconclassname:"el-icon-message",
+                        url:"notice"
+                    },
+                    {
+                        menu:"市场情绪",
+                        iconclassname:"fa fa-bar-chart",
+                        url:"market"
                     }]
 
            }
@@ -164,5 +174,9 @@
    }
    .collapsed li a:hover{
        background:#48576a;
+   }
+   /*样式重置*/
+   .el-menu-item .fa.fa-bar-chart{
+       margin-right:10px;
    }
 </style>

@@ -60,6 +60,14 @@ export default new Router({
         {
           path: '/system/information',
           component: resolve => require(['../components/page/Information.vue'], resolve)
+        },
+        {
+          path: '/system/notice',
+          component: resolve => require(['../components/page/Notice.vue'], resolve)
+        },
+        {
+          path: '/system/market',
+          component: resolve => require(['../components/page/Market.vue'], resolve)
         }
       ]
     },
