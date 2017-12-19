@@ -51,6 +51,16 @@
                         menu:"管理用户合作协议",
                         iconclassname:"el-icon-edit",
                         url:"cooperation"
+                    },
+                    {
+                        menu:"管理公告和喜讯",
+                        iconclassname:"el-icon-message",
+                        url:"notice"
+                    },
+                    {
+                        menu:"管理市场情绪",
+                        iconclassname:"fa fa-bar-chart",
+                        url:"market"
                     }]
                     // {
                     //     menu:"个人信息",
@@ -164,5 +174,9 @@
    }
    .collapsed li a:hover{
        background:#48576a;
+   }
+      /*样式重置*/
+   .el-menu-item .fa.fa-bar-chart{
+       margin-right:10px;
    }
 </style>

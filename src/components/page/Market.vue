@@ -8,6 +8,14 @@
 	    	</el-breadcrumb>
 		</div>	
         <div class="page_content">
+<el-date-picker
+		v-model="value1"
+		type="date"
+		:default-value='Date.now()'
+		placeholder="选择日期"
+		:picker-options="pickerOptions0">
+</el-date-picker>
+<br/>
            <img src="../../assets/img/market.png">
         </div>
 	</div>	
@@ -18,12 +26,20 @@
     data() {
       return {
         userid:'',
-        all:false
+        all:false,
+				value1: '',
+				pickerOptions0: {
+          disabledDate(time) {
+            // return time.getTime() < Date.now() - 6.048e8;
+						return time.getTime() > Date.now();
+          }
+        }
       }
     },
     mounted:function(){
       document.title = "市场情绪";
       var self = this;
+			self.value1 = Date.now();
       if(localStorage["userid"]){
         // self.userid = localStorage.getItem("userid");
         self.all = true;
@@ -70,5 +86,7 @@
   text-align:left;
   padding:10px;
 }
-
+.page_content img{
+	width:300px;
+}
 </style>

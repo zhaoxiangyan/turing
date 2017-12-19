@@ -95,6 +95,14 @@ export default new Router({
         {
           path: '/system/admin/information',
           component: resolve => require(['../components/admin/page/Information.vue'], resolve)
+        },
+        {
+          path: '/system/admin/notice',
+          component: resolve => require(['../components/admin/page/Notice.vue'], resolve)
+        },
+        {
+          path: '/system/admin/market',
+          component: resolve => require(['../components/admin/page/Market.vue'], resolve)
         }
         // {
         //   path: '/system/admin/three',
