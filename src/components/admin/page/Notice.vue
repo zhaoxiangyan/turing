@@ -11,16 +11,16 @@
 <!--用户查询-->
 <!--筛选-->
 <div class="screen_div">
-<el-select v-model="search.type"  clearable placeholder="类型" size="120" @change="screen" @clear="screen" >
-      <el-option label="公告" value="notice"></el-option>
-      <el-option label="喜讯" value="news"></el-option>
+<el-select v-model="search.type"  clearable placeholder="类型" size="120" @change="handleCurrentChange(1)" @clear="handleCurrentChange(1)" >
+      <el-option label="公告" value="1"></el-option>
+      <el-option label="喜讯" value="2"></el-option>
 </el-select>
 <el-button type="primary" icon="edit" @click="dialogFormVisible1 = true">添加</el-button>
 </div>
 <!--公告喜讯表格table-->
 <template>
   <el-table ref="table"
-    :data="tableData"
+    :data="tablebody0"
     style="width: 100%">
     <el-table-column
       prop="date"
@@ -40,8 +40,8 @@
 	  width="95">
 <template slot-scope="scope">
       <el-tag
-          :type="scope.row.type === 'notice' ? 'primary' : 'success'"
-          close-transition>{{scope.row.type === 'notice' ? '公告':'喜讯'}}</el-tag>
+          :type="scope.row.type === '公告' ? 'primary' : 'success'"
+          close-transition>{{scope.row.type === '公告' ? '公告':'喜讯'}}</el-tag>
 </template>
     </el-table-column>
     <el-table-column
@@ -75,8 +75,8 @@
 			    </el-col>
 				<el-col :span="16" class="li_right">
 				  <el-select v-model="form1.type" placeholder="请选择类型">
-                    <el-option label="公告" value="notice"></el-option>
-                    <el-option label="喜讯" value="news"></el-option>
+                    <el-option label="公告" value="1"></el-option>
+                    <el-option label="喜讯" value="2"></el-option>
                   </el-select>
 				</el-col>
 			  </el-row>
@@ -90,7 +90,7 @@
 			  </el-row>
 			</el-row>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogFormVisible1 = false">确 定</el-button>
+                <el-button type="primary" @click="addContent()" :disabled="add_button">确 定</el-button>
                 <el-button @click="dialogFormVisible1 = false">取 消</el-button>
             </div>
         </el-dialog>
@@ -103,9 +103,9 @@
 				    <span>类型：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-                    <el-select v-model="modalbody.type" placeholder="请选择类型">
-                        <el-option label="公告" value="notice"></el-option>
-                        <el-option label="喜讯" value="news"></el-option>
+                    <el-select v-model="modalbody[0].type" placeholder="请选择类型">
+                        <el-option label="公告" value="1"></el-option>
+                        <el-option label="喜讯" value="2"></el-option>
                     </el-select>
                   </el-col>
 				</el-row>
@@ -114,12 +114,12 @@
 				    <span>内容：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right textarea_div" >
-					  <el-input  v-model="modalbody.content"></el-input>
+					  <el-input  v-model="modalbody[0].content"></el-input>
                   </el-col>
 				</el-row>
 		</el-row>
 		<div slot="footer" class="dialog-footer">
-		  <el-button type="primary" @click="modify()" >提交修改</el-button>
+		  <el-button type="primary" @click="modify()" :disabled="modify_button">提交修改</el-button>
 			<el-button type="danger" @click="delete_setting()">删除</el-button>
 			<el-button @click="dialogFormVisible = false">取 消</el-button>
         </div>
@@ -137,6 +137,7 @@
     name: 'Notice',
     data() {
       return {
+		adminname:'',
         // 添加
         dialogFormVisible1: false,
         form1:{
@@ -149,13 +150,13 @@
 			id:'1',
 			date: '2016-05-02 10:11',
 			content: '图灵智能交易系统正式上线',
-			type:'notice',
+			type:'1',
             admin:'管理员1'
 		}, {
 			id:'2',
 			date: '2016-11-02 15:25',
 			content: '图灵智能交易系统正式上线',
-			type:'news',
+			type:'2',
             admin:'管理员2'
 		}],
         // 编辑模态框
@@ -176,230 +177,180 @@
 		// 编辑的公告喜讯id
 		rowid:1,
 		// 编辑公告喜讯模态框数据
-		modalbody:{
-			type:'notice',
+		modalbody:[{
+			id:'1',
+			type:'1',
             content:'fdsfdsfdsf'
-		}
+		}]
       };
     },
+	computed:{
+		"add_button":function(){
+			var self = this;
+			if(self.form1.type === ''||self.form1.content === ''){
+                 return true;
+			}else{
+				return false;
+			}
+		},
+		"modify_button":function(){
+			var self = this;
+			if(self.modalbody[0].type === ''||self.modalbody[0].content === ''){
+				return true;
+			}else{
+				return false;
+			}
+		}
+	},
 	mounted:function(){
 			document.title = "管理公告和喜讯";
 			var self = this;
+			if(window.localStorage["adminname"]){
+              self.adminname = window.localStorage.getItem('adminname');
+            }
 			// 管理公告和喜讯的表格初始化
-			// self.$http({
-			// 					method: 'get',
-			// 					url: '/turingcloud/admin/user/list'
-			// 			}).then(function(res){
-			// 				if(res.data.success == false){
-			// 					self.$message.error(res.data.message);
-			// 				}else if(res.data.success == true){
-			// 					self.total = res.data.totalElements;
-            //                     self.tablebody = res.data.body;
-			// 					// 页面布局初始化
-			// 				}
-			// 			}).catch(function(err){
-			// 					console.log("AJAX失败");
-			// 			});
+			self.$http({
+								method: 'get',
+								url: '/turingcloud/news/list'
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+								self.total = res.data.totalElements;
+                                self.tablebody = res.data.body;
+								// 页面布局初始化
+							}
+						}).catch(function(err){
+								console.log("AJAX失败");
+						});
 	},
 	watch:{
-        // tablebody:function(){
-        //     var self = this;
-        //     self.tablebody0.splice(0,self.tablebody0.length);
-        //     for(var i = 0;i<self.tablebody.length;i++){
-        //         var date_value = moment(self.tablebody[i].lastLoginTime).format("YYYY-MM-DD");  
-        //         var handle_value = (function(){
-        //     if(self.tablebody[i].user.detailInformation.handleStatus == "1"){
-        //                             return "已处理";
-        //                         }else if(self.tablebody[i].user.detailInformation.handleStatus == "0"){
-        //                             return "未处理";
-        //                         }else{
-        //                             return " ";
-        //                         }
-        //         })(handle_value);
-        //         self.tablebody0.push({
-        //             "userid":self.tablebody[i].user.id,
-        //             "date":date_value,
-        //             "username":self.tablebody[i].user.detailInformation.username,
-        //             "phone":self.tablebody[i].user.phone,
-        //             "email":self.tablebody[i].user.email,
-        //             "idcard":self.tablebody[i].user.detailInformation.idcard,
-        //             "address":self.tablebody[i].user.detailInformation.addr,
-        //             "handle":handle_value
-        //         });
-        //     }
-        // }
+        tablebody:function(){
+            var self = this;
+            self.tablebody0.splice(0,self.tablebody0.length);
+            for(var i = 0;i<self.tablebody.length;i++){
+                var date_value = moment(self.tablebody[i].createTime).format("YYYY-MM-DD HH:mm:ss");  
+                var type_value = (function(){
+						if(self.tablebody[i].type == "1"){
+							return "公告";
+						}else if(self.tablebody[i].type == "2"){
+							return "喜讯";
+						}else{
+							return " ";
+						}
+                })(type_value);
+                self.tablebody0.push({
+                    "id":self.tablebody[i].id,
+                    "date":date_value,
+					"type":type_value,
+					"content":self.tablebody[i].content,
+					"admin":self.tablebody[i].publisher
+                });
+            }
+        }
 	},		
     methods: {
         // 表格编辑按钮
         handleEdit(index, row) {
-						var self = this;
-						self.rowid = row.userid;
-						// self.$http({
-						// 			method: 'get',
-						// 			url: '/turingcloud/admin/user/detail/'+row.userid
-						// 	}).then(function(res){
-						// 			if(res.data.success == true){
-						// 				// console.log(res.data.body);
-						// 				self.modalbody = res.data.body;
-						// 				// 返回数据放进个人信息编辑模态框
-						// 			}else if(res.data.success == false){
-						// 				self.$message.error(res.data.message);
-						// 			}
-						// 	}).catch(function(err){
-						// 			console.log("AJAX失败");
-						// 	});
-					  self.dialogFormVisible = true;
+			var self = this;
+			self.modalbody.splice(0,self.modalbody.length);
+			var type_value = (function(){
+				if(self.tablebody0[index].type == "公告"){
+					return "1";
+				}else if(self.tablebody0[index].type == "喜讯"){
+					return "2";
+				}else{
+					return " ";
+				}
+			})(type_value);
+			self.modalbody.push({
+				"id":self.tablebody0[index].id,
+				"type":type_value,
+				"content":self.tablebody0[index].content
+			});
+			self.dialogFormVisible = true;
         },
-        // 个人信息提交修改
+        // 公告和喜讯提交修改
         modify(){
             var self = this;
-            // self.$http({
-            //                 method: 'put',
-            //                 url: '/turingcloud/admin/user/'+self.rowid+'?isPass='+self.modalbody.user.detailInformation.isPass+'&hadleStatus='+self.modalbody.user.detailInformation.handleStatus+'&handleResultDescription='+self.modalbody.user.detailInformation.handleResultDescription,
-            //             }).then(function(res){
-            //                 if(res.data.success == true){
-            //                                 self.$message({
-            //                                     message: '提交修改成功',
-            //                                     type: 'success',
-            //                                     duration: '1000',
-            //                                     onClose:function(){
-            //                                             // 提交修改成功关闭模态框
-            //                                             // self.dialogFormVisible = false;
-            //                                             self.$router.go(0);
-            //                                     }
-            //                                 });
-            //                 }else if(res.data.success == false){
-            //                     self.$message.error(res.data.message);
-            //                 }
-            //         }).catch(function(err){
-            //                 console.log("AJAX失败");
-            //         });
+            self.$http({
+                            method: 'put',
+                            url: '/turingcloud/news/'+self.modalbody[0].id+'/?publisher='+self.adminname+'&type='+self.modalbody[0].type+'&content='+self.modalbody[0].content
+                        }).then(function(res){
+                            if(res.data.success == true){
+								self.$alert('公告和喜讯修改成功', '图灵智能交易系统', {
+									confirmButtonText: '确定',
+									callback: action => {
+										self.$router.go(0);
+									}
+                                });
+                            }else if(res.data.success == false){
+                                self.$message.error(res.data.message);
+                            }
+                    }).catch(function(err){
+                            console.log("AJAX失败");
+                    });
         },								
-        // 删除用户个人信息
+        // 删除公告和喜讯
         delete_setting() {
             var self = this;
-            self.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+            self.$confirm('此操作将永久删除该公告和喜讯, 是否继续?', '提示', {
                 confirmButtonText: '取消',
                 cancelButtonText: '确定',
                 confirmButtonClass: 'quxiao',
                 cancelButtonClass: 'queding',
                 type: 'warning'
             }).then(() => {
-                    self.$message({
-                        type: 'info',
-                        message: '已取消删除'
+				self.$message({
+					type: 'info',
+					message: '已取消删除'
                 });
             }).catch(() => {
                 self.$http({
                                 method: 'delete',
-                                url: '/turingcloud/admin/user/'+self.rowid
+                                url: '/turingcloud/news/'+self.modalbody[0].id
                         }).then(function(res){
-                                if(res.data.success == true){
-                                            self.$message({
-                                                type: 'success',
-                                                message: '该用户已永久删除!',
-                                                duration: '1000',
-                                                onClose:function(){
-                                                    // 删除成功关闭模态框
-                                                    self.$router.go(0);
-                                                }
-                                            });
-                                }else if(res.data.success == false){
+                                if(res.data.success == false){
                                     self.$message.error(res.data.message);
+									return false;
                                 }
+								self.$alert('公告和喜讯已删除', '图灵智能交易系统', {
+									confirmButtonText: '确定',
+									callback: action => {
+										self.$router.go(0);
+									}
+                                });
                         }).catch(function(err){
                                 console.log("AJAX失败");
                         });      
             });
-        },
-        // 日期格式化
-        dateFormat:function(row, column) {  
-            var date = row[column.property];  
-            if (date == undefined) {  
-                    return "";  
-            }  
-            return moment(date).format("YYYY-MM-DD");  
-        },  
+        }, 
 		// 分页
 		handleSizeChange(val) {
                 var self = this;
 				self.search.size = val;
-        // console.log(`每页 ${val} 条`);
-				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
-					self.search.page = 1;
-					self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/user/list?size='+self.search.size
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										self.handleCurrentChange(1);
-										// 页面布局初始化
-									}
-									// console.log(res.data);
-								}).catch(function(err){
-										console.log("AJAX失败");
-								});
-				}else{
-						self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/user/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										self.handleCurrentChange(1);
-										// 页面布局初始化
-									}
-									// console.log(res.data);
-								}).catch(function(err){
-										console.log("AJAX失败");
-								});
-				}  
+                // console.log(`每页 ${val} 条`);
+				self.handleCurrentChange(1); 		
         },
         handleCurrentChange(val) {
                 var self = this;
 				self.search.page = val;
-        // console.log(`当前页: ${val}`);
-				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
-					self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/user/list?size='+self.search.size+'&page='+(self.search.page-1)
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										// 页面布局初始化
-									}
-								}).catch(function(err){
-										console.log("AJAX失败");
-								});
-				}else{
-						self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/user/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										// 页面布局初始化
-									}
-								}).catch(function(err){
-										console.log("AJAX失败");
-								});
-				}  
-        },
-        screen() {
-            console.log('筛选');
+                // console.log(`当前页: ${val}`);
+				self.$http({
+								method: 'get',
+								url: '/turingcloud/news/list?type='+self.search.type+'&size='+self.search.size+'&page='+(self.search.page-1)
+						}).then(function(res){
+							if(res.data.success == false){
+								self.$message.error(res.data.message);
+							}else if(res.data.success == true){
+								self.total = res.data.totalElements;
+								self.tablebody = res.data.body;
+								// 页面布局初始化
+							}
+						}).catch(function(err){
+								console.log("AJAX失败");
+						});
+ 
         },
         // 导出CSV
         csv_download() {
@@ -407,7 +358,33 @@
             const fields = columns.map(t => t.prop)
             const fieldNames =  columns.map(t => t.label)
             CsvExport(this.tablebody0, fields, fieldNames, '公告喜讯')
-        }
+        },
+		// 添加公告和喜讯
+		addContent() {
+		   var self = this;
+           if(self.form1.content.replace(/^\s+|\s+$/g,'') === ''){
+			   self.$message.error('请不要输入空格');
+			   return false;
+		   }
+		   self.$http({
+							method: 'post',
+							url: '/turingcloud/news/?publisher='+self.adminname+'&type='+self.form1.type+'&content='+self.form1.content
+					}).then(function(res){
+						if(res.data.success == false){
+							self.$message.error(res.data.message);
+						}else if(res.data.success == true){
+							self.$alert('公告和喜讯添加成功', '图灵智能交易系统', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    self.$router.go(0);
+                                }
+                            });
+							// 页面布局初始化
+						}
+					}).catch(function(err){
+							console.log("AJAX失败");
+					});
+		}
     }
 }
 </script>

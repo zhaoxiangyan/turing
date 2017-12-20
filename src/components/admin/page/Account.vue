@@ -775,18 +775,6 @@
 					self.$http({
 								method: 'get',
 								url: '/turingcloud/admin/transaction/list?mode='+self.value40+'&isHangUp='+self.value41+'&handleStatus='+self.value43+'&isPass='+self.value42+'&platform='+self.value44+'&'+self.select+'='+self.input6+'&direction='+self.direction+'&page='+(self.search.page-1)+'&size='+self.search.size
-								// url: '/turingcloud/admin/transaction/list',
-								// data:{
-								// 	mode:self.value40,
-								// 	isHangUp:self.value41,
-								// 	handleStatus:self.value43,
-								// 	isPass:self.value42,
-								// 	platform:self.value44,
-								// 	all:self.input6,
-								// 	direction:self.direction,
-								// 	page:(self.search.page-1),
-								// 	size:self.search.size
-								// }
 						}).then(function(res){
 							if(res.data.success == false){
 								self.$message.error(res.data.message);

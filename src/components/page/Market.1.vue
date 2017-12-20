@@ -8,11 +8,15 @@
 	    	</el-breadcrumb>
 		</div>	
         <div class="page_content">
-				  <div :index="index" v-for="(img,index) in imgData">
-				   <el-button type="text" @click="viewImg(index)" >{{img.date}}&nbsp;&nbsp;<i class="el-icon-picture"></i></el-button>
-					 <br/>
-           <img :src="img.src" v-show="img.showimg">
-					</div>
+选择日期：<el-date-picker
+		v-model="value1"
+		type="date"
+		:default-value='Date.now()'
+		placeholder="选择日期"
+		:picker-options="pickerOptions0">
+</el-date-picker>
+<br/>
+           <img src="../../assets/img/market.png">
         </div>
 	</div>	
 </template>
@@ -23,26 +27,13 @@
       return {
         userid:'',
         all:false,
-				imgData:[{
-					date:'2017-12-20',
-					src:'../../../static/img/market.png',
-					showimg:true
-				  },
-					{
-					date:'2017-12-19',
-					src:'../../../static/img/market.png',
-					showimg:false
-			  	},
-					{
-					date:'2017-12-18',
-					src:'../../../static/img/market.png',
-					showimg:false
-			  	},
-					{
-					date:'2017-12-17',
-					src:'../../../static/img/market.png',
-					showimg:false
-			  	}]
+				value1: '',
+				pickerOptions0: {
+          disabledDate(time) {
+            // return time.getTime() < Date.now() - 6.048e8;
+						return time.getTime() > Date.now();
+          }
+        }
       }
     },
     mounted:function(){
@@ -55,13 +46,7 @@
       }else{
         self.$router.push('/system/');
       }
-    },
-		methods:{
-			viewImg(index){
-				var self = this;
-				self.imgData[index].showimg = !self.imgData[index].showimg;
-			}
-		}
+    }
 }
 </script>
 <style scoped>
@@ -71,7 +56,7 @@
 	height:auto;
 	background:#fff;
 	border-bottom:1px solid #d2d6de;
-  border-left:1px solid #e7ebf0;
+    border-left:1px solid #e7ebf0;
 	border-right:1px solid #e7ebf0;
 	border-radius:4px;
 }
@@ -103,6 +88,5 @@
 }
 .page_content img{
 	width:300px;
-	max-width:100%;
 }
 </style>

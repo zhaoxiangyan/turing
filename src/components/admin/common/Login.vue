@@ -79,6 +79,11 @@
               }else{
                 storage.setItem("adminid",res.data.principal.id);
               }
+              if(storage["adminname"]){
+                storage.setItem("adminname",res.data.principal.detailInformation.username);
+              }else{
+                storage.setItem("adminname",res.data.principal.detailInformation.username);
+              }
               self.$message({
                 message: '登录成功',
                 type: 'success',

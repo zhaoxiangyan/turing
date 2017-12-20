@@ -38,6 +38,12 @@
         'getcollapsed'
       ])    
       },
+      mounted:function(){
+        var self = this;
+        if(window.localStorage["adminname"]){
+          self.name = window.localStorage.getItem('adminname');
+        }
+      },
       methods: {
         //折叠导航栏
         // collapse:function(){

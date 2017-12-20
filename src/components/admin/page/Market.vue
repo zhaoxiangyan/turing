@@ -13,9 +13,9 @@
 <div class="screen_div">
 <el-date-picker
     v-model="value6"
-    type="week"
-    format="yyyy 第 WW 周"
-    placeholder="选择周">
+    type="month"
+    placeholder="选择月份"
+    :picker-options="pickerOptions">
 </el-date-picker>
 <el-button type="primary" icon="edit" @click="dialogFormVisible1 = true">添加</el-button>
 </div>
@@ -64,14 +64,15 @@
 		    <el-row class="edit_content">
 			  <el-row class="li">
 			    <el-col :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				   <span>类型：</span>
+				   <span>日期：</span>
 			    </el-col>
 				<el-col :span="16" class="li_right">
 <el-date-picker
       v-model="form1.date"
       type="date"
       placeholder="选择日期"
-      :picker-options="form1.pickerOptions">
+      :picker-options="form1.pickerOptions"
+      @change="addDate">
 </el-date-picker>
 				</el-col>
 			  </el-row>
@@ -118,6 +119,11 @@
         dialogImgVisible:false,
         dialogImgUrl:'',
         value6:'',
+        pickerOptions: {
+                disabledDate(time) {
+                  return time.getTime() > Date.now();
+                }
+        },
         // 添加
         dialogFormVisible1: false,
         form1:{
@@ -162,7 +168,7 @@
       };
     },
 	mounted:function(){
-		document.title = "管理公告和喜讯";
+		document.title = "管理市场情绪";
 	},
 	watch:{
         
@@ -178,7 +184,7 @@
         handleEdit(index, row) {
             var self = this;
             self.rowid = row.userid;
-            self.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+            self.$confirm('此操作将永久删除该条市场情绪, 是否继续?', '提示', {
                 confirmButtonText: '取消',
                 cancelButtonText: '确定',
                 confirmButtonClass: 'quxiao',
@@ -338,6 +344,9 @@
                     }
                     reader.readAsDataURL(file)
                 }
+        },
+        addDate(val){
+            console.log(val);
         }
     }
 }
