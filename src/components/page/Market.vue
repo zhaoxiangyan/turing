@@ -9,14 +9,15 @@
 		</div>	
         <div class="page_content">
 				  <div :index="index" v-for="(img,index) in imgData">
-				   <el-button type="text" @click="viewImg(index)" >{{img.date}}&nbsp;&nbsp;<i class="el-icon-picture"></i></el-button>
+				   <el-button type="text" @click="viewImg(index)" >{{img.createTime|timeFilter}}&nbsp;&nbsp;<i class="el-icon-picture"></i></el-button>
 					 <br/>
-           <img :src="img.src" v-show="img.showimg">
+           <img :src="img.content|srcFilter" v-show="img.showimg">
 					</div>
         </div>
 	</div>	
 </template>
 <script>
+ import moment from 'moment'
  export default {
     name: 'Market',
     data() {
@@ -55,11 +56,53 @@
       }else{
         self.$router.push('/system/');
       }
+			// 获取所有市场情绪
+			self.$http({
+				        method: 'get',
+								url: '/turingcloud/ms/list'
+								}).then(function(res){
+										if(res.data.success == true){
+												// console.log(res.data.body);
+												self.imgData = res.data.body;
+												for(var i = 0;i<res.data.body.length;i++){
+													if(i == 0){
+														self.imgData[i].showimg = true;
+													}else{
+                            self.imgData[i].showimg = false;
+													}	
+                        }
+												// 表格数据返回无限长
+										}else if(res.data.success == false){
+												self.$message.error(res.data.message);
+										}
+								}).catch(function(err){
+									 console.log("AJAX失败");
+								});
     },
+		filters:{
+			// 市场情绪时间过滤器
+			  timeFilter:function(value){
+          return moment(value).format("YYYY-MM-DD");  
+        },
+				srcFilter:function(value){
+					return 'http://turing-cloud.cn/file/ms/'+value;
+				}
+
+		},
 		methods:{
 			viewImg(index){
+				alert(index);
 				var self = this;
-				self.imgData[index].showimg = !self.imgData[index].showimg;
+				// Vue.set(self.imgData[index], 'showimg', true);
+				self.imgData[index] = Object.assign({}, self.imgData[index], {
+					showimg: !self.imgData[index].showimg
+				})
+				// self.imgData[index].showimg = !self.imgData[index].showimg;
+				// if(self.imgData[index].showimg = true){
+        //   self.$set(self.imgData[index], 'showimg', false);
+				// }else{
+				//   self.$set(self.imgData[index], 'showimg', true);
+				// }
 			}
 		}
 }

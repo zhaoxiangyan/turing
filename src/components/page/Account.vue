@@ -2,7 +2,7 @@
   <div class="account_box">
 	<div class="news">
 			   <i>公告：</i>
-				 <p>图灵智能交易系统更新</p>
+				 <p>{{message}}</p>
 	</div>
 	<div class="account">
 	    <div class="page_title">
@@ -481,11 +481,7 @@
 	<div class="notice">
 		<h4>喜讯</h4>
 		<ul id="scrollobj">
-			<li><i class="fa fa-volume-up" aria-hidden="true"></i>11111热烈祝贺用户4324234交易成功<span>2017-12-18</span></li>
-			<li><i class="fa fa-volume-up" aria-hidden="true"></i>2222热烈祝贺用户4324234交易成功的点点滴滴fffffffff<span>2017-12-18</span></li>
-			<li><i class="fa fa-volume-up" aria-hidden="true"></i>3333热烈祝贺用户4324234交易成功<span>2017-12-18</span></li>
-			<li><i class="fa fa-volume-up" aria-hidden="true"></i>44444热烈祝贺用户4324234交易成功ggggg<span>2017-12-18</span></li>
-			<li><i class="fa fa-volume-up" aria-hidden="true"></i>55555热烈祝贺用户4324234交易成功<span>2017-12-18</span></li>
+			<li v-for="(tab,index) in tabs" v-if="index<=4"><i class="fa fa-volume-up" aria-hidden="true"></i>{{tab.content}}<span>{{tab.createTime|timeFilter}}</span></li>
 		</ul>
 	</div>
 	</div>
@@ -496,6 +492,10 @@
     name: 'Account',
     data() {
       return {
+		// 喜讯
+		tabs:'',
+		// 公告
+		 message:'图灵智能交易系统正式上线',
 			userid:'',
     // 上传扣款协议
 		 switch0:"img",
@@ -632,11 +632,53 @@
 									 console.log("AJAX失败");
 								});
 			}
+			// 获取公告内容
+			self.$http({
+				        method: 'get',
+								url: '/turingcloud/news/list?type=1'
+								}).then(function(res){
+										if(res.data.success == true){
+												// console.log(res.data.body);
+												self.message = res.data.body[0].content;
+												// 表格数据返回无限长
+										}else if(res.data.success == false){
+												self.$message.error(res.data.message);
+										}
+								}).catch(function(err){
+									 console.log("AJAX失败");
+								});
+			// 获取喜讯内容
+			self.$http({
+				        method: 'get',
+								url: '/turingcloud/news/list?type=2'
+								}).then(function(res){
+										if(res.data.success == true){
+												// console.log(res.data.body);
+												if(res.data.body.length<=5){
+													self.tabs = res.data.body;
+												}else{
+													self.tabs
+												}
+												console.log(res.data.body.length);
+												self.tabs = res.data.body;
+												// 表格数据返回无限长
+										}else if(res.data.success == false){
+												self.$message.error(res.data.message);
+										}
+								}).catch(function(err){
+									 console.log("AJAX失败");
+								});
 			// 编辑页面建议回撤初始化
  			// self.monitorRetracement();
 			//  协议上传显示状态初始化
 			self.uploadStatus();
 			self.carousel = setInterval(()=>{self.scroll(document.getElementById('scrollobj'))}, 180); 
+		},
+		filters:{
+			// 喜讯时间过滤器
+			  timeFilter:function(value){
+          return moment(value).format("YYYY-MM-DD");  
+        }
 		},
 		watch:{
 			 switch3:function(){

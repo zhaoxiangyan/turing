@@ -12,20 +12,30 @@
 <!--筛选-->
 <div class="screen_div">
 <el-date-picker
-    v-model="value6"
-    type="month"
-    placeholder="选择月份"
-    :picker-options="pickerOptions">
+      v-model="value6"
+      type="date"
+      placeholder="起始日期"
+      @change="start_change"
+      :picker-options="pickerOptions">
+</el-date-picker>
+to
+<el-date-picker
+      v-model="value7"
+      type="date"
+      placeholder="终止日期"
+      @change="end_change"
+      :picker-options="pickerOptions">
 </el-date-picker>
 <el-button type="primary" icon="edit" @click="dialogFormVisible1 = true">添加</el-button>
 </div>
 <!--公告喜讯表格table-->
 <template>
   <el-table ref="table"
-    :data="tableData"
+    :data="tablebody"
     style="width: 100%">
     <el-table-column
-      prop="date"
+      prop="createTime"
+      :formatter="dateFormat"
       label="日期">
     </el-table-column>
     <el-table-column
@@ -35,7 +45,7 @@
         </template>
     </el-table-column>
     <el-table-column
-        prop="admin"
+        prop="publisher"
         label="发布管理员">
     </el-table-column>
     <el-table-column
@@ -71,6 +81,7 @@
       v-model="form1.date"
       type="date"
       placeholder="选择日期"
+      :clearable="false"
       :picker-options="form1.pickerOptions"
       @change="addDate">
 </el-date-picker>
@@ -95,7 +106,7 @@
 			  </el-row>
 			</el-row>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="dialogFormVisible1 = false">确 定</el-button>
+                <el-button type="primary" @click="addContent()" :disabled="add_button">确 定</el-button>
                 <el-button @click="dialogFormVisible1 = false">取 消</el-button>
             </div>
         </el-dialog>
@@ -116,9 +127,11 @@
     name: 'Market',
     data() {
       return {
+        adminname:'',
         dialogImgVisible:false,
         dialogImgUrl:'',
         value6:'',
+        value7:'',
         pickerOptions: {
                 disabledDate(time) {
                   return time.getTime() > Date.now();
@@ -135,7 +148,8 @@
             },
             filename_text:'点击上传图片',
 			have_img:false,
-            img_src:'../../../static/img/market.png'
+            img_src:'../../../static/img/market.png',
+            time_stamp:''
 		},
         formLabelWidth1: '120px',
 		// 表格数据
@@ -161,29 +175,83 @@
 		search:{
 			page:1,
 			size:10,
-            type:''
+            range:{
+                start:'',
+                end:''
+            }
 		},
 		// 删除的市场情绪id
 		rowid:1
       };
     },
+    computed:{
+        "add_button":function(){
+            var self = this;
+			if(self.form1.date === ''||self.form1.have_img === false){
+                 return true;
+			}else{
+				return false;
+			}
+        }
+    },
 	mounted:function(){
 		document.title = "管理市场情绪";
+        var self = this;
+        if(window.localStorage["adminname"]){
+              self.adminname = window.localStorage.getItem('adminname');
+        }
+        // 管理市场情绪的表格初始化
+        self.$http({
+                            method: 'get',
+                            url: '/turingcloud/ms/list'
+                    }).then(function(res){
+                        if(res.data.success == false){
+                            self.$message.error(res.data.message);
+                        }else if(res.data.success == true){
+                            self.total = res.data.totalElements;
+                            self.tablebody = res.data.body;
+                            // 页面布局初始化
+                        }
+                    }).catch(function(err){
+                            console.log("AJAX失败");
+                    });
 	},
 	watch:{
-        
+        // tablebody:function(){
+        //     var self = this;
+        //     self.tablebody0.splice(0,self.tablebody0.length);
+        //     for(var i = 0;i<self.tablebody.length;i++){
+        //         var date_value = moment(self.tablebody[i].createTime).format("YYYY-MM-DD HH:mm:ss");  
+        //         var type_value = (function(){
+		// 				if(self.tablebody[i].type == "1"){
+		// 					return "公告";
+		// 				}else if(self.tablebody[i].type == "2"){
+		// 					return "喜讯";
+		// 				}else{
+		// 					return " ";
+		// 				}
+        //         })(type_value);
+        //         self.tablebody0.push({
+        //             "id":self.tablebody[i].id,
+        //             "date":date_value,
+		// 			"type":type_value,
+		// 			"content":self.tablebody[i].content,
+		// 			"admin":self.tablebody[i].publisher
+        //         });
+        //     }
+        // }
 	},		
     methods: {
         // 查看市场情绪图片
         viewImg(index, row) {
             var self = this;
-            self.dialogImgUrl = row.src;
+            self.dialogImgUrl = 'http://turing-cloud.cn/file/ms/'+row.content;
             self.dialogImgVisible = true;
         },
         // 表格删除按钮
         handleEdit(index, row) {
             var self = this;
-            self.rowid = row.userid;
+            self.rowid = row.id;
             self.$confirm('此操作将永久删除该条市场情绪, 是否继续?', '提示', {
                 confirmButtonText: '取消',
                 cancelButtonText: '确定',
@@ -191,27 +259,27 @@
                 cancelButtonClass: 'queding',
                 type: 'warning'
             }).then(() => {
-                    self.$message({
-                        type: 'info',
-                        message: '已取消删除'
+                self.$message({
+                    type: 'info',
+                    message: '已取消删除'
                 });
             }).catch(() => {
                 self.$http({
                                 method: 'delete',
-                                url: '/turingcloud/admin/user/'+self.rowid
-                        }).then(function(res){
-                                if(res.data.success == true){
-                                            self.$message({
-                                                type: 'success',
-                                                message: '该用户已永久删除!',
-                                                duration: '1000',
-                                                onClose:function(){
-                                                    // 删除成功关闭模态框
-                                                    self.$router.go(0);
-                                                }
-                                            });
-                                }else if(res.data.success == false){
+                                url: '/turingcloud/ms/'+self.rowid
+                        }).then(function(res){      
+                                if(res.data.success == false){
                                     self.$message.error(res.data.message);
+                                }else{
+                                    self.$message({
+                                                    type: 'success',
+                                                    message: '该条市场情绪已永久删除!',
+                                                    duration: '1000',
+                                                    onClose:function(){
+                                                        // 删除成功关闭模态框
+                                                        self.$router.go(0);
+                                                    }
+                                                });
                                 }
                         }).catch(function(err){
                                 console.log("AJAX失败");
@@ -219,93 +287,37 @@
             });
         },
         // 日期格式化
-        // dateFormat:function(row, column) {  
-        //     var date = row[column.property];  
-        //     if (date == undefined) {  
-        //             return "";  
-        //     }  
-        //     return moment(date).format("YYYY-MM-DD");  
-        // },  
+        dateFormat:function(row, column) {  
+            var date = row[column.property];  
+            if (date == undefined) {  
+                    return "";  
+            }  
+            return moment(date).format("YYYY-MM-DD");  
+        },  
 		// 分页
 		handleSizeChange(val) {
                 var self = this;
 				self.search.size = val;
-        // console.log(`每页 ${val} 条`);
-				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
-					self.search.page = 1;
-					self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/user/list?size='+self.search.size
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										self.handleCurrentChange(1);
-										// 页面布局初始化
-									}
-									// console.log(res.data);
-								}).catch(function(err){
-										console.log("AJAX失败");
-								});
-				}else{
-						self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/user/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										self.handleCurrentChange(1);
-										// 页面布局初始化
-									}
-									// console.log(res.data);
-								}).catch(function(err){
-										console.log("AJAX失败");
-								});
-				}  
+                self.handleCurrentChange(1);
         },
         handleCurrentChange(val) {
                 var self = this;
 				self.search.page = val;
-        // console.log(`当前页: ${val}`);
-				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
-					self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/user/list?size='+self.search.size+'&page='+(self.search.page-1)
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										// 页面布局初始化
-									}
-								}).catch(function(err){
-										console.log("AJAX失败");
-								});
-				}else{
-						self.$http({
-										method: 'get',
-										url: '/turingcloud/admin/user/list?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
-								}).then(function(res){
-									if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}else if(res.data.success == true){
-										self.total = res.data.totalElements;
-										self.tablebody = res.data.body;
-										// 页面布局初始化
-									}
-								}).catch(function(err){
-										console.log("AJAX失败");
-								});
-				}  
-        },
-        screen() {
-            console.log('筛选');
+                // console.log(`当前页: ${val}`);
+                self.$http({
+                                method: 'get',
+                                url: '/turingcloud/ms/list?from='+self.search.range.start+'&to='+self.search.range.end+'&size='+self.search.size+'&page='+(self.search.page-1)
+                        }).then(function(res){
+                            if(res.data.success == false){
+                                self.$message.error(res.data.message);
+                            }else if(res.data.success == true){
+                                self.total = res.data.totalElements;
+                                self.tablebody = res.data.body;
+                                // 页面布局初始化
+                            }
+                        }).catch(function(err){
+                                console.log("AJAX失败");
+                        }); 
         },
         // 检测图片格式大小符合
         testIMG(img){
@@ -347,6 +359,59 @@
         },
         addDate(val){
             console.log(val);
+            var self = this;
+            self.form1.time_stamp = new Date(val).getTime();
+        },
+        // 添加市场情绪
+		addContent() {
+		   var self = this;
+           var image = new FormData();
+           image.append('publisher',self.adminname);
+           image.append('pic',document.getElementById("file_img").files[0]);
+           image.append('date',self.form1.time_stamp);
+		   self.$http({
+							method: 'post',
+							url: '/turingcloud/ms/',
+                            data:image
+					}).then(function(res){
+						if(res.data.success == false){
+							self.$message.error(res.data.message);
+						}else if(res.data.success == true){
+							self.$alert('添加市场情绪成功', '图灵智能交易系统', {
+                                confirmButtonText: '确定',
+                                callback: action => {
+                                    self.$router.go(0);
+                                }
+                            });
+							// 页面布局初始化
+						}
+					}).catch(function(err){
+							console.log("AJAX失败");
+					});
+		},
+        // 起始时间，终止时间
+        start_change(val){
+            var self = this;
+            if(self.value6 === ""){
+                self.search.range.start = "";
+            }else{
+                self.search.range.start = new Date(val).getTime();
+            }
+            if(self.search.range.start < self.search.range.end){
+                self.handleCurrentChange(1);
+            }
+        },
+        end_change(val){
+            console.log(val);
+            var self = this;
+            if(self.value7 === ""){
+                self.search.range.end = "";
+            }else{
+                self.search.range.end = new Date(val).getTime();
+            }
+            if(self.search.range.start < self.search.range.end){
+                self.handleCurrentChange(1);
+            }
         }
     }
 }

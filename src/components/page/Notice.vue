@@ -9,21 +9,20 @@
 		</div>	
         <div class="page_content">
           <ul>
-            <li><i class="fa fa-volume-up" aria-hidden="true"></i>1111图灵智能交易系统暂停交易，系统维护12.18-12.20<span>2017-12-16</span></li>
-            <li><i class="fa fa-volume-up" aria-hidden="true"></i>22图灵智能交易系统暂停交易，系统维护12.18-12.20<span>2017-12-16</span></li>
-            <li><i class="fa fa-volume-up" aria-hidden="true"></i>333333333图灵智能交易系统暂停交易，系统维护12.18-12.20<span>2017-12-16</span></li>
-            <li><i class="fa fa-volume-up" aria-hidden="true"></i>4444444图灵智能交易系统暂停交易，系统维护12.18-12.20<span>2017-12-16</span></li>
+            <li v-for="tab in tabs"><i class="fa fa-volume-up" aria-hidden="true"></i>{{tab.content}}<span>{{tab.createTime|timeFilter}}</span></li>
           </ul>
         </div>
 	</div>	
 </template>
 <script>
+ import moment from 'moment'
  export default {
     name: 'Notice',
     data() {
       return {
         userid:'',
-        all:false
+        all:false,
+        tabs:''
       }
     },
     computed:{
@@ -38,20 +37,28 @@
       }else{
         self.$router.push('/system/');
       }
+      // 获取所有公告内容
+			self.$http({
+				        method: 'get',
+								url: '/turingcloud/news/list?type=1'
+								}).then(function(res){
+										if(res.data.success == true){
+												// console.log(res.data.body);
+												self.tabs = res.data.body;
+												// 表格数据返回无限长
+										}else if(res.data.success == false){
+												self.$message.error(res.data.message);
+										}
+								}).catch(function(err){
+									 console.log("AJAX失败");
+								});
     },
-    filters: {
-      // 时间过滤器
-    //   timeFilter:function(value){
-    //       var date = new Date(value);
-    //       var Y = date.getFullYear()+'-';
-    //       var  M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-    //       var D = date.getDate() + ' ';
-    //       var h = date.getHours() + ':';
-    //       var m = date.getMinutes() + ':';
-    //       var s = date.getSeconds();
-    //         return Y+M+D+h+m+s; 
-    //   }
-    },
+    filters:{
+			// 公告时间过滤器
+			  timeFilter:function(value){
+          return moment(value).format("YYYY-MM-DD");  
+        }
+		},
     methods: {
 
     }

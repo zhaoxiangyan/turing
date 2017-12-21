@@ -21,9 +21,9 @@
 </el-input>
 <!--新的筛选查询-->
 <el-row class="screen_div">
-<el-select v-model="value44"  clearable placeholder="使用的平台" size="120" @change="screen" @clear="screen">
+<!--<el-select v-model="value44"  clearable placeholder="使用的平台" size="120" @change="screen" @clear="screen">
       <el-option label="GQCapital-Live"   value="GQCapital-Live"></el-option>
-</el-select>
+</el-select>-->
 <el-select v-model="value40"  clearable placeholder="挂机模式" size="120" @change="screen" @clear="screen" >
       <el-option label="成长型"   value="1"></el-option>
       <el-option label="宏利先锋型" value="2"></el-option>
@@ -774,7 +774,7 @@
 					self.search.condition = self.input6;
 					self.$http({
 								method: 'get',
-								url: '/turingcloud/admin/transaction/list?mode='+self.value40+'&isHangUp='+self.value41+'&handleStatus='+self.value43+'&isPass='+self.value42+'&platform='+self.value44+'&'+self.select+'='+self.input6+'&direction='+self.direction+'&page='+(self.search.page-1)+'&size='+self.search.size
+								url: '/turingcloud/admin/transaction/list?mode='+self.value40+'&isHangUp='+self.value41+'&handleStatus='+self.value43+'&isPass='+self.value42+'&'+self.select+'='+self.input6+'&direction='+self.direction+'&page='+(self.search.page-1)+'&size='+self.search.size
 						}).then(function(res){
 							if(res.data.success == false){
 								self.$message.error(res.data.message);

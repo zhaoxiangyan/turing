@@ -108,19 +108,11 @@
 			</el-row>
 			</div>
 
-        <el-row class="li margintop20">
-					<el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-						<span></span>
-					</el-col>
-					<el-col    :span="16" class="li_right radio35" style="text-align:right;">
-							<i>如果您有其他使用的交易平台，请填写该平台名字，我们会考虑联系合作。</i>
-					</el-col>			 
-		  	</el-row>
-				<el-row class="li margintop0">
+				<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>使用的平台：</span>
+				    <span>您的平台：</span>
 				  </el-col>
-				  <el-col :span="8" class="li_right platform select100">
+				  <!--<el-col :span="8" class="li_right platform select100">
 					    <template>
 								<el-select v-model="value1" placeholder="请选择">
 									<el-option
@@ -131,9 +123,9 @@
 									</el-option>
 								</el-select>
 					  	</template>
-          </el-col>
-					<el-col :span="8" class="li_right">
-					  	<el-input placeholder="请输入交易平台名字(选填)"></el-input>
+          </el-col>-->
+					<el-col :span="16" class="li_right">
+					  	<el-input v-model="value1" placeholder="请输入交易平台名字"></el-input>
           </el-col>
 				</el-row>	
 				<el-row class="li">
