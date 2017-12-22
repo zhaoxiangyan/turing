@@ -11,7 +11,7 @@
 				  <div :index="index" v-for="(img,index) in imgData">
 				   <el-button type="text" @click="viewImg(index)" >{{img.createTime|timeFilter}}&nbsp;&nbsp;<i class="el-icon-picture"></i></el-button>
 					 <br/>
-           <img :src="img.content|srcFilter" v-show="img.showimg">
+           <img :src="img.content|srcFilter" v-show="show===index">
 					</div>
         </div>
 	</div>	
@@ -24,24 +24,15 @@
       return {
         userid:'',
         all:false,
+				show:0,
 				imgData:[{
-					date:'2017-12-20',
-					src:'../../../static/img/market.png',
+					createTime:'2017-12-20',
+					content:'19216800014220171222094701609257.PNG',
 					showimg:true
 				  },
 					{
-					date:'2017-12-19',
-					src:'../../../static/img/market.png',
-					showimg:false
-			  	},
-					{
-					date:'2017-12-18',
-					src:'../../../static/img/market.png',
-					showimg:false
-			  	},
-					{
-					date:'2017-12-17',
-					src:'../../../static/img/market.png',
+					createTime:'2017-12-17',
+					content:'19216800014220171222094701609257.PNG',
 					showimg:false
 			  	}]
       }
@@ -62,15 +53,7 @@
 								url: '/turingcloud/ms/list'
 								}).then(function(res){
 										if(res.data.success == true){
-												// console.log(res.data.body);
 												self.imgData = res.data.body;
-												for(var i = 0;i<res.data.body.length;i++){
-													if(i == 0){
-														self.imgData[i].showimg = true;
-													}else{
-                            self.imgData[i].showimg = false;
-													}	
-                        }
 												// 表格数据返回无限长
 										}else if(res.data.success == false){
 												self.$message.error(res.data.message);
@@ -86,23 +69,14 @@
         },
 				srcFilter:function(value){
 					return 'http://turing-cloud.cn/file/ms/'+value;
+					// return 'http://192.168.0.111/file/ms/'+value;
 				}
 
 		},
 		methods:{
 			viewImg(index){
-				alert(index);
 				var self = this;
-				// Vue.set(self.imgData[index], 'showimg', true);
-				self.imgData[index] = Object.assign({}, self.imgData[index], {
-					showimg: !self.imgData[index].showimg
-				})
-				// self.imgData[index].showimg = !self.imgData[index].showimg;
-				// if(self.imgData[index].showimg = true){
-        //   self.$set(self.imgData[index], 'showimg', false);
-				// }else{
-				//   self.$set(self.imgData[index], 'showimg', true);
-				// }
+				self.show = index;
 			}
 		}
 }
@@ -145,7 +119,7 @@
   padding:10px;
 }
 .page_content img{
-	width:300px;
+	width:450px;
 	max-width:100%;
 }
 </style>

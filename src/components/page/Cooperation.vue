@@ -1,7 +1,7 @@
 <template>
 	<div class="cooperation">
 	    <div class="page_title">
-		    <span>签约合作协议<i>*您如果想和我们合作，请先下载协议，打印后签名，扫描上传已签约的协议，再提交审核。</i></span>
+		    <span>签约合作协议<i>*请先下载协议，打印后签名，扫描上传已签约的协议，再提交审核。</i></span>
 		    <el-breadcrumb separator="/">
 				<el-breadcrumb-item :to="{path:'/system/home'}">首页</el-breadcrumb-item>
 				<el-breadcrumb-item>签约合作协议</el-breadcrumb-item>
@@ -454,7 +454,7 @@
 		</div>
 		</el-row>	  
 		<div class="page_footer clearfix">
-		   <span>交易有风险，入市须谨慎！</span>
+		   <span>图灵智能交易系统仅提供软件服务。交易有风险，入市须谨慎！</span>
 			 <a  class="uploadstatus1" v-if="uploadStatus() == '1'" href="javascript:void(0)" @click="submitAgreement()">提交</a>
 			 <a  class="uploadstatus2" v-else-if="uploadStatus() == '2'" href="javascript:void(0)" @click="editAgreement()">提交修改</a>
 			 <!--<a  class="uploadstatus3" v-if="uploadStatus() == '3'" href="javascript:void(0)" @click="submitAgreement()">提交</a>-->

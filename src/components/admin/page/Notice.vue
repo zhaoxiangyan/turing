@@ -126,7 +126,7 @@
 		</el-dialog>
         <!--公告喜讯编辑页面end-->
 		<div class="page_footer">
-		   <span>交易有风险，入市须谨慎！</span>
+		   <span>图灵智能交易系统仅提供软件服务。交易有风险，入市须谨慎！</span>
 		</div>
 	</div>	
 </template>
@@ -278,7 +278,7 @@
                             url: '/turingcloud/news/'+self.modalbody[0].id+'/?publisher='+self.adminname+'&type='+self.modalbody[0].type+'&content='+self.modalbody[0].content
                         }).then(function(res){
                             if(res.data.success == true){
-								self.$alert('公告和喜讯修改成功', '图灵智能交易系统', {
+								self.$alert('公告和喜讯修改成功。', '图灵智能交易系统', {
 									confirmButtonText: '确定',
 									callback: action => {
 										self.$router.go(0);
@@ -314,7 +314,7 @@
                                     self.$message.error(res.data.message);
 									return false;
                                 }
-								self.$alert('公告和喜讯已删除', '图灵智能交易系统', {
+								self.$alert('公告和喜讯已删除。', '图灵智能交易系统', {
 									confirmButtonText: '确定',
 									callback: action => {
 										self.$router.go(0);
@@ -373,7 +373,7 @@
 						if(res.data.success == false){
 							self.$message.error(res.data.message);
 						}else if(res.data.success == true){
-							self.$alert('公告和喜讯添加成功', '图灵智能交易系统', {
+							self.$alert('公告和喜讯添加成功。', '图灵智能交易系统', {
                                 confirmButtonText: '确定',
                                 callback: action => {
                                     self.$router.go(0);

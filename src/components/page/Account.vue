@@ -475,7 +475,7 @@
 		</el-dialog>
         <!--编辑交易配置页面end-->
 		<div class="page_footer">
-		   	<span>交易有风险，入市须谨慎！</span>
+		   	<span>图灵智能交易系统仅提供软件服务。交易有风险，入市须谨慎！</span>
 		</div>
 	</div>	
 	<div class="notice">

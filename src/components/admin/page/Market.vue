@@ -117,7 +117,7 @@ to
 </el-dialog>
         <!--市场情绪查看图片模态框end-->
 		<div class="page_footer">
-		   <span>交易有风险，入市须谨慎！</span>
+		   <span>图灵智能交易系统仅提供软件服务。交易有风险，入市须谨慎！</span>
 		</div>
 	</div>	
 </template>
@@ -377,7 +377,7 @@ to
 						if(res.data.success == false){
 							self.$message.error(res.data.message);
 						}else if(res.data.success == true){
-							self.$alert('添加市场情绪成功', '图灵智能交易系统', {
+							self.$alert('添加市场情绪成功。', '图灵智能交易系统', {
                                 confirmButtonText: '确定',
                                 callback: action => {
                                     self.$router.go(0);

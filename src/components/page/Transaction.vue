@@ -224,7 +224,7 @@
 				</el-row>
 		</el-row>
 		<div class="page_footer clearfix">
-		   <span>交易有风险，入市须谨慎！</span>
+		   <span>图灵智能交易系统仅提供软件服务。交易有风险，入市须谨慎！</span>
 			 <el-button type="success" @click="submitSetting()" :disabled="!switch2">提交</el-button>
 		</div>
 	</div>	

@@ -20,7 +20,7 @@
                             <p><input type="password" id="repsw" placeholder="请再次输入密码" v-model="repassword"> </p>
                             <div class="error_div"><span class="error" v-show="error.repassword1">*两次密码不一致</span></div>
                             <div class="checked_div">
-                                <input type="checkbox" id="checkbox" v-model="checked"> 同意并接受
+                                <input type="checkbox" id="checkbox" v-model="checked"> 我已阅读并接受
                                 <a href="/system/protocol" class="" target="_blank">图灵用户协议</a>
                             </div>
                             <div class="phone-submit">
