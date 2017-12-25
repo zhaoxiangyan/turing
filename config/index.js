@@ -30,7 +30,9 @@ module.exports = {
     proxyTable: {
       // 本地代理服务器跨域并统一后端URL
       '/turingcloud': { 
-        target: 'http://192.168.0.119', 
+        target: 'https://192.168.0.119', 
+        secure:false,
+        // secure:false https请求需要加入配置
         changeOrigin: true
         // pathRewrite: { 
         // '^/turingcloud': '/turingcloud' 

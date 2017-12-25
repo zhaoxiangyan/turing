@@ -113,7 +113,7 @@
 				    <span>三方合作协议：</span>
 				  </el-col>
 				  <el-col :span="16"  class="li_right">
-				    	<a class="preview" :href="'http://turing-cloud.cn/file/'+rowid+'/'+modalbody.file1" target="_blank"><i class="el-icon-document"></i>点击查看三方合作协议</a>
+				    	<a class="preview" :href="'/file/'+rowid+'/'+modalbody.file1" target="_blank"><i class="el-icon-document"></i>点击查看三方合作协议</a>
           </el-col>
 				</el-row>
 				<template v-else>
@@ -440,7 +440,7 @@
 				ViewImg(name){
 					var self = this;
 					// dialogImgVisible
-          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+self.rowid+'/'+name;
+          self.dialogImgUrl = '/file/'+self.rowid+'/'+name;
 					self.dialogImgVisible = true;
 				},
 				// 删除用户签约协议

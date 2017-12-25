@@ -118,7 +118,7 @@
 			     <span>扣款协议：</span>
 			  </el-col>
 			 <el-col  :span="16" class="li_right">
-		      <a class="preview" href="http://turing-cloud.cn/file/委托扣款三方协议.pdf" download="委托扣款三方协议.pdf" ><i class="el-icon-document"></i>委托扣款协议</a>
+		      <a class="preview" href="/file/委托扣款三方协议.pdf" download="委托扣款三方协议.pdf" ><i class="el-icon-document"></i>委托扣款协议</a>
 			 </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -126,7 +126,7 @@
 			     <span></span>
 			  </el-col>
 			  <el-col  :span="16" class="li_right">
-			   <a class="download" href="http://turing-cloud.cn/file/委托扣款三方协议.zip">下载协议</a>
+			   <a class="download" href="/file/委托扣款三方协议.zip">下载协议</a>
 			  </el-col>
 			</el-row>-->
       <el-row class="li">
@@ -155,7 +155,7 @@
 			     <span>上传PDF文件：</span>
 			  </el-col>
 			  <el-col  :span="16" class="file_box li_right">
-					<a class="mask user_mask" target="_blank" :href="'http://turing-cloud.cn/file/'+userid+'/'+modalbody.contract.file1">{{modalbody.contract.file1}}</a>
+					<a class="mask user_mask" target="_blank" :href="'/file/'+userid+'/'+modalbody.contract.file1">{{modalbody.contract.file1}}</a>
 			  </el-col>  
 			</el-row>		
 			</div>
@@ -659,7 +659,7 @@
 												}else{
 													self.tabs
 												}
-												console.log(res.data.body.length);
+												// console.log(res.data.body.length);
 												self.tabs = res.data.body;
 												// 表格数据返回无限长
 										}else if(res.data.success == false){
@@ -885,7 +885,7 @@
 				ViewImg(event){
 					var self = this;
 					// dialogImgVisible
-          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+self.userid+'/'+event.target.innerText;
+          self.dialogImgUrl = '/file/'+self.userid+'/'+event.target.innerText;
 					self.dialogImgVisible = true;
 				},
         // 提交修改  图片已通过  2  // 提交修改  pdf已通过   1

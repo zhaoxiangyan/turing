@@ -27,12 +27,12 @@
 				show:0,
 				imgData:[{
 					createTime:'2017-12-20',
-					content:'19216800014220171222094701609257.PNG',
+					content:'01415302004720171222151706288299.jpg',
 					showimg:true
 				  },
 					{
 					createTime:'2017-12-17',
-					content:'19216800014220171222094701609257.PNG',
+					content:'01415302004720171222151706288299.jpg',
 					showimg:false
 			  	}]
       }
@@ -68,7 +68,7 @@
           return moment(value).format("YYYY-MM-DD");  
         },
 				srcFilter:function(value){
-					return 'http://turing-cloud.cn/file/ms/'+value;
+					return '/file/ms/'+value;
 					// return 'http://192.168.0.111/file/ms/'+value;
 				}
 

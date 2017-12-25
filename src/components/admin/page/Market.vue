@@ -245,7 +245,7 @@ to
         // 查看市场情绪图片
         viewImg(index, row) {
             var self = this;
-            self.dialogImgUrl = 'http://turing-cloud.cn/file/ms/'+row.content;
+            self.dialogImgUrl = '/file/ms/'+row.content;
             self.dialogImgVisible = true;
         },
         // 表格删除按钮

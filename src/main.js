@@ -15,6 +15,7 @@ Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(Vuex)
 axios.defaults.withCredentials = true
+// axios.defaults.baseURL = 'https://192.168.0.119'
 Vue.prototype.$http = axios
 // Vue.use(Index)
 

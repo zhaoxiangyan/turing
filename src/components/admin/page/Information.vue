@@ -393,9 +393,9 @@
 					var self = this;
 					// dialogImgVisible
 					// 线上地址
-          self.dialogImgUrl = 'http://turing-cloud.cn/file/'+self.rowid+'/'+name;
+          self.dialogImgUrl = '/file/'+self.rowid+'/'+name;
 					// 本地测试
-					// self.dialogImgUrl = 'http://192.168.0.111/file/'+self.rowid+'/'+name;
+					// self.dialogImgUrl = 'https://192.168.0.111/file/'+self.rowid+'/'+name;
 					self.dialogImgVisible = true;
 				},				
 				// 删除用户个人信息

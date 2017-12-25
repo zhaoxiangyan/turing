@@ -15,7 +15,7 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="https://turingtechcn.com/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -158,7 +158,7 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="https://turingtechcn.com/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -309,7 +309,7 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="http://turing-cloud.cn/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf" ><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="https://turingtechcn.com/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf" ><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
 			<!--<el-row class="li">
