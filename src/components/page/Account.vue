@@ -155,7 +155,7 @@
 			     <span>上传PDF文件：</span>
 			  </el-col>
 			  <el-col  :span="16" class="file_box li_right">
-					<a class="mask user_mask" target="_blank" :href="'/file/'+userid+'/'+modalbody.contract.file1">{{modalbody.contract.file1}}</a>
+					<a class="mask user_mask" :href="'/file/'+userid+'/'+modalbody.contract.file1" download="我的委托扣款协议.pdf">{{modalbody.contract.file1}}</a>
 			  </el-col>  
 			</el-row>		
 			</div>
@@ -528,16 +528,16 @@
 		// 使用挂机模式
 		options3: [{
           value3: '1',
-          label3: '成长型'
-        }, {
-          value3: '2',
-          label3: '宏利先锋型'
-        }, {
-          value3: '3',
-          label3: '趋势策略型'
-        }, {
-          value3: '4',
-          label3: '综合尊享型'
+          label3: 'pipsbot'
+        // }, {
+        //   value3: '2',
+        //   label3: '宏利先锋型'
+        // }, {
+        //   value3: '3',
+        //   label3: '趋势策略型'
+        // }, {
+        //   value3: '4',
+        //   label3: '综合尊享型'
         }],
       value3: '',
 		// 同意挂机费用
@@ -801,13 +801,13 @@
              return "";  
           }  
           if(mode == "1"){
-						return "成长型";
-					}else if(mode == "2"){
-            return "宏利先锋型";
-					}else if(mode == "3"){
-						return "趋势策略型";
-					}else if(mode == "4"){
-						return "综合尊享型";
+						return "pipsbot";
+					// }else if(mode == "2"){
+          //   return "宏利先锋型";
+					// }else if(mode == "3"){
+					// 	return "趋势策略型";
+					// }else if(mode == "4"){
+					// 	return "综合尊享型";
 					}else{
 						return " ";
 					}

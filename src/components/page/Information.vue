@@ -1,5 +1,5 @@
 <template>
-	<div class="information" v-show="all">
+	<div class="information" >
 	    <div class="page_title">
 		    <span>个人信息</span>
 		    <el-breadcrumb separator="/">
@@ -159,7 +159,7 @@
     data() {
       return {
         userid:'',
-        all:false,
+        // all:false,
         body:{
           addr:'',
           email:'',
@@ -239,7 +239,7 @@
           }).then(function(res){
             if(res.data.success == true){
               self.body = res.data.body;
-              self.all = true;
+              // self.all = true;
             }else{
               // self.$message.error('用户登录失效，请重新登录！');
                 self.$router.push('/system/');

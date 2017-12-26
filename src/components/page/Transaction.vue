@@ -266,16 +266,16 @@
 		// 使用挂机模式
 		options3: [{
           value3: '1',
-          label3: '成长型'
-        }, {
-          value3: '2',
-          label3: '宏利先锋型'
-        }, {
-          value3: '3',
-          label3: '趋势策略型'
-        }, {
-          value3: '4',
-          label3: '综合尊享型'
+          label3: 'pipsbot'
+        // },{
+        //   value3: '2',
+        //   label3: '宏利先锋型'
+        // }, {
+        //   value3: '3',
+        //   label3: '趋势策略型'
+        // }, {
+        //   value3: '4',
+        //   label3: '综合尊享型'
         }],
     value3: '',
 		// 同意挂机费用

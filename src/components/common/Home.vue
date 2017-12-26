@@ -3,7 +3,8 @@
         <v-head></v-head>
         <v-sidebar></v-sidebar>
         <div class="content" v-bind:class="[ getcollapsed ? '' : 'min-left']">
-            <transition name="move"><router-view></router-view></transition>
+            <!--<transition name="move"><router-view></router-view></transition>-->
+            <el-collapse-transition><router-view></router-view></el-collapse-transition>
              <v-Copyright></v-Copyright>
         </div>
     </div>

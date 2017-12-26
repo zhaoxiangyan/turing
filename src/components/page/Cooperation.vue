@@ -15,7 +15,7 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="https://turingtechcn.com/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -111,10 +111,11 @@
 			</div>
 			<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>使用的平台：</span>
+				    <span>您的平台：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right platform select100">
-					    <template>
+					 <el-input v-model="value1" placeholder="请输入交易平台名字"></el-input>
+					    <!--<template>
 								<el-select v-model="value1" placeholder="请选择">
 									<el-option
 									v-for="item in options1"
@@ -123,7 +124,7 @@
 									:value="item.value1">
 									</el-option>
 								</el-select>
-					  	</template>
+					  	</template>-->
           </el-col>
 			</el-row>	
 			<el-row class="li">
@@ -158,7 +159,7 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="https://turingtechcn.com/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf"><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -254,10 +255,10 @@
 			</div>
 			<el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>使用的平台：</span>
+				    <span>您的平台：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right platform select100">
-					    <template>
+					    <!--<template>
 								<el-select v-model="databody.platform" placeholder="请选择">
 									<el-option
 									v-for="item in options1"
@@ -266,7 +267,8 @@
 									:value="item.value1">
 									</el-option>
 								</el-select>
-					  	</template>
+					  	</template>-->
+							<el-input v-model="databody.platform" placeholder="请输入交易平台名字"></el-input>
           </el-col>
 			</el-row>	
 			<el-row class="li">
@@ -309,7 +311,7 @@
 			     <span>合作协议：</span>
 			  </el-col>
 			  <el-col  :span="16">
-		        <a class="preview" href="https://turingtechcn.com/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf" ><i class="el-icon-document"></i>三方合作协议</a>
+		        <a class="preview" href="/file/介绍经纪人三方协议.pdf" download="三方合作协议.pdf" ><i class="el-icon-document"></i>三方合作协议</a>
 			  </el-col>
 			</el-row>
 			<!--<el-row class="li">
@@ -797,7 +799,7 @@
 <style scoped>
 .cooperation{
 	/*position:relative;*/
-	min-height:100%;
+	/*min-height:100%;*/
 	height:auto;
 	background:#fff;
 	border-bottom:1px solid #d2d6de;
@@ -994,7 +996,7 @@ em.error{
 
 
 .page_footer{
-	height:50px;
+	/*height:50px;*/
   border-top: 1px solid #f4f4f4;
   text-align: left;
   padding: 0 10px;

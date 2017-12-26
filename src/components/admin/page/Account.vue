@@ -1,5 +1,5 @@
 <template>
-	<div class="account">
+	<div class="account" >
 	    <div class="page_title">
 		    <span><i class="el-icon-edit"></i>用户交易信息</span>
 		    <el-breadcrumb separator="/">
@@ -24,12 +24,12 @@
 <!--<el-select v-model="value44"  clearable placeholder="使用的平台" size="120" @change="screen" @clear="screen">
       <el-option label="GQCapital-Live"   value="GQCapital-Live"></el-option>
 </el-select>-->
-<el-select v-model="value40"  clearable placeholder="挂机模式" size="120" @change="screen" @clear="screen" >
+<!--<el-select v-model="value40"  clearable placeholder="挂机模式" size="120" @change="screen" @clear="screen" >
       <el-option label="成长型"   value="1"></el-option>
       <el-option label="宏利先锋型" value="2"></el-option>
       <el-option label="趋势策略型" value="3"></el-option>
       <el-option label="综合尊享型" value="4"></el-option>
-</el-select>
+</el-select>-->
 <el-select v-model="value41"  clearable placeholder="是否挂机" size="120" @change="screen" @clear="screen">
       <el-option label="否"   value="1"></el-option>
       <el-option label="是" value="0"></el-option>
@@ -172,7 +172,7 @@
 				    <span>委托扣款协议：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-				     	<a class="preview" :href="'/file/'+userid+'/'+modalbody.contract.file1"  target="_blank" ><i class="el-icon-document"></i>用户委托扣款协议</a>
+				     	<a class="preview" :href="'/file/'+userid+'/'+modalbody.contract.file1"  :download="modalbody.user.detailInformation.username+'的委托扣款协议.pdf'" ><i class="el-icon-document"></i>用户委托扣款协议</a>
           </el-col>
 				</el-row>
 				<template v-else>
@@ -377,16 +377,16 @@
 		// 使用挂机模式
 		options3: [{
           value3: '1',
-          label3: '成长型'
-        }, {
-          value3: '2',
-          label3: '宏利先锋型'
-        }, {
-          value3: '3',
-          label3: '趋势策略型'
-        }, {
-          value3: '4',
-          label3: '综合尊享型'
+          label3: 'pipsbot'
+        // }, {
+        //   value3: '2',
+        //   label3: '宏利先锋型'
+        // }, {
+        //   value3: '3',
+        //   label3: '趋势策略型'
+        // }, {
+        //   value3: '4',
+        //   label3: '综合尊享型'
         }],
         value3: '2',
 		// 同意挂机费用
@@ -553,13 +553,13 @@
 					 var date_value = moment(self.tablebody[i].lastModifiedTime).format("YYYY-MM-DD");  
 					 var mode_value = (function(){
                    if(self.tablebody[i].mode == "1"){
-											return "成长型";
-										}else if(self.tablebody[i].mode == "2"){
-											return "宏利先锋型";
-										}else if(self.tablebody[i].mode == "3"){
-											return "趋势策略型";
-										}else if(self.tablebody[i].mode == "4"){
-											return "综合尊享型";
+											return "pipsbot";
+										// }else if(self.tablebody[i].mode == "2"){
+										// 	return "宏利先锋型";
+										// }else if(self.tablebody[i].mode == "3"){
+										// 	return "趋势策略型";
+										// }else if(self.tablebody[i].mode == "4"){
+										// 	return "综合尊享型";
 										}else{
 											return " ";
 										}
@@ -729,12 +729,12 @@
 				}  
 				if(mode == "1"){
 					return "成长型";
-				}else if(mode == "2"){
-					return "宏利先锋型";
-				}else if(mode == "3"){
-					return "趋势策略型";
-				}else if(mode == "4"){
-					return "综合尊享型";
+				// }else if(mode == "2"){
+				// 	return "宏利先锋型";
+				// }else if(mode == "3"){
+				// 	return "趋势策略型";
+				// }else if(mode == "4"){
+				// 	return "综合尊享型";
 				}else{
 					return " ";
 				}
@@ -768,8 +768,8 @@
 				self.handleCurrentChange(1); 
       },
       handleCurrentChange(val) {
-				var self = this;
-				self.search.page = val;
+				  var self = this;
+				  self.search.page = val;
 					self.search.type = self.select;
 					self.search.condition = self.input6;
 					self.$http({
@@ -787,42 +787,6 @@
 						}).catch(function(err){
 								console.log("AJAX失败");
 						});
-        // console.log(`当前页: ${val}`);
-				// if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
-				// 	self.$http({
-				// 						method: 'get',
-				// 						url: '/turingcloud/admin/transaction/newlist?size='+self.search.size+'&page='+(self.search.page-1)
-				// 				}).then(function(res){
-				// 					if(res.data.success == false){
-				// 						self.$message.error(res.data.message);
-				// 					}else if(res.data.success == true){
-				// 						self.total = res.data.totalElements;
-				// 						self.tablebody = res.data.body;
-				// 						// 页面布局初始化
-				// 					}
-				// 					// console.log(res.data);
-				// 				}).catch(function(err){
-				// 						console.log("AJAX失败");
-				// 						self.$router.push('/system/admin/login');
-				// 				});
-				// }else{
-				// 		self.$http({
-				// 						method: 'get',
-				// 						url: '/turingcloud/admin/transaction/newlist?type='+self.search.type+'&condition='+self.search.condition+'&size='+self.search.size+'&page='+(self.search.page-1)
-				// 				}).then(function(res){
-				// 					if(res.data.success == false){
-				// 						self.$message.error(res.data.message);
-				// 					}else if(res.data.success == true){
-				// 						self.total = res.data.totalElements;
-				// 						self.tablebody = res.data.body;
-				// 						// 页面布局初始化
-				// 					}
-				// 					// console.log(res.data);
-				// 				}).catch(function(err){
-				// 						console.log("AJAX失败");
-				// 						self.$router.push('/system/admin/login');
-				// 				});
-				// }  
       },
 			csv_download() {
             let columns = this.$refs.table.$children.filter(t => t.prop != null)

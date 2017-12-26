@@ -2,8 +2,10 @@
     <div class="wrapper" v-show="all">
         <v-head></v-head>
         <v-sidebar></v-sidebar>
-        <div class="content" v-bind:class="[ getcollapsed ? '' : 'min-left']">
-            <transition name="move"><router-view></router-view></transition>
+        <div class="content" v-bind:class="[ getcollapsed ? '' : 'min-left']" >
+            <!--<transition name="move"><router-view ></router-view></transition>-->
+            <!--<router-view></router-view>-->
+            <el-collapse-transition><router-view></router-view></el-collapse-transition>
              <v-Copyright></v-Copyright>
         </div>
     </div>
