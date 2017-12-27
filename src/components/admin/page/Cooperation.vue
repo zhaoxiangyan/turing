@@ -351,6 +351,7 @@
 							// console.log(res.data.body);
 						}).catch(function(err){
 								console.log("AJAX失败");
+								self.$router.push('/system/admin');
 						});
 		},	
 		watch:{

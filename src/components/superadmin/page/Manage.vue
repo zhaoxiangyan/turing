@@ -126,6 +126,7 @@
 							}
 						}).catch(function(err){
 								console.log("AJAX失败");
+								self.$router.push('/system/superadmin');
 						});
 		},		
     methods: {

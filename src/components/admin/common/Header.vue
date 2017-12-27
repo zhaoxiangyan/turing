@@ -27,6 +27,7 @@
       name: 'header',  
       data () {
         return {
+          adminid:'',
           name: 'Admin',
           src: '../static/img/boy_default.png'
           // collapsed:false
@@ -43,6 +44,21 @@
         if(window.localStorage["adminname"]){
           self.name = window.localStorage.getItem('adminname');
         }
+        if(localStorage["adminid"]){
+          self.adminid = localStorage.getItem("adminid");
+        }else{
+          self.$router.push('/system/');
+        }
+        self.$http({
+          method: 'get',
+          url: '/turingcloud/user/'+self.adminid,
+          }).then(function(res){
+            if(res.data.success == false){
+                self.$router.push('/system/admin');
+            }
+          }).catch(function(err){
+              console.log("AJAX失败");
+          }); 
       },
       methods: {
         //折叠导航栏

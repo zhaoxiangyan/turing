@@ -786,6 +786,7 @@
 							// console.log(res.data);
 						}).catch(function(err){
 								console.log("AJAX失败");
+								self.$router.push('/system/admin');
 						});
       },
 			csv_download() {
