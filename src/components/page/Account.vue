@@ -429,10 +429,25 @@
 				    <span>账户投资资金：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="modalbody.capital" placeholder="请输入投资金额（美元）"></el-input>
+					   <el-input v-model="input1" type="number" placeholder="请输入投资金额（美元）"></el-input>
           </el-col>
 				</el-row>	
-			    <el-row class="li">
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>投资品种：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					  <el-select class="checkbox" v-model="value5"  multiple v-bind:multiple-limit="selectNumber" placeholder="请选择">
+							<el-option
+								v-for="item in options"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+							</el-option>
+						</el-select>
+          </el-col>
+				</el-row>
+			  <el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>使用挂机模式：</span>
 				  </el-col>
@@ -453,10 +468,10 @@
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>建议回撤：</span>
 				  </el-col>
-				  <el-col :span="16" class="li_right radio35 small_text">
+				  <el-col :span="16" class="li_right radio35 small_text disabledradio">
 				     <!--	<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>-->
-							 <el-radio class="radio" v-model="switch3" label="0">35%</el-radio>
-               <el-radio class="radio" v-model="switch3" label="1">自定义</el-radio>
+							 <el-radio class="radio" v-model="switch3" disabled label="0">25%</el-radio>
+               <el-radio class="radio" v-model="switch3" disabled label="1">自定义</el-radio>
 					  	<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false">
 							  <template slot="append">%</template>
 							</el-input>
@@ -509,6 +524,31 @@
 		 debit_file2:false,
 		//   账户投资资金select
 		input1: '',
+		// 投资品种多选框
+    options: [{
+          value: '1',
+          label: 'EURUSD'
+        }, {
+          value: '2',
+          label: 'USDJPY'
+        }, {
+          value: '3',
+          label: 'GBPUSD'
+        }, {
+          value: '4',
+          label: 'USDCAD'
+        }, {
+          value: '5',
+          label: 'USDCHF'
+				}, {
+          value: '6',
+          label: 'AUDUSD'
+        }, {
+          value: '7',
+          label: 'NZDUSD'
+        }],
+		selectNumber:4,
+    value5: [],
 		// 使用的平台select
 		options1: [{
           platform: 'GQCapital-Live',
@@ -553,7 +593,7 @@
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
-			retracement: '35',
+			retracement: '25',
 			state:'1',
 			message:'最大回撤过大'
 		}],
@@ -599,7 +639,7 @@
 		// 正在编辑的账户信息id
 		rowid:1,
 		// 监听变化之后的建议回撤
-		retreatRate:"35"
+		retreatRate:"25"
       };
     },
 		computed:{
@@ -654,13 +694,14 @@
 								}).then(function(res){
 										if(res.data.success == true){
 												// console.log(res.data.body);
-												if(res.data.body.length<=5){
-													self.tabs = res.data.body;
-												}else{
-													self.tabs
-												}
+												// if(res.data.body.length<=5){
+												// 	self.tabs = res.data.body;
+												// }else{
+												// 	self.tabs
+												// }
 												// console.log(res.data.body.length);
 												self.tabs = res.data.body;
+												self.carousel = setInterval(()=>{self.scroll(document.getElementById('scrollobj'))}, 180);
 												// 表格数据返回无限长
 										}else if(res.data.success == false){
 												self.$message.error(res.data.message);
@@ -672,7 +713,7 @@
  			// self.monitorRetracement();
 			//  协议上传显示状态初始化
 			self.uploadStatus();
-			self.carousel = setInterval(()=>{self.scroll(document.getElementById('scrollobj'))}, 180); 
+			 
 		},
 		filters:{
 			// 喜讯时间过滤器
@@ -684,7 +725,7 @@
 			 switch3:function(){
 				  var self = this;
           if(self.switch3 == "0"){
-						self.retreatRate = "35";
+						self.retreatRate = "25";
 					}else if(self.switch3 == "1"){
 						self.retreatRate = self.input5;
 					}
@@ -692,6 +733,23 @@
 			 input5:function(){
 				  var self = this;
 					self.retreatRate = self.input5;
+			 },
+			//  监听投资资金触发投资品种
+			 input1:function(){
+         var self = this;
+				 if(self.input1<10000){
+					 self.selectNumber = 1;
+					 self.switch3 = "0";
+				 }else if(self.input1<20000){
+					 self.selectNumber = 2;
+					 self.switch3 = "1";
+				 }else if(self.input1<50000){
+					 self.selectNumber = 3;
+					 self.switch3 = "1";
+				 }else{
+					 self.selectNumber = 4;
+					 self.switch3 = "1";
+				 }
 			 }
 		},
     methods: {
@@ -826,7 +884,7 @@
         },  
 				// 表格编辑按钮
         handleEdit(index, row) {
-					 var self = this;
+					var self = this;
 					self.rowid = row.id;
 					self.$http({
 								method: 'get',
@@ -842,6 +900,13 @@
 									  self.contractisPass = self.modalbody.contract.isPass;
 										self.contractfiletype = self.modalbody.contract.filetype;
 										self.retreatRate = self.modalbody.retreatRate;
+										self.input1 = self.modalbody.capital;
+										// 投资品种多选框初始化
+										if(res.data.body.currencyPairs !== null){
+									  	self.value5 = res.data.body.currencyPairs;
+										}else{
+											self.value5 = [];
+										}
 			            	self.uploadStatus();
 								}else if(res.data.success == false){
 									 self.$message.error(res.data.message);
@@ -854,7 +919,7 @@
 				// 编辑页面建议回撤初始化监听			
 				monitorRetracement(){
 					 var self = this;
-           if(self.modalbody.retreatRate ==35 ){
+           if(self.modalbody.retreatRate ==25 ){
 						//  self.input5 = "";
 						 self.switch3 = "0"; 
 					 }else{
@@ -891,8 +956,12 @@
         // 提交修改  图片已通过  2  // 提交修改  pdf已通过   1
 				modify12(rowid){
 					var self = this;
-						 if(self.modalbody.capital === ''){
+						 if(self.input1 === ''){
 							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.value5.length === 0){
+							  self.$message.error('请至少选择一种投资品种');
+						 }else if(self.value5.length > self.selectNumber){
+							  self.$message.error('投资品种选择过多');
 						 }else if(self.modalbody.mode === ''){
 							 self.$message.error('请至少选择一种挂机模式');
 						 }else if(self.retreatRate === ''){
@@ -913,7 +982,8 @@
 										  httpform.append('newPassword',self.modalbody.newPassword);
 								 }
                     httpform.append('fileType',null);
-										httpform.append('capital',self.modalbody.capital);
+										httpform.append('capital',self.input1);
+										httpform.append('currencyPairs',self.value5);
 										httpform.append('mode',self.modalbody.mode);
 										httpform.append('retreatRate',self.retreatRate);
                     self.$http({
@@ -948,8 +1018,12 @@
 				// 提交修改  pdf未通过   3 				// 提交修改  图片未通过  4
 				modify34(rowid){
 					var self = this;
-						 if(self.modalbody.capital === ''){
+						 if(self.input1 === ''){
 							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.value5.length === 0){
+							  self.$message.error('请至少选择一种投资品种');
+						 }else if(self.value5.length > self.selectNumber){
+							  self.$message.error('投资品种选择过多');
 						 }else if(self.modalbody.mode === ''){
 							 self.$message.error('请至少选择一种挂机模式');
 						 }else if(self.retreatRate === ''){
@@ -981,7 +1055,8 @@
 								}else{
 									 httpform.append('fileType',null);
 								}   
-										httpform.append('capital',self.modalbody.capital);
+										httpform.append('capital',self.input1);
+										httpform.append('currencyPairs',self.value5);
 										httpform.append('mode',self.modalbody.mode);
 										httpform.append('retreatRate',self.retreatRate);
                     self.$http({
@@ -1386,5 +1461,10 @@ ul,ol,li{
 .red_text{
 	color:red;
 }
+/*投资品种多选*/
+.checkbox.el-select{
+	width:100%;
+}
+
 
 </style>

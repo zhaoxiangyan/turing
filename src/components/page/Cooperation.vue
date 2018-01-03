@@ -803,9 +803,10 @@
 	height:auto;
 	background:#fff;
 	border-bottom:1px solid #d2d6de;
-    border-left:1px solid #e7ebf0;
+  border-left:1px solid #e7ebf0;
 	border-right:1px solid #e7ebf0;
 	border-radius:4px;
+	margin-bottom:75px;
 }
 .page_title{
 	height:40px;

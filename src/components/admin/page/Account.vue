@@ -167,7 +167,8 @@
 					   <el-input :value="modalbody.user.phone" placeholder="用户手机号码" disabled ></el-input>
           </el-col>
 				</el-row>	
-				<el-row class="li" v-if="modalbody.contract.filetype == 'pdf'" >
+				<template v-if="modalbody.contract.filetype == 'pdf'">
+				<el-row class="li"  >
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>委托扣款协议：</span>
 				  </el-col>
@@ -175,6 +176,7 @@
 				     	<a class="preview" :href="'/file/'+userid+'/'+modalbody.contract.file1"  :download="modalbody.user.detailInformation.username+'的委托扣款协议.pdf'" ><i class="el-icon-document"></i>用户委托扣款协议</a>
           </el-col>
 				</el-row>
+				</template>
 				<template v-else>
 				<el-row class="li" >
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
@@ -206,7 +208,6 @@
 				    <span>使用的平台：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right platform select100">
-					    <template>
 								<el-select v-model="modalbody.platform" placeholder="请选择" disabled>
 									<el-option
 									v-for="item in options1"
@@ -215,7 +216,6 @@
 									:value="item.value1">
 									</el-option>
 								</el-select>
-					  	</template>
           </el-col>
 				</el-row>	
 				<el-row class="li">
@@ -258,21 +258,35 @@
 					   <el-input :value="modalbody.capital" placeholder="请输入投资金额（美元）"  disabled></el-input>
           </el-col>
 				</el-row>	
-			    <el-row class="li">
+			  <el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>使用挂机模式：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right select100">
-					    <template>
-								<el-select v-model="modalbody.mode" placeholder="请选择" disabled>
-									<el-option
+								<el-select v-bind:value="modalbody.mode" placeholder="请选择" disabled>
+									<!--<el-option
 									v-for="item in options3"
 									:key="item.value3"
 									:label="item.label3"
 									:value="item.value3">
-									</el-option>
+									</el-option>-->
+									<el-option  label="pipsbot" value="1"></el-option>
 								</el-select>
-					  	</template>
+          </el-col>
+				</el-row>
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>投资品种：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right" >
+					  <el-select class="checkbox" v-bind:value="value5"  disabled  multiple v-bind:multiple-limit="selectNumber" placeholder="请选择">
+							<el-option
+								v-for="items in optionss"
+								:key="items.valuee"
+								:label="items.labell"
+								:value="items.valuee">
+							</el-option>
+						</el-select>
           </el-col>
 				</el-row>
 				<el-row class="li">
@@ -289,7 +303,7 @@
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35 small_text">
 				     <!--	<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' disabled ></el-switch>-->
-						  <el-radio class="radio" v-model="switch3" label="0" disabled>35%</el-radio>
+						  <el-radio class="radio" v-model="switch3" label="0" disabled>25%</el-radio>
               <el-radio class="radio" v-model="switch3" label="1" disabled>自定义</el-radio>
 					  	<el-input class="custom" v-model="input5" placeholder="自定义回撤百分比"  disabled><template slot="append">%</template></el-input>
           </el-col>
@@ -360,6 +374,31 @@
 		switch8:false,
 		//   账户投资资金select
 		input1: '',
+		// 投资品种多选框
+    optionss: [{
+          valuee: '1',
+          labell: 'EURUSD'
+        }, {
+          valuee: '2',
+          labell: 'USDJPY'
+        }, {
+          valuee: '3',
+          labell: 'GBPUSD'
+        }, {
+          valuee: '4',
+          labell: 'USDCAD'
+        }, {
+          valuee: '5',
+          labell: 'USDCHF'
+				}, {
+          valuee: '6',
+          labell: 'AUDUSD'
+        }, {
+          valuee: '7',
+          labell: 'NZDUSD'
+        }],
+		selectNumber:4,
+    value5: [],
 		// 使用的平台select
 		options1: [{
           value1: 'GQCapital-Live',
@@ -375,20 +414,20 @@
 		// 新的MT4密码
 		password1:'',
 		// 使用挂机模式
-		options3: [{
-          value3: '1',
-          label3: 'pipsbot'
-        // }, {
-        //   value3: '2',
-        //   label3: '宏利先锋型'
-        // }, {
-        //   value3: '3',
-        //   label3: '趋势策略型'
-        // }, {
-        //   value3: '4',
-        //   label3: '综合尊享型'
-        }],
-        value3: '2',
+		// options3: [{
+    //       value3: '1',
+    //       label3: 'pipsbot'
+    //     // }, {
+    //     //   value3: '2',
+    //     //   label3: '宏利先锋型'
+    //     // }, {
+    //     //   value3: '3',
+    //     //   label3: '趋势策略型'
+    //     // }, {
+    //     //   value3: '4',
+    //     //   label3: '综合尊享型'
+    //     }],
+    //  value3: '2',
 		// 同意挂机费用
 		switch2:true,
 		//建议回撤
@@ -423,7 +462,7 @@
 			account: '20171105',
 			capital: '5000',
 			model: '成长型',
-			retracement: '35%',
+			retracement: '25%',
 			state:'1',
 			state_text:'已处理'
 		}],
@@ -539,7 +578,7 @@
 		watch:{
 			retreatRate:function(){
 				  var self = this;
-          if(self.retreatRate == 35){
+          if(self.retreatRate == 25){
 						self.switch3 = "0";
 					}else{
 						self.switch3 = "1";
@@ -625,6 +664,8 @@
 										// 返回数据放进交易配置编辑模态框
 										self.retreatRate = res.data.body.retreatRate;
 										// 建议回撤初始化
+										self.value5 = self.modalbody.currencyPairs;
+										// 投资品种初始化
 									}else if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}
@@ -872,7 +913,7 @@
 .edit_content  .li{
 	margin-top:20px;
 	/*padding:0 30px;*/
-	height:35px;
+	/*height:35px;*/
 	text-align:left;
 }
 .edit_content .li a.preview{
@@ -900,7 +941,7 @@
 	margin-right:10px;
 }
 .edit_content .li div{
-	height:35px;
+	/*height:35px;*/
 }
 .edit_content .li .radio35 div{
 	height:auto;
@@ -1012,4 +1053,10 @@
 	padding:0 20px;
 	text-align:left;
 }
+
+/*投资品种多选*/
+.checkbox.el-select{
+	width:100%;
+}
+
 </style>

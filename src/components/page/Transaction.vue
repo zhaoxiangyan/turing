@@ -181,10 +181,25 @@
 				    <span>账户投资资金：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right">
-					   <el-input v-model="input1" placeholder="请输入投资金额（美元）"></el-input>
+					   <el-input v-model="input1" type="number" placeholder="请输入投资金额（美元）"></el-input>
           </el-col>
 				</el-row>	
-			    <el-row class="li">
+				<el-row class="li">
+				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
+				    <span>投资品种：</span>
+				  </el-col>
+				  <el-col :span="16" class="li_right">
+					  <el-select class="checkbox" v-model="value5" multiple v-bind:multiple-limit="selectNumber" placeholder="请选择">
+							<el-option
+								v-for="item in options"
+								:key="item.value"
+								:label="item.label"
+								:value="item.value">
+							</el-option>
+						</el-select>
+          </el-col>
+				</el-row>
+			  <el-row class="li">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>使用挂机模式：</span>
 				  </el-col>
@@ -213,13 +228,13 @@
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>建议回撤：</span>
 				  </el-col>
-				  <el-col :span="16" class="li_right radio35 small_text">
+				  <el-col :span="16" class="li_right radio35 small_text disabledradio">
 					    <!--<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>-->
-							<el-radio class="radio" v-model="switch3" label="0">35%</el-radio>
-              <el-radio class="radio" v-model="switch3" label="1">自定义</el-radio>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false">
-							  <template slot="append">%</template>
-							</el-input>
+								<el-radio class="radio" v-model="switch3" disabled label="0">25%</el-radio>
+								<el-radio class="radio" v-model="switch3" disabled label="1">自定义</el-radio>
+								<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false">
+									<template slot="append">%</template>
+								</el-input>
           </el-col>
 				</el-row>
 		</el-row>
@@ -247,6 +262,31 @@
 		 debit_file2:false,
 		//   账户投资资金select
 		input1: '',
+		// 投资品种多选框
+    options: [{
+          value: '1',
+          label: 'EURUSD'
+        }, {
+          value: '2',
+          label: 'USDJPY'
+        }, {
+          value: '3',
+          label: 'GBPUSD'
+        }, {
+          value: '4',
+          label: 'USDCAD'
+        }, {
+          value: '5',
+          label: 'USDCHF'
+				}, {
+          value: '6',
+          label: 'AUDUSD'
+        }, {
+          value: '7',
+          label: 'NZDUSD'
+        }],
+		selectNumber:1,
+    value5: [],
 		// 使用的平台select
 		options1: [{
           value1: 'GQCapital-Live',
@@ -283,7 +323,7 @@
 		// 建议回撤
 		switch3:'0',
 		input5: '',
-		retreatRate: '35'
+		retreatRate: '25'
       };
     },
 		mounted:function(){
@@ -299,7 +339,7 @@
 			 switch3:function(){
 				  var self = this;
           if(self.switch3 == "0"){
-						self.retreatRate = "35";
+						self.retreatRate = "25";
 					}else if(self.switch3 == "1"){
 						self.retreatRate = self.input5;
 					}
@@ -307,6 +347,42 @@
 			 input5:function(){
 				  var self = this;
 					self.retreatRate = self.input5;
+			 },
+			//  监听投资资金触发投资品种
+			 input1:function(){
+				 var self = this;
+				 if(self.input1<10000){
+					 if(self.selectNumber > 1){
+						 self.value5 = [];
+					 }
+					 self.selectNumber = 1;
+					 self.switch3 = "0";
+				 }else if(self.input1<20000){
+					 if(self.selectNumber > 2){
+						 self.value5 = [];
+					 }
+					 self.selectNumber = 2;
+					 self.switch3 = "1";
+				 }else if(self.input1<50000){
+					 if(self.selectNumber > 3){
+						 self.value5 = [];
+					 }
+					 self.selectNumber = 3;
+					 self.switch3 = "1";
+				 }else{
+					 self.selectNumber = 4;
+					 self.switch3 = "1";
+				 }
+			 }
+		},
+		computed: {
+			 twentyfive:function(){
+				 var self = this;
+				 if(self.input1<10000){
+					 return true;
+				 }else{
+					 return false;
+				 }
 			 }
 		},
     methods: {
@@ -420,6 +496,8 @@
 							  self.$message.error('两次密码不一致');
 						 }else if(self.input1 === ''){
 							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.value5.length === 0){
+							  self.$message.error('请至少选择一种投资品种');
 						 }else if(self.value3 === ''){
 							 self.$message.error('请至少选择一种挂机模式');
 						 }else if(self.retreatRate === ''){
@@ -432,6 +510,7 @@
                     httpform.append('mt4Account',self.input2);
 										httpform.append('mt4Password',self.password);
 										httpform.append('capital',self.input1);
+										httpform.append('currencyPairs',self.value5);
 										httpform.append('mode',self.value3);
 										httpform.append('agreeHangupCosts',self.switch2);
 										httpform.append('retreatRate',self.retreatRate);
@@ -476,6 +555,8 @@
 							  self.$message.error('两次密码不一致');
 						 }else if(self.input1 === ''){
 							  self.$message.error('账户投资资金不能为空');
+						 }else if(self.value5.length === 0){
+							  self.$message.error('请至少选择一种投资品种');
 						 }else if(self.value3 === ''){
 							 self.$message.error('请至少选择一种挂机模式');
 						 }else if(self.retreatRate === ''){
@@ -489,6 +570,7 @@
                     httpform.append('mt4Account',self.input2);
 										httpform.append('mt4Password',self.password);
 										httpform.append('capital',self.input1);
+										httpform.append('currencyPairs',self.value5);
 										httpform.append('mode',self.value3);
 										httpform.append('agreeHangupCosts',self.switch2);
 										httpform.append('retreatRate',self.retreatRate);
@@ -526,6 +608,7 @@
   border-left:1px solid #e7ebf0;
 	border-right:1px solid #e7ebf0;
 	border-radius:4px;
+	margin-bottom:75px;
 }
 .page_title{
 	height:40px;
@@ -718,5 +801,10 @@
 	  display:none;
 	  vertical-align: bottom;
     max-width: 100%;
+}
+
+/*投资品种多选*/
+.checkbox.el-select{
+	width:100%;
 }
 </style>
