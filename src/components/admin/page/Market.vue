@@ -358,7 +358,7 @@ to
                 }
         },
         addDate(val){
-            console.log(val);
+            // console.log(val);
             var self = this;
             self.form1.time_stamp = new Date(val).getTime();
         },
@@ -402,7 +402,7 @@ to
             }
         },
         end_change(val){
-            console.log(val);
+            // console.log(val);
             var self = this;
             if(self.value7 === ""){
                 self.search.range.end = "";

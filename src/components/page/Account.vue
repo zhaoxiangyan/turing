@@ -471,8 +471,9 @@
 				  <el-col :span="16" class="li_right radio35 small_text disabledradio">
 				     <!--	<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>-->
 							 <el-radio class="radio" v-model="switch3" disabled label="0">25%</el-radio>
-               <el-radio class="radio" v-model="switch3" disabled label="1">自定义</el-radio>
-					  	<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false">
+							 <el-radio class="radio" v-model="switch3" :disabled="switch3=='0'?true:false" label="1">35%</el-radio>
+               <el-radio class="radio" v-model="switch3" :disabled="switch3=='0'?true:false" label="2">自定义</el-radio>
+					  	<el-input v-model="input5" placeholder="自定义回撤" :disabled="switch3=='2'?false:true">
 							  <template slot="append">%</template>
 							</el-input>
           </el-col>
@@ -727,6 +728,8 @@
           if(self.switch3 == "0"){
 						self.retreatRate = "25";
 					}else if(self.switch3 == "1"){
+						self.retreatRate = "35";
+					}else if(self.switch3 == "2"){
 						self.retreatRate = self.input5;
 					}
 			 },
@@ -922,8 +925,10 @@
            if(self.modalbody.retreatRate ==25 ){
 						//  self.input5 = "";
 						 self.switch3 = "0"; 
-					 }else{
+					 }else if(self.modalbody.retreatRate ==35){
 						 self.switch3 = "1";
+					 }else{
+						 self.switch3 = "2";
 						 self.input5 = self.modalbody.retreatRate;
 					 }
 					//  self.swicth3
@@ -1082,9 +1087,9 @@
 				// 提交停止挂机
 				stop(){
 					var self = this;
-						self.$confirm('此操作将停止该MT4账号的挂机, 是否继续?', '提示', {
+						self.$confirm('此操作将申请该MT4账号停止交易系统产生新的交易订单。当停止指令生效后，您会收到电邮通知，届时您便可根据个人判断对正在交易中的订单自行手动平仓。盈亏自负！是否继续?', '提示', {
 							confirmButtonText: '取消',							
-							cancelButtonText: '确定',
+							cancelButtonText: '已阅读并确定',
 							confirmButtonClass: 'quxiao',
 							cancelButtonClass: 'queding',
 							type: 'warning'

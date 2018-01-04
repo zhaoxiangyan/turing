@@ -231,8 +231,9 @@
 				  <el-col :span="16" class="li_right radio35 small_text disabledradio">
 					    <!--<el-switch  v-model="switch3"  on-text="自定义"  off-text="35%" off-color="#13ce66" :width='80' ></el-switch>-->
 								<el-radio class="radio" v-model="switch3" disabled label="0">25%</el-radio>
-								<el-radio class="radio" v-model="switch3" disabled label="1">自定义</el-radio>
-								<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='0'?true:false">
+								<el-radio class="radio" v-model="switch3" :disabled="switch3=='0'?true:false" label="1">35%</el-radio>
+								<el-radio class="radio" v-model="switch3" :disabled="switch3=='0'?true:false" label="2">自定义</el-radio>
+								<el-input v-model="input5" placeholder="自定义回撤百分比" :disabled="switch3=='2'?false:true">
 									<template slot="append">%</template>
 								</el-input>
           </el-col>
@@ -341,6 +342,8 @@
           if(self.switch3 == "0"){
 						self.retreatRate = "25";
 					}else if(self.switch3 == "1"){
+						self.retreatRate = "35";
+					}else if(self.switch3 == "2"){
 						self.retreatRate = self.input5;
 					}
 			 },
