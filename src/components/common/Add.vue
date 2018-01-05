@@ -117,23 +117,23 @@
                     }).catch(function(err){
                        console.log("AJAX失败");
                     }); 
-            }else if(sessionStorage.getItem("msmCode")){
-                self.phone = sessionStorage.getItem("phone2");
-                self.code = sessionStorage.getItem("msmCode");
-                self.$http({
-                        method: 'post',
-                        url: '/turingcloud/userInfor/byMsm?phone='+self.phone+'&msmCode='+self.code
-                    }).then(function(res){
-                        // console.log(res);
-                        var storage = window.sessionStorage; 
-                        storage.setItem("userid",res.data.body.id);
-                        if(res.data.body.detailInformation != null){
-                                   storage.setItem("detailInforId",res.data.body.detailInformation.id);
-                        }
-                        self.updatesession();
-                    }).catch(function(err){
-                       console.log("AJAX失败");
-                    }); 
+            // }else if(sessionStorage.getItem("msmCode")){
+            //     self.phone = sessionStorage.getItem("phone2");
+            //     self.code = sessionStorage.getItem("msmCode");
+            //     self.$http({
+            //             method: 'post',
+            //             url: '/turingcloud/userInfor/byMsm?phone='+self.phone+'&msmCode='+self.code
+            //         }).then(function(res){
+            //             // console.log(res);
+            //             var storage = window.sessionStorage; 
+            //             storage.setItem("userid",res.data.body.id);
+            //             if(res.data.body.detailInformation != null){
+            //                        storage.setItem("detailInforId",res.data.body.detailInformation.id);
+            //             }
+            //             self.updatesession();
+            //         }).catch(function(err){
+            //            console.log("AJAX失败");
+            //         }); 
             }else {
                self.updatesession();
             }

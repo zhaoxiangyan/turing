@@ -8,11 +8,16 @@
    	  	 <form class="password_form" >
    	  	 	<div class="required phone1_div">
             <img src="../../../assets/img/login_01.png">
-   	  	 		<input type="text" name="phone1"  v-model="phone" placeholder="请输入手机号" id="phone1">
+   	  	 		<input type="text" name="phone1"  v-model="phone" placeholder="请输入管理员账号" id="phone1">
    	  	 	</div>
    	  	 	<div class="required password_div">
             <img src="../../../assets/img/login_02.png">
    	  	 		<input type="password" name="password"  v-model="password" placeholder="请输入密码" id="password">
+   	  	 	</div>
+          <div class="required imgcode_div">
+            <i class="el-icon-picture"></i>
+   	  	 		<input  type="text" name="imgCode"  v-model="img_code" placeholder="请输入图形验证码" id="imgcode" >
+            <img src="/turingcloud/captcha/gen" id="veriImg" class="areaNum graph" onclick="this.src='/turingcloud/captcha/gen?random='+Math.random()">
    	  	 	</div>
           <div id="login_message" class="error" v-show="empty">
              {{message}}
@@ -33,6 +38,7 @@
       // 密码登录
       phone: '',
       password: '',
+      img_code:'',
       // repassword: false,
       empty:false,
       message:'请填写完整',
@@ -50,7 +56,7 @@
       self.empty = false;
       // var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
       // var pswReg = /^\w{6,16}$/;
-      if (self.phone === '' || self.password === '') {
+      if (self.phone === '' || self.password === ''|| self.img_code === '') {
          self.message = "请填写完整";
          self.empty = true;
          return false;
@@ -67,6 +73,7 @@
           var formdata = new FormData();
               formdata.append('username',self.phone);
               formdata.append('password',self.password);
+              formdata.append('imageCode',self.img_code);
           self.$http({
                 method: 'post',
                 url: '/turingcloud/login',
@@ -93,7 +100,7 @@
                 }
               });
             }else{
-              self.$message.error('请使用管理员账号登录');
+              self.$message.error('账号错误');
             }
           }).catch(function(err){
               // 手机号密码错误统一500错误，需要改接口
@@ -179,7 +186,7 @@ ul,ol,li{
   margin:40px 0;
   padding:0;
 }
-form div.phone1_div,form div.password_div{
+form div.phone1_div,form div.password_div,form div.imgcode_div{
   width:310px;
   font-size:14px;
   padding-right:20px;
@@ -188,8 +195,21 @@ form div.phone1_div,form div.password_div{
   border-radius:20px;
   height:40px;
 }
+.imgcode_div i.el-icon-picture{
+  width:15px;
+  margin:13px 10px 0 20px;
+  color:#dbdbdb;
+}
 form div img{
   margin:10px 10px 0 20px;
+}
+form div img#veriImg{
+  margin: 0;
+  height: 34px;
+  width: 120px;
+  cursor: pointer;
+  vertical-align: -11px;
+  display: inline-block;
 }
 #password,#phone1,#submit1{
   background-color:transparent;
@@ -201,6 +221,13 @@ form div img{
   border-radius:4px;
   height:38px;
   line-height:38px;
+}
+.imgcode_div input{
+  width:115px;
+  border-radius:4px;
+  height:38px;
+  line-height:38px;
+  vertical-align:top;
 }
 form div.re{
   width:310px;

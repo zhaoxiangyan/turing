@@ -4,10 +4,10 @@
    	  <div class="title">图灵智能交易系统</div>
    	  <div class="login-form">
          <ul class="switch">
-           <li  v-bind:class="[ this.switch ? 'active' : '']" @click="switchLogin1">密码登录</li>
-           <li class="code_switch"  v-bind:class="[ this.switch ? '' : 'active']"  @click="switchLogin2">验证码登录</li>
+           <li  class="active" >密码登录</li>
+           <!--<li class="code_switch"  v-bind:class="[ this.switch ? '' : 'active']"  @click="switchLogin2">验证码登录</li>-->
          </ul>
-   	  	 <form class="password_form"  v-if="this.switch"  @keyup.13="login1">
+   	  	 <form class="password_form"   @keyup.13="login1">
    	  	 	<div class="required phone1_div">
             <img src="../../assets/img/login_01.png">
    	  	 		<input type="text" name="phone1"  v-model="phone1" placeholder="请输入手机号" id="phone1">
@@ -15,6 +15,11 @@
    	  	 	<div class="required password_div">
             <img src="../../assets/img/login_02.png">
    	  	 		<input type="password" name="password"  v-model="password" placeholder="请输入密码" id="password" >
+   	  	 	</div>
+          <div class="required imgcode_div">
+            <i class="el-icon-picture"></i>
+   	  	 		<input  type="text" name="imgCode"  v-model="img_code" placeholder="请输入图形验证码" id="imgcode" >
+            <img src="/turingcloud/captcha/gen" id="veriImg" class="areaNum graph" onclick="this.src='/turingcloud/captcha/gen?random='+Math.random()">
    	  	 	</div>
           <div class="re clearfix">
             <label for="keepPwd"><input type="checkbox" id="keepPwd" v-model="repassword">记住登录状态</label>
@@ -27,7 +32,7 @@
           <div id="login_message" class="error" v-show="empty1" v-html="message1">
           </div>
    	  	 </form>
-          <form class="code_form" v-else @keyup.13="login2">
+          <!--<form class="code_form" v-else @keyup.13="login2">
    	  	 	<div class="required phone2_div">
             <img src="../../assets/img/login_01.png">
    	  	 		<input type="text" name="phone2"  v-model="phone2" placeholder="请输入手机号" id="phone2">
@@ -46,7 +51,7 @@
    	  	 	</div>
           <div id="code_message" class="error" v-show="empty2" v-html="message2">
           </div>
-   	  	 </form>
+   	  	 </form>-->
          <div class="register_div">
             <p class="register">还没有Turing账号？<a href="/system/register">立即注册</a></p>
          </div>
@@ -65,6 +70,7 @@
       // password: 'yan151798',
       phone1: '',
       password: '',
+      img_code:'',
       repassword: false,
       empty1:false,
       message1:'',
@@ -82,27 +88,27 @@
     document.title = "登录";
   },
   watch:{
-    phone2:function(){
-      var self = this;
-      var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
-      if(self.phone2 === ''||!phoneReg.test(self.phone2)){
-         self.message2 = '请输入格式正确的手机号码';
-         self.empty2 = true;
-      }else{
-         self.empty2 = false;
-         self.disabled = false;
-      }
-    }
+    // phone2:function(){
+    //   var self = this;
+    //   var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+    //   if(self.phone2 === ''||!phoneReg.test(self.phone2)){
+    //      self.message2 = '请输入格式正确的手机号码';
+    //      self.empty2 = true;
+    //   }else{
+    //      self.empty2 = false;
+    //      self.disabled = false;
+    //   }
+    // }
 
   },
   methods: {
     // 登录方式切换
-    switchLogin1() {
-        this.switch = true
-    },
-    switchLogin2() {
-       this.switch = false
-    },
+    // switchLogin1() {
+    //     this.switch = true
+    // },
+    // switchLogin2() {
+    //    this.switch = false
+    // },
     getUser() {
         var storage = window.localStorage; 
         var getPhone = storage["phone"]; 
@@ -133,6 +139,10 @@
            self.message1 = '请输入格式正确的密码（8-16位字母和数字的组合）';
            self.empty1 = true;
            return false;
+      }else if(self.img_code === ''){
+           self.message1 = "图形验证码不能为空";
+           self.empty1 = true;
+           return false;
       }else {
         // var storage = window.localStorage; 
         // if(self.repassword){
@@ -148,6 +158,7 @@
         var formdata1 = new FormData();
             formdata1.append('username',self.phone1);
             formdata1.append('password',self.password);
+            formdata1.append('imageCode',self.img_code);
             formdata1.append('remember-me',self.repassword);
         self.$http({
               method: 'post',
@@ -177,107 +188,105 @@
             self.empty1 = true;
          });
       }
-    },
-    // 发送验证码倒计时
-    countDown(){
-        var self = this;
-        self.sendMessage = '重新发送(59)';
-        var _step = 58;
-        var _res = setInterval(function(){
-            self.sendMessage = '重新发送('+_step+')';
-            _step-=1;
-            if(_step<=0){
-                self.disabled = false;
-                self.sendMessage = '发送短信验证码';
-                clearInterval(_res);
-            }else{
-                  self.disabled = true;
-            }
-        },1000);
-    },
-     // 点击发送验证码
-    sendCaptcha(){
-        var self = this;
-        var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
-        if (self.phone2 === '' || !phoneReg.test(self.phone2)) {
-              self.message2 = '请输入格式正确的手机号码';
-              self.empty2 = true;
-              return false;
-        }else{
-              var codedata = new FormData();
-              codedata.append('phone',self.phone2);
-              self.$http({
-                  method: 'post',
-                  url: '/turingcloud/msmCode/sendMsmForLogin',
-                  data:codedata
-              }).then(function(res){
-                if(res.data.success == true){
-                    self.countDown();
-                }else if(res.data.success == false){
-                  self.message2 = res.data.message;
-                  self.empty2 = true;
-                }
-              }).catch(function(err){
-                self.message2 = err.data.message;
-                self.empty2 = true;
-              });
-        }
-    },
-    // 短信验证码登录
-    login2 () {
-      var self = this;
-      if(self.empty2 == true && self.code != ''){
-        self.empty2 = false;
-      }
-      // self.empty2 = false;
-      var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
-      if (self.phone2 === '' || self.code === '') {
-         self.message2 = "请填写完整";
-         self.empty2 = true;
-         return false;
-      }else if(!phoneReg.test(self.phone2)){
-           self.message2 = "请输入正确的手机号码";
-           self.empty2 = true;
-           return false;
-      }else {
-              var formdata2 = new FormData();
-              formdata2.append('phone',self.phone2);
-              formdata2.append('msmCode',self.code);
-              self.$http({
-              method: 'post',
-              url: '/turingcloud/byMsm',
-              data: formdata2
-              }).then(function(res){
-                if(res.data.principal.roles[0].id == 2){
-                var storage = window.localStorage; 
-                if(storage["userid"]){
-                  storage.setItem("userid",res.data.principal.id);
-                }else{
-                  storage.setItem("userid",res.data.principal.id);
-                }
-                self.$message({
-                  message: '登录成功',
-                  type: 'success',
-                  duration: '2000',
-                  onClose:function(){
-                      self.$router.push('/system/home');
-                  }
-                });
-                }else{
-                  self.message2 = '用户不存在';
-                  self.empty2 = true;
-                }
-         }).catch(function(err){
-            var storage = window.sessionStorage; 
-            storage.setItem("phone2",self.phone2);
-            storage.setItem("msmCode",self.code);
-            self.message2 = err.response.data.message;
-            self.empty2 = true;
-         });
-         // 此处加入后台AJAX验证
-        
-      }
     }
+    // 发送验证码倒计时
+    // countDown(){
+    //     var self = this;
+    //     self.sendMessage = '重新发送(59)';
+    //     var _step = 58;
+    //     var _res = setInterval(function(){
+    //         self.sendMessage = '重新发送('+_step+')';
+    //         _step-=1;
+    //         if(_step<=0){
+    //             self.disabled = false;
+    //             self.sendMessage = '发送短信验证码';
+    //             clearInterval(_res);
+    //         }else{
+    //               self.disabled = true;
+    //         }
+    //     },1000);
+    // }
+     // 点击发送验证码
+    // sendCaptcha(){
+    //     var self = this;
+    //     var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+    //     if (self.phone2 === '' || !phoneReg.test(self.phone2)) {
+    //           self.message2 = '请输入格式正确的手机号码';
+    //           self.empty2 = true;
+    //           return false;
+    //     }else{
+    //           var codedata = new FormData();
+    //           codedata.append('phone',self.phone2);
+    //           self.$http({
+    //               method: 'post',
+    //               url: '/turingcloud/msmCode/sendMsmForLogin',
+    //               data:codedata
+    //           }).then(function(res){
+    //             if(res.data.success == true){
+    //                 self.countDown();
+    //             }else if(res.data.success == false){
+    //               self.message2 = res.data.message;
+    //               self.empty2 = true;
+    //             }
+    //           }).catch(function(err){
+    //             self.message2 = err.data.message;
+    //             self.empty2 = true;
+    //           });
+    //     }
+    // }
+    // 短信验证码登录
+    // login2 () {
+    //   var self = this;
+    //   if(self.empty2 == true && self.code != ''){
+    //     self.empty2 = false;
+    //   }
+    //   // self.empty2 = false;
+    //   var phoneReg = /^1[3|4|5|7|8][0-9]\d{4,8}$/;
+    //   if (self.phone2 === '' || self.code === '') {
+    //      self.message2 = "请填写完整";
+    //      self.empty2 = true;
+    //      return false;
+    //   }else if(!phoneReg.test(self.phone2)){
+    //        self.message2 = "请输入正确的手机号码";
+    //        self.empty2 = true;
+    //        return false;
+    //   }else {
+    //           var formdata2 = new FormData();
+    //           formdata2.append('phone',self.phone2);
+    //           formdata2.append('msmCode',self.code);
+    //           self.$http({
+    //           method: 'post',
+    //           url: '/turingcloud/byMsm',
+    //           data: formdata2
+    //           }).then(function(res){
+    //             if(res.data.principal.roles[0].id == 2){
+    //             var storage = window.localStorage; 
+    //             if(storage["userid"]){
+    //               storage.setItem("userid",res.data.principal.id);
+    //             }else{
+    //               storage.setItem("userid",res.data.principal.id);
+    //             }
+    //             self.$message({
+    //               message: '登录成功',
+    //               type: 'success',
+    //               duration: '2000',
+    //               onClose:function(){
+    //                   self.$router.push('/system/home');
+    //               }
+    //             });
+    //             }else{
+    //               self.message2 = '用户不存在';
+    //               self.empty2 = true;
+    //             }
+    //      }).catch(function(err){
+    //         var storage = window.sessionStorage; 
+    //         storage.setItem("phone2",self.phone2);
+    //         storage.setItem("msmCode",self.code);
+    //         self.message2 = err.response.data.message;
+    //         self.empty2 = true;
+    //      });
+    //   }
+    // }
   }
 	}
 </script>
@@ -355,7 +364,7 @@ ul,ol,li{
   margin-top:40px;
   padding:0;
 }
-form div.phone1_div,form div.password_div{
+form div.phone1_div,form div.password_div,form div.imgcode_div{
   width:310px;
   font-size:14px;
   padding-right:20px;
@@ -364,8 +373,21 @@ form div.phone1_div,form div.password_div{
   border-radius:20px;
   height:40px;
 }
+.imgcode_div i.el-icon-picture{
+  width:15px;
+  margin:13px 10px 0 20px;
+  color:#dbdbdb;
+}
 form div img{
   margin:10px 10px 0 20px;
+}
+form div img#veriImg{
+  margin: 0;
+  height: 34px;
+  width: 120px;
+  cursor: pointer;
+  vertical-align: -11px;
+  display: inline-block;
 }
 #password,#phone1,#submit1{
   background-color:transparent;
@@ -377,6 +399,13 @@ form div img{
   border-radius:4px;
   height:38px;
   line-height:38px;
+}
+.imgcode_div input{
+  width:115px;
+  border-radius:4px;
+  height:38px;
+  line-height:38px;
+  vertical-align:top;
 }
 form div.re{
   width:310px;
