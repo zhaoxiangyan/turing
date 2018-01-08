@@ -52,12 +52,8 @@
       label="是否挂机"
 			width="95">
 <template slot-scope="scope">
-      <el-tag v-if="scope.row.isHangUp === '0'"
-          type="success"
-          close-transition>是</el-tag>
-      <el-tag v-else-if="scope.row.isHangUp === '1'"
-          type="danger"
-          close-transition>否</el-tag>
+      <div v-if="scope.row.isHangUp === '0'">是</div>
+      <div v-else-if="scope.row.isHangUp === '1'">否</div>
 </template>  
     </el-table-column>
 		<el-table-column

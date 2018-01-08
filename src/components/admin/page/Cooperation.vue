@@ -220,6 +220,7 @@
     name: 'Cooperation',
     data() {
       return {
+		timestamp:'',
 		name:'赵先生',
 		phone:'15112345678',
 		//   账户投资资金select
@@ -402,6 +403,7 @@
 							}).then(function(res){
 									if(res.data.success == true){
 										// console.log(res.data.body);
+										self.timestamp = res.data.body.lastModifiedTime;
 										self.modalbody = res.data.body;
 										// 返回数据放进交易配置编辑模态框
 									}else if(res.data.success == false){
@@ -417,7 +419,7 @@
 					var self = this;
 					self.$http({
 									method: 'put',
-									url: '/turingcloud/admin/coopContraction/'+self.rowid+'?isPass='+self.modalbody.isPass+'&hadleStatus='+self.modalbody.handleStatus+'&handleResultDescription='+self.modalbody.handleResultDescription,
+									url: '/turingcloud/admin/coopContraction/'+self.rowid+'?isPass='+self.modalbody.isPass+'&hadleStatus='+self.modalbody.handleStatus+'&handleResultDescription='+self.modalbody.handleResultDescription+'&lastModifiedTime='+self.timestamp,
 							    }).then(function(res){
 									if(res.data.success == true){
 													self.$message({

@@ -77,6 +77,11 @@ ul,ol,li{
 .checkbox .el-input.is-disabled .el-input__inner{
 	color:#eef1f6;
 }
+/* 管理员页面停止挂机侧重 */
+.red_text.el-switch.is-disabled .el-switch__core {
+    border-color: red !important;
+    background: red !important;
+}
 /*用户account  建议回撤*/
 .disabledradio .el-radio__input.is-disabled.is-checked .el-radio__inner {
     background-color: #20a0ff;

@@ -211,6 +211,7 @@
     name: 'Information',
     data() {
       return {
+		timestamp:'',
 		name:'赵先生',
 		phone:'15112345678',
 		sex:true,
@@ -354,6 +355,7 @@
 							}).then(function(res){
 									if(res.data.success == true){
 										// console.log(res.data.body);
+										self.timestamp = res.data.body.user.detailInformation.lastModifiedTime;
 										self.modalbody = res.data.body;
 										// 返回数据放进个人信息编辑模态框
 									}else if(res.data.success == false){
@@ -369,7 +371,7 @@
 					var self = this;
 					self.$http({
 									method: 'put',
-									url: '/turingcloud/admin/user/'+self.rowid+'?isPass='+self.modalbody.user.detailInformation.isPass+'&hadleStatus='+self.modalbody.user.detailInformation.handleStatus+'&handleResultDescription='+self.modalbody.user.detailInformation.handleResultDescription,
+									url: '/turingcloud/admin/user/'+self.rowid+'?isPass='+self.modalbody.user.detailInformation.isPass+'&hadleStatus='+self.modalbody.user.detailInformation.handleStatus+'&handleResultDescription='+self.modalbody.user.detailInformation.handleResultDescription+'&lastModifiedTime='+self.timestamp,
 							    }).then(function(res){
 									if(res.data.success == true){
 													self.$message({

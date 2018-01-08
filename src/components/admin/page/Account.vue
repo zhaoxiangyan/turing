@@ -311,10 +311,10 @@
 				</el-row>
 				<el-row class="li" v-show="modalbody.isHangUp == '1'?true:false">
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
-				    <span>停止挂机模式：</span>
+				    <span class="red_text">停止挂机模式：</span>
 				  </el-col>
 				  <el-col :span="16" class="li_right radio35">
-					<el-switch  v-model="modalbody.isHangUp" on-value="0" off-value="1" on-text="运行"  off-text="停止" :width='80' disabled></el-switch>
+					<el-switch class="red_text"  v-model="modalbody.isHangUp" on-value="0" off-value="1" on-text="运行"  off-text="停止" :width='80' disabled></el-switch>
           </el-col>
 				</el-row>
 				<!--<el-row class="li">
@@ -370,6 +370,7 @@
     name: 'Account',
     data() {
       return {
+		timestamp:'',
 		name:'赵先生',
 		phone:'15112345678',
 		switch8:false,
@@ -664,6 +665,7 @@
 									if(res.data.success == true){
 										// console.log(res.data.body);
 										self.modalbody = res.data.body;
+										self.timestamp = res.data.body.lastModifiedTime;
 										// 返回数据放进交易配置编辑模态框
 										self.retreatRate = res.data.body.retreatRate;
 										// 建议回撤初始化
@@ -687,7 +689,8 @@
 										cIsPass:self.modalbody.contract.isPass,
 										handleStatus:self.modalbody.handleStatus,
 										isPass:self.modalbody.isPass,
-										handleResultDescription:self.modalbody.handleResultDescription
+										handleResultDescription:self.modalbody.handleResultDescription,
+										lastModifiedTime:self.timestamp
 									}
 							}).then(function(res){
 									if(res.data.success == true){
@@ -1060,6 +1063,11 @@
 /*投资品种多选*/
 .checkbox.el-select{
 	width:100%;
+}
+
+/*模态框停止挂机*/
+.red_text{
+	color:red;
 }
 
 </style>
