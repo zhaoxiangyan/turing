@@ -87,7 +87,7 @@
                 }
               });
             }else{
-              self.$message.error('账号错误');
+              self.$message.error('用户不存在');
             }
           }).catch(function(err){
               // 手机号密码错误统一500错误，需要改接口

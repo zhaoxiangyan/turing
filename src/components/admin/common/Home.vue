@@ -38,7 +38,7 @@
                 url: '/turingcloud/isLogin',
                 }).then(function(res){
                     // console.log(res.data);
-                   if(res.data == true){
+                   if(res.data.success == true && res.data.body.principal.roles[0].id == 1){
                        self.all = true;
                    }else{
                      self.$router.push('/system/admin/');
@@ -46,7 +46,30 @@
                 }).catch(function(err){
                     console.log("AJAX失败");
                 }); 
-      }
+            // 获取用户登录状态  定时器
+            self.loginStatus = setInterval(()=>{self.loginTime()}, 30000);
+      },
+      methods: {
+        loginTime(){
+            var self = this;
+           self.$http({
+                method: 'get',
+                url: '/turingcloud/isLogin',
+                }).then(function(res){
+                   if(res.data.success == true && res.data.body.principal.roles[0].id == 1){
+                       return true;
+                   }else{
+                     self.$message.error('用户未登入');
+                     self.$router.push('/system/admin/');
+                   }
+                }).catch(function(err){
+                    console.log("AJAX失败");
+                });    
+		}
+      },
+      beforeDestroy(){
+		clearInterval(this.loginStatus);	
+	  }
     }
 </script>
 
