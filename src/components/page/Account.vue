@@ -432,8 +432,10 @@
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>投资品种：</span>
 				  </el-col>
-				  <el-col :span="16" class="li_right">
-					  <el-select class="checkbox" v-model="value5"  multiple v-bind:multiple-limit="selectNumber" placeholder="请选择">
+				  <el-col :span="16" class="li_right radio35">
+					  <el-radio class="radio" v-model="switch5"  label="0">由系统安排</el-radio>
+						<el-radio class="radio" v-model="switch5"  label="1">自定义</el-radio>
+					  <el-select class="checkbox" v-model="value5"  multiple v-bind:multiple-limit="selectNumber" :disabled="switch5 =='1'?false:true" placeholder="请选择">
 							<el-option
 								v-for="item in options"
 								:key="item.value"
@@ -546,6 +548,7 @@
         }],
 		selectNumber:4,
     value5: [],
+		switch5:'',
 		// 使用的平台select
 		options1: [{
           platform: 'GQCapital-Live',
@@ -906,6 +909,11 @@
 										}else{
 											self.value5 = [];
 										}
+										if(self.value5.length === 0){
+											self.switch5 = '0';
+										}else{
+											self.switch5 = '1';
+										}
 			            	self.uploadStatus();
 								}else if(res.data.success == false){
 									 self.$message.error(res.data.message);
@@ -959,8 +967,10 @@
 					var self = this;
 						 if(self.input1 === ''){
 							  self.$message.error('账户投资资金不能为空');
-						 }else if(self.value5.length === 0){
-							  self.$message.error('请至少选择一种投资品种');
+						 }else if(self.switch5 === ''){
+							  self.$message.error('请选择投资品种');
+						 }else if(self.switch5 === '1'&&self.value5.length === 0){
+							  self.$message.error('请选择投资品种');
 						 }else if(self.value5.length > self.selectNumber){
 							  self.$message.error('投资品种选择过多');
 						 }else if(self.modalbody.mode === ''){
@@ -982,9 +992,14 @@
 											httpform.append('isChangePassword',true);
 										  httpform.append('newPassword',self.modalbody.newPassword);
 								 }
+								//  投资品种
+								if(self.switch5 === '0'){
+									httpform.append('currencyPairs','');
+								}else{
+									httpform.append('currencyPairs',self.value5);
+								}
                     httpform.append('fileType',null);
 										httpform.append('capital',self.input1);
-										httpform.append('currencyPairs',self.value5);
 										httpform.append('mode',self.modalbody.mode);
 										httpform.append('retreatRate',self.retreatRate);
                     self.$http({
@@ -995,15 +1010,6 @@
                         if(res.data.success == false){
                             self.$message.error(res.data.message);
                         }else{
-                            // self.$message({
-                            //         showClose: true,
-                            //         message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
-                            //         type: 'success',
-														// 				duration: '1000',
-														// 				onClose:function(){
-														// 						self.$router.go(0);
-														// 				}
-                            // });
 														self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
                                 confirmButtonText: '确定',
                                 callback: action => {
@@ -1021,8 +1027,10 @@
 					var self = this;
 						 if(self.input1 === ''){
 							  self.$message.error('账户投资资金不能为空');
-						 }else if(self.value5.length === 0){
-							  self.$message.error('请至少选择一种投资品种');
+						 }else if(self.switch5 === ''){
+							  self.$message.error('请选择投资品种');
+						 }else if(self.switch5 === '1'&&self.value5.length === 0){
+							  self.$message.error('请选择投资品种');
 						 }else if(self.value5.length > self.selectNumber){
 							  self.$message.error('投资品种选择过多');
 						 }else if(self.modalbody.mode === ''){
@@ -1056,8 +1064,13 @@
 								}else{
 									 httpform.append('fileType',null);
 								}   
+								// 投资品种
+								if(self.switch5 === '0'){
+									httpform.append('currencyPairs','');
+								}else{
+									httpform.append('currencyPairs',self.value5);
+								}
 										httpform.append('capital',self.input1);
-										httpform.append('currencyPairs',self.value5);
 										httpform.append('mode',self.modalbody.mode);
 										httpform.append('retreatRate',self.retreatRate);
                     self.$http({
@@ -1464,7 +1477,8 @@ ul,ol,li{
 }
 /*投资品种多选*/
 .checkbox.el-select{
-	width:100%;
+	width:60%;
+	float:right;
 }
 
 

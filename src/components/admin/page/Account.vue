@@ -278,7 +278,9 @@
 				  <el-col  :xs="7" :sm="6" :md="5" :lg="5" class="li_left">
 				    <span>投资品种：</span>
 				  </el-col>
-				  <el-col :span="16" class="li_right" >
+				  <el-col :span="16" class="li_right radio35" >
+					  <el-radio class="radio" v-model="switch9" disabled label="0">由系统安排</el-radio>
+						<el-radio class="radio" v-model="switch9" disabled label="1">自定义</el-radio>
 					  <el-select class="checkbox" v-bind:value="value5"  disabled  multiple v-bind:multiple-limit="selectNumber" placeholder="请选择">
 							<el-option
 								v-for="items in optionss"
@@ -401,6 +403,7 @@
         }],
 		selectNumber:4,
     value5: [],
+		switch9:'',
 		// 使用的平台select
 		options1: [{
           value1: 'GQCapital-Live',
@@ -669,7 +672,13 @@
 										// 返回数据放进交易配置编辑模态框
 										self.retreatRate = res.data.body.retreatRate;
 										// 建议回撤初始化
-										self.value5 = self.modalbody.currencyPairs;
+										if(self.modalbody.currencyPairs.length === 0){
+											alert('ddd');
+                      self.switch9 = '0';
+										}else{
+											self.switch9 = '1';
+										  self.value5 = self.modalbody.currencyPairs;
+										}
 										// 投资品种初始化
 									}else if(res.data.success == false){
 										self.$message.error(res.data.message);
@@ -1062,7 +1071,8 @@
 
 /*投资品种多选*/
 .checkbox.el-select{
-	width:100%;
+	width:60%;
+	float:right;
 }
 
 /*模态框停止挂机*/
