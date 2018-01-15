@@ -506,6 +506,8 @@
     name: 'Account',
     data() {
       return {
+		// 防止重复发送ajax
+    ajax:false,
 		// 喜讯
 		tabs:'',
 		// 公告
@@ -888,6 +890,8 @@
         handleEdit(index, row) {
 					var self = this;
 					self.rowid = row.id;
+					if(self.ajax) return;
+					self.ajax = true;
 					self.$http({
 								method: 'get',
 								url: '/turingcloud/trnsaction/'+self.userid+'/'+row.id
@@ -918,8 +922,10 @@
 								}else if(res.data.success == false){
 									 self.$message.error(res.data.message);
 								}
+								self.ajax = false;
 						}).catch(function(err){
 								console.log("AJAX失败");
+								self.ajax = false;
 						});
 					 self.dialogFormVisible = true;
         },
@@ -1002,6 +1008,8 @@
 										httpform.append('capital',self.input1);
 										httpform.append('mode',self.modalbody.mode);
 										httpform.append('retreatRate',self.retreatRate);
+										if(self.ajax) return;
+										self.ajax = true;
                     self.$http({
                         method: 'post',
                         url: '/turingcloud/trnsaction/'+self.userid+'/'+rowid,
@@ -1017,8 +1025,10 @@
                                 }
                             });
                         }
+												self.ajax = false;
                     }).catch(function(err){
                        console.log("AJAX失败");
+											 self.ajax = false;
                     });
 						 } 
 				},
@@ -1073,6 +1083,8 @@
 										httpform.append('capital',self.input1);
 										httpform.append('mode',self.modalbody.mode);
 										httpform.append('retreatRate',self.retreatRate);
+										if(self.ajax) return;
+										self.ajax = true;
                     self.$http({
                         method: 'post',
                         url: '/turingcloud/trnsaction/'+self.userid+'/'+rowid,
@@ -1088,8 +1100,10 @@
                                 }
                             });
                         }
+												self.ajax = false;
                     }).catch(function(err){
                        console.log("AJAX失败");
+											 self.ajax = false;
                     });
 						 }
 				},
@@ -1108,6 +1122,8 @@
 								message: '已取消提交'
 							});  
 						}).catch(() => {
+							if(self.ajax) return;
+							self.ajax = true;
 							self.$http({
 												method: 'put',
 												url: '/turingcloud/trnsaction/'+self.userid+'/changeHangupStatus/'+self.rowid
@@ -1122,8 +1138,10 @@
 												}else if(res.data.success == false){
 													self.$message.error(res.data.message);
 												}
+												self.ajax = false;
 										}).catch(function(err){
 												console.log("AJAX失败");
+												self.ajax = false;
 										});        
 						});
 				},
@@ -1142,6 +1160,8 @@
 								message: '已取消提交'
 							});  
 						}).catch(() => {
+							if(self.ajax) return;
+							self.ajax = true;
 							self.$http({
 												method: 'put',
 												url: '/turingcloud/trnsaction/'+self.userid+'/changeHangupStatus/'+self.rowid
@@ -1156,8 +1176,10 @@
 												}else if(res.data.success == false){
 													self.$message.error(res.data.message);
 												}
+												self.ajax = false;
 										}).catch(function(err){
 												console.log("AJAX失败");
+												self.ajax = false;
 										});        
 						});
 				},

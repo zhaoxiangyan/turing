@@ -127,6 +127,8 @@ to
     name: 'Market',
     data() {
       return {
+		// 防止重复发送ajax
+        ajax:false,
         adminname:'',
         dialogImgVisible:false,
         dialogImgUrl:'',
@@ -264,6 +266,8 @@ to
                     message: '已取消删除'
                 });
             }).catch(() => {
+                if(self.ajax) return;
+                self.ajax = true;
                 self.$http({
                                 method: 'delete',
                                 url: '/turingcloud/ms/'+self.rowid
@@ -281,8 +285,10 @@ to
                                                     }
                                                 });
                                 }
+                                self.ajax = false;
                         }).catch(function(err){
                                 console.log("AJAX失败");
+                                self.ajax = false;
                         });      
             });
         },
@@ -304,6 +310,8 @@ to
                 var self = this;
 				self.search.page = val;
                 // console.log(`当前页: ${val}`);
+                if(self.ajax) return;
+                self.ajax = true;
                 self.$http({
                                 method: 'get',
                                 url: '/turingcloud/ms/list?from='+self.search.range.start+'&to='+self.search.range.end+'&size='+self.search.size+'&page='+(self.search.page-1)
@@ -315,8 +323,10 @@ to
                                 self.tablebody = res.data.body;
                                 // 页面布局初始化
                             }
+                            self.ajax = false;
                         }).catch(function(err){
                                 console.log("AJAX失败");
+                                self.ajax = false;
                         }); 
         },
         // 检测图片格式大小符合
@@ -369,6 +379,8 @@ to
            image.append('publisher',self.adminname);
            image.append('pic',document.getElementById("file_img").files[0]);
            image.append('date',self.form1.time_stamp);
+           if(self.ajax) return;
+           self.ajax = true;
 		   self.$http({
 							method: 'post',
 							url: '/turingcloud/ms/',
@@ -385,8 +397,10 @@ to
                             });
 							// 页面布局初始化
 						}
+                        self.ajax = false;
 					}).catch(function(err){
 							console.log("AJAX失败");
+                            self.ajax = false;
 					});
 		},
         // 起始时间，终止时间

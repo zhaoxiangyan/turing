@@ -158,6 +158,8 @@
     name: 'Information',
     data() {
       return {
+        // 防止重复发送ajax
+        ajax:false,
         userid:'',
         // all:false,
         body:{
@@ -291,6 +293,8 @@
               });
               return false;
            }else{
+           if(self.ajax) return;
+           self.ajax = true;
            self.$http({
                     method: 'post',
                     url: '/turingcloud/'+self.userid+'/validateEmail?email='+self.form.newemail
@@ -298,14 +302,18 @@
                       if(res.data.success == true){
                         self.countdownEmail();
                       }
+                      self.ajax = false;
                     }).catch(function(err){
                         console.log("AJAX失败");
+                        self.ajax = false;
                     }); 
            }
       },
       //  确定修改邮箱地址
       modifyEmail:function(){
         var self = this;
+         if(self.ajax) return;
+         self.ajax = true;
          self.$http({
                   method: 'post',
                   url: '/turingcloud/'+self.userid+'/midifyEmail?email='+self.form.newemail
@@ -326,8 +334,10 @@
                         }
                       });
                     }
+                    self.ajax = false;
                   }).catch(function(err){
                       console.log("AJAX失败"); 
+                      self.ajax = false;
                   }); 
       },
       // 发送旧手机验证码倒计时
@@ -350,6 +360,8 @@
       // 发送验证码至旧手机号码
       sendoldCode(){
            var self = this;
+           if(self.ajax) return;
+           self.ajax = true;
            self.$http({
                     method: 'post',
                     url: '/turingcloud/phone/oldPhone/sendMsm?phone='+self.body.phone
@@ -359,8 +371,10 @@
                       }else if(res.data.success == false){
                         self.$message.error(res.data.message);
                       }
+                      self.ajax = false;
                     }).catch(function(err){
                         console.log("AJAX失败");
+                        self.ajax = false;
                     }); 
       },
       // 发送新手机验证码倒计时
@@ -391,6 +405,8 @@
               });
               return false;
            }else{
+           if(self.ajax) return;
+           self.ajax = true;
            self.$http({
                     method: 'post',
                     url: '/turingcloud/phone/newPhone/sendMsm?phone='+self.form1.newphone
@@ -400,8 +416,10 @@
                       }else if(res.data.success == false){
                         self.$message.error(res.data.message);
                       }
+                      self.ajax = false;
                     }).catch(function(err){
                         console.log("AJAX失败");
+                        self.ajax = false;
                     }); 
            }
       },
@@ -416,6 +434,8 @@
               });
               return false;
         }else{
+           if(self.ajax) return;
+           self.ajax = true;
            self.$http({
                     method: 'post',
                     url: '/turingcloud/phone/'+self.userid+'/modifiedPhone?newPhone='+self.form1.newphone+'&newMsm='+self.form1.newcode,
@@ -433,8 +453,10 @@
                       }else if(res.data.success == false){
                         self.$message.error(res.data.message);
                       }
+                      self.ajax = false;
                     }).catch(function(err){
                         console.log("AJAX失败");
+                        self.ajax = false;
                     }); 
         }
       },
@@ -461,6 +483,8 @@
                     });
                 return false;
         } else {
+           if(self.ajax) return;
+           self.ajax = true;
            self.$http({
                     method: 'post',
                     url: '/turingcloud/user/'+self.userid+'/modifiedPassword?oldPassword='+self.form2.oldpassword+'&newPassword='+self.form2.newpassword
@@ -478,14 +502,18 @@
                       }else if(res.data.success == false){
                         self.$message.error(res.data.message);
                       }
+                      self.ajax = false;
                     }).catch(function(err){
                         console.log("AJAX失败");
+                        self.ajax = false;
                     }); 
         }
       },
       // 确定修改居住地址
       modifyAddr(){
         var self = this;
+        if(self.ajax) return;
+        self.ajax = true;
         self.$http({
                     method: 'put',
                     url: '/turingcloud/userInfor/'+self.userid+'/addr?addr='+self.body.addr
@@ -503,8 +531,10 @@
                       }else if(res.data.success == false){
                         self.$message.error(res.data.message);
                       }
+                      self.ajax = false;
                     }).catch(function(err){
                         console.log("AJAX失败");
+                        self.ajax = false;
                     }); 
       }
     }

@@ -137,6 +137,8 @@
     name: 'Notice',
     data() {
       return {
+	    // 防止重复发送ajax
+        ajax:false,
 		adminname:'',
         // 添加
         dialogFormVisible1: false,
@@ -273,6 +275,8 @@
         // 公告和喜讯提交修改
         modify(){
             var self = this;
+			if(self.ajax) return;
+			self.ajax = true;
             self.$http({
                             method: 'put',
                             url: '/turingcloud/news/'+self.modalbody[0].id+'/?publisher='+self.adminname+'&type='+self.modalbody[0].type+'&content='+self.modalbody[0].content
@@ -287,8 +291,10 @@
                             }else if(res.data.success == false){
                                 self.$message.error(res.data.message);
                             }
+							self.ajax = false;
                     }).catch(function(err){
                             console.log("AJAX失败");
+							self.ajax = false;
                     });
         },								
         // 删除公告和喜讯
@@ -306,6 +312,8 @@
 					message: '已取消删除'
                 });
             }).catch(() => {
+				if(self.ajax) return;
+				self.ajax = true;
                 self.$http({
                                 method: 'delete',
                                 url: '/turingcloud/news/'+self.modalbody[0].id
@@ -320,8 +328,10 @@
 										self.$router.go(0);
 									}
                                 });
+								self.ajax = false;
                         }).catch(function(err){
                                 console.log("AJAX失败");
+								self.ajax = false;
                         });      
             });
         }, 
@@ -336,6 +346,8 @@
                 var self = this;
 				self.search.page = val;
                 // console.log(`当前页: ${val}`);
+				if(self.ajax) return;
+				self.ajax = true;
 				self.$http({
 								method: 'get',
 								url: '/turingcloud/news/list?type='+self.search.type+'&size='+self.search.size+'&page='+(self.search.page-1)
@@ -347,8 +359,10 @@
 								self.tablebody = res.data.body;
 								// 页面布局初始化
 							}
+							self.ajax = false;
 						}).catch(function(err){
 								console.log("AJAX失败");
+								self.ajax = false;
 						});
  
         },
@@ -366,6 +380,8 @@
 			   self.$message.error('请不要输入空格');
 			   return false;
 		   }
+		   if(self.ajax) return;
+		   self.ajax = true;
 		   self.$http({
 							method: 'post',
 							url: '/turingcloud/news/?publisher='+self.adminname+'&type='+self.form1.type+'&content='+self.form1.content
@@ -381,8 +397,10 @@
                             });
 							// 页面布局初始化
 						}
+						self.ajax = false;
 					}).catch(function(err){
 							console.log("AJAX失败");
+							self.ajax = false;
 					});
 		}
     }

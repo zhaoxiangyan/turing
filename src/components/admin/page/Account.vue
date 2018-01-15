@@ -372,6 +372,8 @@
     name: 'Account',
     data() {
       return {
+		// 防止重复发送ajax
+    ajax:false,
 		timestamp:'',
 		name:'赵先生',
 		phone:'15112345678',
@@ -661,6 +663,8 @@
 						var self = this;
 						self.rowid = row.id;
 						self.userid = row.userid;
+						if(self.ajax) return;
+						self.ajax = true;
 						self.$http({
 									method: 'get',
 									url: '/turingcloud/admin/transaction/detail/'+row.id
@@ -683,14 +687,18 @@
 									}else if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}
+									self.ajax = false;
 							}).catch(function(err){
 									console.log("AJAX失败");
+									self.ajax = false;
 							});
 					  self.dialogFormVisible = true;
         },
 				// 交易配置提交修改
 				modify(){
 					var self = this;
+					if(self.ajax) return;
+					self.ajax = true;
 					self.$http({
 									method: 'put',
 									url: '/turingcloud/admin/transaction/'+self.userid+'/'+self.rowid,
@@ -716,8 +724,10 @@
 									}else if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}
+									self.ajax = false;
 							}).catch(function(err){
 									console.log("AJAX失败");
+									self.ajax = false;
 							});
 				},
 				// 点击预览图片
@@ -742,6 +752,8 @@
 									message: '已取消删除'
 						  	});      
 						}).catch(() => {
+							if(self.ajax) return;
+							self.ajax = true;
 							self.$http({
 												method: 'delete',
 												url: '/turingcloud/admin/transaction/'+self.userid+'/'+self.rowid
@@ -760,8 +772,10 @@
 												}else if(res.data.success == false){
 													self.$message.error(res.data.message);
 												}
+												self.ajax = false;
 										}).catch(function(err){
 												console.log("AJAX失败");
+												self.ajax = false;
 										});    
 						});
       },
@@ -825,6 +839,8 @@
       },
       handleCurrentChange(val) {
 				  var self = this;
+					if(self.ajax) return;
+					self.ajax = true;
 				  self.search.page = val;
 					self.search.type = self.select;
 					self.search.condition = self.input6;
@@ -839,9 +855,10 @@
                 self.tablebody = res.data.body;
 								// 页面布局初始化
 							}
-							// console.log(res.data);
+							self.ajax = false;
 						}).catch(function(err){
 								console.log("AJAX失败");
+								self.ajax = false;
 								self.$router.push('/system/admin');
 						});
       },

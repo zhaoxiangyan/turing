@@ -211,6 +211,8 @@
     name: 'Information',
     data() {
       return {
+		// 防止重复发送ajax
+    ajax:false,
 		timestamp:'',
 		name:'赵先生',
 		phone:'15112345678',
@@ -349,6 +351,8 @@
         handleEdit(index, row) {
 						var self = this;
 						self.rowid = row.userid;
+						if(self.ajax) return;
+						self.ajax = true;
 						self.$http({
 									method: 'get',
 									url: '/turingcloud/admin/user/detail/'+row.userid
@@ -361,14 +365,18 @@
 									}else if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}
+									self.ajax = false;
 							}).catch(function(err){
 									console.log("AJAX失败");
+									self.ajax = false;
 							});
 					  self.dialogFormVisible = true;
         },
 				// 个人信息提交修改
 				modify(){
 					var self = this;
+					if(self.ajax) return;
+					self.ajax = true;
 					self.$http({
 									method: 'put',
 									url: '/turingcloud/admin/user/'+self.rowid+'?isPass='+self.modalbody.user.detailInformation.isPass+'&hadleStatus='+self.modalbody.user.detailInformation.handleStatus+'&handleResultDescription='+self.modalbody.user.detailInformation.handleResultDescription+'&lastModifiedTime='+self.timestamp,
@@ -387,8 +395,10 @@
 									}else if(res.data.success == false){
 										self.$message.error(res.data.message);
 									}
+									self.ajax = false;
 							}).catch(function(err){
 									console.log("AJAX失败");
+									self.ajax = false;
 							});
 				},				
 				// 点击预览图片
@@ -416,6 +426,8 @@
 								message: '已取消删除'
 					  	});
 					}).catch(() => {
+						if(self.ajax) return;
+						self.ajax = true;
 						self.$http({
 										method: 'delete',
 										url: '/turingcloud/admin/user/'+self.rowid
@@ -434,8 +446,10 @@
 										}else if(res.data.success == false){
 											self.$message.error(res.data.message);
 										}
+										self.ajax = false;
 								}).catch(function(err){
 										console.log("AJAX失败");
+										self.ajax = false;
 								});      
 					});
       },
@@ -456,6 +470,8 @@
 					self.search.page = 1;
 					self.search.type = self.select;
 					self.search.condition = self.input6;
+					if(self.ajax) return;
+					self.ajax = true;
 					self.$http({
 								method: 'get',
 								url: '/turingcloud/admin/user/list?type='+self.search.type+'&condition='+self.search.condition
@@ -468,15 +484,18 @@
 								self.handleCurrentChange(1);
 								// 页面布局初始化
 							}
-							// console.log(res.data);
+							self.ajax = false;
 						}).catch(function(err){
 								console.log("AJAX失败");
+								self.ajax = false;
 						});
 				}
 			},
 			// 分页
 			handleSizeChange(val) {
         var self = this;
+				if(self.ajax) return;
+				self.ajax = true;
 				self.search.size = val;
         // console.log(`每页 ${val} 条`);
 				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
@@ -493,9 +512,10 @@
 										self.handleCurrentChange(1);
 										// 页面布局初始化
 									}
-									// console.log(res.data);
+									self.ajax = false;
 								}).catch(function(err){
 										console.log("AJAX失败");
+										self.ajax = false;
 								});
 				}else{
 						self.$http({
@@ -510,14 +530,17 @@
 										self.handleCurrentChange(1);
 										// 页面布局初始化
 									}
-									// console.log(res.data);
+									self.ajax = false;
 								}).catch(function(err){
 										console.log("AJAX失败");
+										self.ajax = false;
 								});
 				}  
       },
       handleCurrentChange(val) {
         var self = this;
+				if(self.ajax) return;
+				self.ajax = true;
 				self.search.page = val;
         // console.log(`当前页: ${val}`);
 				if(self.input6 == "" || self.input6.replace(/\s/g, "") == ""){
@@ -532,9 +555,10 @@
 										self.tablebody = res.data.body;
 										// 页面布局初始化
 									}
-									// console.log(res.data);
+									self.ajax = false;
 								}).catch(function(err){
 										console.log("AJAX失败");
+										self.ajax = false;
 								});
 				}else{
 						self.$http({
@@ -548,9 +572,10 @@
 										self.tablebody = res.data.body;
 										// 页面布局初始化
 									}
-									// console.log(res.data);
+									self.ajax = false;
 								}).catch(function(err){
 										console.log("AJAX失败");
+										self.ajax = false;
 								});
 				}  
       },

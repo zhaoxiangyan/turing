@@ -252,6 +252,8 @@
     name: 'Transaction',
     data() {
       return {
+			// 防止重复发送ajax
+      ajax:false,
 		  userid:'',
 	  // 上传扣款协议
 		 switch0:false,
@@ -526,6 +528,8 @@
 										httpform.append('mode',self.value3);
 										httpform.append('agreeHangupCosts',self.switch2);
 										httpform.append('retreatRate',self.retreatRate);
+										if(self.ajax) return;
+										self.ajax = true;
                     self.$http({
                         method: 'post',
                         url: '/turingcloud/trnsaction/'+self.userid,
@@ -541,8 +545,10 @@
                                 }
                             });
                         }
+												self.ajax = false;
                     }).catch(function(err){
                        console.log("AJAX失败");
+											 self.ajax = false;
                     });
 						 }
 					 }else{
@@ -584,6 +590,8 @@
 										httpform.append('mode',self.value3);
 										httpform.append('agreeHangupCosts',self.switch2);
 										httpform.append('retreatRate',self.retreatRate);
+										if(self.ajax) return;
+										self.ajax = true;
                     self.$http({
                         method: 'post',
                         url: '/turingcloud/trnsaction/'+self.userid,
@@ -599,8 +607,10 @@
                                 }
                             });
                         }
+												self.ajax = false;
                     }).catch(function(err){
                        console.log("AJAX失败");
+											 self.ajax = false;
                     });
 						 }
 					 }

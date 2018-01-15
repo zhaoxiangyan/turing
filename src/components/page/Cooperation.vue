@@ -468,6 +468,8 @@
 	  name: 'Cooperation',
     data() {
       return {
+			// 防止重复发送ajax
+      ajax:false,
     //   协议上传方式选择
 		  radio:'0',
 		  switch1:false,
@@ -708,6 +710,8 @@
                     httpform.append('platform',self.value1);
                     httpform.append('mt4Account',self.input2);
 										// httpform.append('mt4Password',self.password);
+                    if(self.ajax) return;
+										self.ajax = true;
                     self.$http({
                         method: 'post',
                         url: '/turingcloud/coopContract/'+self.userid,
@@ -716,11 +720,6 @@
                         if(res.data.success == false){
                             self.$message.error(res.data.message);
                         }else{
-                            // self.$message({
-                            //         showClose: true,
-                            //         message: "您提交的信息客服会在24小时内进行审核，请您耐心等待！",
-                            //         type: 'success'
-                            // });
 														self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
                                 confirmButtonText: '确定',
                                 callback: action => {
@@ -728,8 +727,10 @@
                                 }
                             });
                         }
+												self.ajax = false;
                     }).catch(function(err){
                        console.log("AJAX失败");
+											 self.ajax = false;
                     });
 						 }		 
 		},
@@ -742,10 +743,6 @@
 							  self.$message.error('请选择使用的平台');
 						 }else if(self.databody.mt4Account === ''||!mt4Reg.test(self.databody.mt4Account)){
 							  self.$message.error('请填写7位数字的MT4账号');
-						//  }else if(self.databody.mt4Password === ''){
-						// 	  self.$message.error('MT4密码不能为空');
-						//  }else if(self.databodyrepassword != self.databody.mt4Password){
-						// 	  self.$message.error('两次密码不一致');
 						 }else{
 							      var httpform = new FormData();
 										if(self.databody.filetype == "img" && self.user_file1 == true && self.user_file2 == true && self.user_file3 == true){
@@ -762,6 +759,8 @@
 													httpform.append('platform',self.databody.platform);
 													httpform.append('mt4Account',self.databody.mt4Account);
 													// httpform.append('mt4Password',self.databody.mt4Password);
+													if(self.ajax) return;
+													self.ajax = true;
 													self.$http({
 															method: 'post',
 															url: '/turingcloud/coopContract/'+self.userid,
@@ -777,8 +776,10 @@
 																			}
 																	});
 															}
+															self.ajax = false;
 													}).catch(function(err){
 														 console.log("AJAX失败");
+														 self.ajax = false;
 													});
 						 }		 
 		},

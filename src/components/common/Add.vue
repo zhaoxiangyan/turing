@@ -69,6 +69,8 @@
         name: 'Add',
         data() {
             return {
+                // 防止重复发送ajax
+                ajax:false,
                 all:false,
                 phone:'',
                 password:'',
@@ -317,6 +319,8 @@
                     image.append('multipartFile1',document.getElementById("file1").files[0]);
                     image.append('multipartFile2',document.getElementById("file2").files[0]);
                     image.append('multipartFile3',document.getElementById("file3").files[0]);
+                    if(self.ajax) return;
+                    self.ajax = true;
                     self.$http({
                         method: 'post',
                         url: '/turingcloud/userInfor',
@@ -325,16 +329,6 @@
                         if(res.data.success == false){
                             self.$message.error(res.data.message);
                         }else{
-                            // self.$message({
-                            //         showClose: true,
-                            //         message:"您提交的信息客服会在24小时内进行审核，请您耐心等待！",
-                            //         type: 'success',
-                            //         duration:'2000',
-                            //         customClass:'center_message',
-                            //         onClose:function(){
-                            //             self.$router.push('/system/login');
-                            //         }
-                            // });
                             self.$alert('您提交的信息客服会在24小时内进行审核，请您耐心等待！', '图灵智能交易系统', {
                                 confirmButtonText: '确定',
                                 callback: action => {
@@ -342,8 +336,10 @@
                                 }
                             });
                         }
+                        self.ajax = false;
                     }).catch(function(err){
                        console.log("AJAX失败");
+                       self.ajax = false;
                     });
                 }
             }

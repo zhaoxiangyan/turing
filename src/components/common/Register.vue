@@ -42,6 +42,8 @@
         name: 'Register',
         data() {
             return {
+                // 防止重复发送ajax
+                ajax:false,
                 phone: '',
                 img_code: '',
                 code:'',
@@ -109,6 +111,8 @@
                     self.http_mess = true;
                       return false;
                 } else {
+                     if(self.ajax) return;
+                     self.ajax = true;
                      self.$http({
                          method: 'post',
                          url: '/turingcloud/msmCode/send?phone='+self.phone+'&imageCode='+self.img_code
@@ -119,9 +123,11 @@
                             self.http_message = res.data.message;
                             self.http_mess = true;
                         }  
+                        self.ajax = false;
                      }).catch(function(err){
                         self.http_mess = true;
                         self.http_message = err.response.data.message;
+                        self.ajax = false;
                      });
                 }
             },
@@ -145,6 +151,8 @@
                      self.http_mess = true;
                     return false;
                 } else {
+                    if(self.ajax) return;
+                    self.ajax = true;
                     self.$http({
                         method: 'post',
                         url: '/turingcloud/register?phone='+self.phone+'&msmCode='+self.code+'&password='+self.password
@@ -167,9 +175,11 @@
                          }else{
                               self.http_message = res.data.message;
                               self.http_mess = true; 
-                         }    
+                         }   
+                         self.ajax = false; 
                     }).catch(function(err){
                          console.log(err);
+                         self.ajax = false;
                     });
                 }
             }

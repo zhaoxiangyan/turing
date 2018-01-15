@@ -86,6 +86,8 @@
     name: 'Manage',
     data() {
       return {
+		// 防止重复发送ajax
+    ajax:false,
 		// 表格数据
 		tableData: [{
 			id:'1',
@@ -138,6 +140,8 @@
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
+						if(self.ajax) return;
+						self.ajax = true;
 						self.$http({
 										method: 'delete',
 										url: '/turingcloud/superAdmin/delete/'+row.user.id
@@ -150,8 +154,10 @@
 															 self.$router.go(0);
 														}
 													});
+										self.ajax = false;
 								}).catch(function(err){
 										console.log("AJAX失败");
+										self.ajax = false;
 								});
 					}).catch(() => {
 						self.$message({
@@ -187,24 +193,28 @@
           type: 'warning'
           });
 				}else{
+					if(self.ajax) return;
+					self.ajax = true;
 					self.$http({
 										method: 'post',
 										url: '/turingcloud/superAdmin/addAdmin?username='+self.modaldata1.name+'&phone='+self.modaldata1.username+'&password='+self.modaldata1.password,
 									}).then(function(res){
-									if(res.data.success == true){
-										self.$message({
-											message: '添加管理员成功',
-											type: 'success',
-											onClose:function(){
-													// 提交修改成功关闭模态框
-													self.$router.go(0);
+											if(res.data.success == true){
+												self.$message({
+													message: '添加管理员成功',
+													type: 'success',
+													onClose:function(){
+															// 提交修改成功关闭模态框
+															self.$router.go(0);
+													}
+												});
+											}else if(res.data.success == false){
+												self.$message.error(res.data.message);
 											}
-										});
-									}else if(res.data.success == false){
-										self.$message.error(res.data.message);
-									}
+											self.ajax = false;
 						    	}).catch(function(err){
 										console.log("AJAX失败");
+										self.ajax = false;
 						    	});
 				}
 			}

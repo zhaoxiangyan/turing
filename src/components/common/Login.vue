@@ -63,6 +63,8 @@
   name: 'Login',
   data () {
     return {
+      // 防止重复发送ajax
+      ajax:false,
       // 密码验证码登录切换
       switch: true,
       // 密码登录
@@ -160,6 +162,8 @@
             formdata1.append('password',self.password);
             formdata1.append('imageCode',self.img_code);
             formdata1.append('remember-me',self.repassword);
+        if(self.ajax) return;
+        self.ajax = true;
         self.$http({
               method: 'post',
               url: '/turingcloud/login',
@@ -180,6 +184,7 @@
              self.message1 = "用户不存在";
              self.empty1 = true;
            }
+           self.ajax = false;
          }).catch(function(err){
            var storage = window.sessionStorage; 
             storage.setItem("phone1",self.phone1);
@@ -187,6 +192,7 @@
             // 手机号密码错误统一500错误，需要改接口
             self.message1 = err.response.data.message;
             self.empty1 = true;
+            self.ajax = false; 
          });
       }
     }

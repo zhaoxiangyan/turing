@@ -35,6 +35,8 @@
   name: 'Login',
   data () {
     return {
+      // 防止重复发送ajax
+      ajax:false,
       // 密码登录
       phone: '',
       password: '',
@@ -74,6 +76,8 @@
               formdata.append('username',self.phone);
               formdata.append('password',self.password);
               formdata.append('imageCode',self.img_code);
+          if(self.ajax) return;
+          self.ajax = true;
           self.$http({
                 method: 'post',
                 url: '/turingcloud/login',
@@ -102,10 +106,12 @@
             }else{
               self.$message.error('用户不存在');
             }
+            self.ajax = false;
           }).catch(function(err){
               // 手机号密码错误统一500错误，需要改接口
               self.message = err.response.data.message;
               self.empty = true;
+              self.ajax = false;
           });
       }
     }
