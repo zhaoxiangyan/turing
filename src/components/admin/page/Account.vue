@@ -677,7 +677,6 @@
 										self.retreatRate = res.data.body.retreatRate;
 										// 建议回撤初始化
 										if(self.modalbody.currencyPairs.length === 0){
-											alert('ddd');
                       self.switch9 = '0';
 										}else{
 											self.switch9 = '1';
