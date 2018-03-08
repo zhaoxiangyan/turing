@@ -68,6 +68,8 @@
                 }else{
                   return false;
                 }
+              }else{
+                return false;
               };
             }else{
                 self.$router.push('/system/');

@@ -154,7 +154,9 @@
             card:function(){
                 var self = this;
                 var cardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-                if(self.card === '' || !cardReg.test(self.card)){
+                // var HK-cardReg = /^(.{8}|.{10})$/;
+                var HKcardReg = /^[A-Z\s]\d{6}\([0-9aA]\)$/;
+                if(self.card === '' || (!cardReg.test(self.card)&&!HKcardReg.test(self.card))){
                      self.error.card1 = true;
                 }else{
                     self.error.card1 = false;
@@ -288,13 +290,14 @@
                 // var emailReg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
                 var emailReg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
                 var cardReg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                var HKcardReg = /^[A-Z\s]\d{6}\([0-9aA]\)$/;
                 if(self.name === '' || !nameReg.test(self.name)){
                      self.error.name1 = true;
                      return false;
                 } else if(self.email === '' || !emailReg.test(self.email)){
                      self.error.email1 = true;
                      return false;
-                } else if(self.card === '' || !cardReg.test(self.card)){
+                } else if(self.card === '' || (!cardReg.test(self.card)&&!HKcardReg.test(self.card))){
                      self.error.email1 = false;
                      self.error.card1 = true;
                      return false;
